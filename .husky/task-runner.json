@@ -1,14 +1,24 @@
 {
-   "$schema": "https://alirezanet.github.io/Husky.Net/schema.json",
-   "tasks": [
-      {
-         "name": "welcome-message-example",
-         "command": "bash",
-         "args": [ "-c", "echo Husky.Net is awesome!" ],
-         "windows": {
-            "command": "cmd",
-            "args": ["/c", "echo Husky.Net is awesome!" ]
-         }
-      }
-   ]
+  "tasks": [
+    {
+      "name": "Protect Main Branch",
+      "group": "pre-commit",
+      "command": "bash",
+      "args": [
+        "-c",
+        "branch=$(git symbolic-ref --short HEAD); if [ \"$branch\" = \"main\" ]; then echo -e '\\n\\033[1;31m[COMMIT ERROR]\\033[0m\\nDirect commits to main are blocked.\\nUse: git switch -c <branch-name>\\n'; exit 1; fi"
+      ]
+    },
+    {
+      "name": "Validate Commit Message Prefix",
+      "group": "commit-msg",
+      "command": "bash",
+      "args": [
+        "-c",
+        "commit_msg=$(cat \"$1\"); pattern='^[^:]+:[[:space:]]+.+$'; if ! echo \"$commit_msg\" | grep -Eq \"$pattern\"; then echo -e '\\n\\033[1;31m[INVALID COMMIT MESSAGE]\\033[0m\\nMessage must include a prefix followed by a colon and a space.\\nExample: \"project-123: fix bug\"\\n'; exit 1; fi",
+        "--",
+        "${args}"
+      ]
+    }
+  ]
 }
