@@ -5,7 +5,7 @@ A standalone .NET desktop app for sales tracking, reporting, and prediction.
 
 - [Commands/](Commands/): Command handlers, CLI utilities, and scripts invoked by the app.
 - [Models/](Models/): Domain models, DTOs, validation logic, and persistence schemas.
-- [ModelViews/](ModelViews/): View-models or presentation-layer models that adapt `Models` for UI binding.
+- [ViewModels/](ViewModels/): View-models or presentation-layer models that adapt `Models` for UI binding.
 - [Services/](Services/): Business logic, API clients, data access services, and orchestrators.
 - [Services/Data/](Services/Data/): Data-specific services such as repositories, storage adapters, seeding, and migrations.
 - [UserComponents/](UserComponents/): Reusable UI components, controls, and widgets used by views.
