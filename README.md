@@ -9,7 +9,7 @@ A standalone .NET desktop app for sales tracking, reporting, and prediction.
 - [Services/](Services/): Business logic, API clients, data access services, and orchestrators.
 - [Services/Data/](Services/Data/): Data-specific services such as repositories, storage adapters, seeding, and migrations.
 - [UserComponents/](UserComponents/): Reusable UI components, controls, and widgets used by views.
-- [Views/](Views/): Screens, pages, and templates that compose `UserComponents` and bind to `ModelViews`.
+- [Views/](Views/): Screens, pages, and templates that compose `UserComponents` and bind to `ViewModels`.
 
 ## Getting started
 
