@@ -47,8 +47,10 @@ namespace nexgensales.Views
         // Handles the navigation back to the Analytics Dashboard
         private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: Navigate to AnalyticsView
-            MessageBox.Show("Navigating back to Analytics Dashboard...", "Navigation", MessageBoxButton.OK, MessageBoxImage.Information);
+            
+            ProcessView processWindow = new ProcessView();
+            processWindow.Show();
+            this.Close();
         }
     }
 }
