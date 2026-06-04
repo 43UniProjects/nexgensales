@@ -195,9 +195,10 @@
                         <RowDefinition Height="Auto"/> <!-- Bottom Controls -->
                     </Grid.RowDefinitions>
 
-                    <!-- TOP NAVIGATION BAR -->
+                    <!-- TOP NAVIGATION BAR: PROCESS VIEW -->
                     <Grid Grid.Row="0" Margin="0,0,0,25">
-                        <!-- Navigate Back to Home -->
+
+                        <!-- Secondary Back Navigation to Home View -->
                         <Button Content="&#x276E;  Home" Click="BtnHome_Click" HorizontalAlignment="Left" Width="130" Height="40" FontSize="13" Foreground="#0B0F13" Cursor="Hand">
                             <Button.Style>
                                 <Style TargetType="Button">
@@ -221,8 +222,8 @@
                             </Button.Style>
                         </Button>
 
-                        <!-- Navigate Forward to Exports -->
-                        <Button Content="Exports  &#x276F;" HorizontalAlignment="Right" Click="BtnExports_Click" Width="130" Height="40" FontSize="13" Foreground="#0B0F13" Cursor="Hand">
+                        <!-- Primary Forward Navigation to Exports View -->
+                        <Button Content="Exports  &#x276F;" Click="BtnExports_Click" HorizontalAlignment="Right" Width="130" Height="40" FontSize="13" Foreground="#0B0F13" Cursor="Hand">
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <Setter Property="Background" Value="#00C896"/>
