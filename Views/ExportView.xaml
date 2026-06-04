@@ -10,50 +10,35 @@
 
     
     <Window.Resources>
-        <!-- Custom style for ComboBox to match the dark theme and override default Windows styling -->
+        <!-- Custom ComboBox style -->
         <Style TargetType="ComboBox">
             <Setter Property="Background" Value="#1C2127"/>
             <Setter Property="Foreground" Value="#D3D9E0"/>
             <Setter Property="BorderBrush" Value="#2D3A46"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="15,0"/>
-            <Setter Property="Height" Value="40"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ComboBox">
                         <Grid>
-                            <!-- Main background and border -->
-                            <Border Background="{TemplateBinding Background}" 
-                                    BorderBrush="{TemplateBinding BorderBrush}" 
-                                    BorderThickness="{TemplateBinding BorderThickness}" 
-                                    CornerRadius="6"/>
-
-                            <!-- Toggle button covering the entire combo box for click detection -->
-                            <ToggleButton Name="ToggleButton" BorderThickness="0" Background="Transparent" 
-                                          Focusable="false" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
+                            <!-- Dropdown Border -->
+                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6"/>
+                            <!-- Toggle Button with Custom Teal Arrow -->
+                            <ToggleButton Name="ToggleButton" BorderThickness="0" Background="Transparent" Focusable="false" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
                                 <ToggleButton.Template>
                                     <ControlTemplate TargetType="ToggleButton">
                                         <Border Background="Transparent">
-                                            <!-- Custom teal dropdown arrow -->
-                                            <Path Data="M 0 0 L 4 4 L 8 0 Z" Fill="#00C896" 
-                                                  HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,15,0"/>
+                                            <Path Data="M 0 0 L 4 4 L 8 0 Z" Fill="#00C896" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,15,0"/>
                                         </Border>
                                     </ControlTemplate>
                                 </ToggleButton.Template>
                             </ToggleButton>
-
-                            <!-- Area where the selected text is displayed -->
-                            <ContentPresenter Name="ContentSite" IsHitTestVisible="False" 
-                                              Content="{TemplateBinding SelectionBoxItem}" 
-                                              Margin="{TemplateBinding Padding}" 
-                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
-                                              HorizontalAlignment="Left"/>
-
-                            <!-- The dropdown popup window -->
+                            <!-- Selected Item Content -->
+                            <ContentPresenter Name="ContentSite" IsHitTestVisible="False" Content="{TemplateBinding SelectionBoxItem}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" HorizontalAlignment="Left"/>
+                            <!-- Dropdown List Popup -->
                             <Popup Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
-                                <Border Background="#141A21" BorderBrush="#2D3A46" BorderThickness="1" CornerRadius="6" Margin="0,4,0,0" 
-                                        Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}">
+                                <Border Background="#141A21" BorderBrush="#2D3A46" BorderThickness="1" CornerRadius="6" Margin="0,4,0,0" Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}">
                                     <ScrollViewer Margin="0,5">
                                         <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
                                     </ScrollViewer>
@@ -65,7 +50,7 @@
             </Setter>
         </Style>
 
-        <!-- Custom style for individual items inside the ComboBox -->
+        <!-- Custom ComboBoxItem style -->
         <Style TargetType="ComboBoxItem">
             <Setter Property="Foreground" Value="#A0ABB5"/>
             <Setter Property="Padding" Value="15,10"/>
@@ -91,20 +76,16 @@
         </Style>
     </Window.Resources>
 
-   
+    <!--  MAIN APPLICATION WRAPPER  -->
     <Border Background="#0B0F13" CornerRadius="12">
         <Grid>
-            <!-- Row 0: Custom Title Bar | Row 1: Application Content -->
             <Grid.RowDefinitions>
                 <RowDefinition Height="35"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-          
             <!-- CUSTOM TITLE BAR -->
-        
             <Grid Grid.Row="0" Background="Transparent" MouseLeftButtonDown="Window_MouseDown">
-                <!-- Branding -->
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0,0,0">
                     <TextBlock Text="💼" Foreground="#00C896" FontSize="14" Margin="0,0,8,0" VerticalAlignment="Center"/>
                     <TextBlock Text="NexGenSales - Export" Foreground="#788896" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"/>
@@ -178,7 +159,8 @@
                 </StackPanel>
             </Grid>
 
-             <Grid Grid.Row="1">
+            <!-- MAIN CONTENT AREA -->
+            <Grid Grid.Row="1">
 
                 <!-- Background Gradient -->
                 <Rectangle>
@@ -190,7 +172,7 @@
                     </Rectangle.Fill>
                 </Rectangle>
 
-                <!-- Analytics Back Button -->
+                <!-- BACK BUTTON  -->
                 <Button HorizontalAlignment="Left" VerticalAlignment="Top" Margin="40,30,0,0" Height="36" Padding="15,0" Cursor="Hand" Click="BtnBack_Click" Width="83">
                     <Button.Style>
                         <Style TargetType="Button">
@@ -218,43 +200,47 @@
                     </StackPanel>
                 </Button>
 
-               
-                <!-- EXPORT FORMS CONTAINER  -->
-                
-                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0">
+                <!--  SIDE-BY-SIDE CARD LAYOUT  -->
+                <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="400"/>
+                        <!-- Card 1 Width -->
+                        <ColumnDefinition Width="60"/>
+                        <!-- Spacing between cards -->
+                        <ColumnDefinition Width="400"/>
+                        <!-- Card 2 Width -->
+                    </Grid.ColumnDefinitions>
 
-                    <!-- PARSED DATA SECTION -->
-                    <Grid Margin="0,0,0,60">
-                        <Grid.ColumnDefinitions>
-                            <!-- Fixed width for proper left-side alignment of headings -->
-                            <ColumnDefinition Width="280"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
+                    <!--  CARD 1: EXPORT PARSED DATA  -->
+                    <Border Grid.Column="0" Background="#141A21" CornerRadius="12" Padding="40" BorderBrush="#1E262E" BorderThickness="1">
+                        <!-- Drop Shadow for 3D floating effect -->
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="30" Color="Black" Opacity="0.4" ShadowDepth="10"/>
+                        </Border.Effect>
 
-                        <!-- Heading -->
-                        <TextBlock Grid.Column="0" Text="Export Parsed Data" Foreground="White" FontSize="22" FontWeight="Bold" VerticalAlignment="Top" Margin="0,8,0,0"/>
+                        <StackPanel>
+                            <!-- Card Heading -->
+                            <TextBlock Text="Export Parsed Data" Foreground="White" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,30"/>
 
-                        <!-- Form Area -->
-                        <StackPanel Grid.Column="1">
-                            <!-- Inputs Row -->
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
-                                <TextBlock Text="Select Date Range" Foreground="White" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center" Width="140"/>
+                            <!-- Input Label -->
+                            <TextBlock Text="Select Date Range" Foreground="#788896" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,10"/>
 
-                                <ComboBox Width="170" Margin="0,0,15,0" SelectedIndex="0">
-                                    <ComboBoxItem Content="Start Date" />
-                                    <ComboBoxItem Content="2026-05-01" />
-                                    <ComboBoxItem Content="2026-06-01" />
-                                </ComboBox>
+                            <!-- Start Date Combo -->
+                            <ComboBox Height="45" Margin="0,0,0,15" SelectedIndex="0">
+                                <ComboBoxItem Content="Start Date" />
+                                <ComboBoxItem Content="2026-05-01" />
+                                <ComboBoxItem Content="2026-06-01" />
+                            </ComboBox>
 
-                                <ComboBox Width="170" SelectedIndex="0">
-                                    <ComboBoxItem Content="End Date" />
-                                    <ComboBoxItem Content="2026-05-31" />
-                                    <ComboBoxItem Content="2026-06-30" />
-                                </ComboBox>
-                            </StackPanel>
+                            <!-- End Date Combo -->
+                            <ComboBox Height="45" Margin="0,0,0,40" SelectedIndex="0">
+                                <ComboBoxItem Content="End Date" />
+                                <ComboBoxItem Content="2026-05-31" />
+                                <ComboBoxItem Content="2026-06-30" />
+                            </ComboBox>
 
-                            <!-- Export Button -->
-                            <Button Content="Export" Width="495" Height="45" FontSize="14" FontWeight="Bold" Foreground="#0B0F13" Cursor="Hand" HorizontalAlignment="Left">
+                            <!-- Export Button for Parsed Data -->
+                            <Button Content="Export Data" Height="48" FontSize="14" FontWeight="Bold" Foreground="#0B0F13" Cursor="Hand" HorizontalAlignment="Stretch">
                                 <Button.Style>
                                     <Style TargetType="Button">
                                         <Setter Property="Background" Value="#00C896"/>
@@ -276,34 +262,31 @@
                                 </Button.Style>
                             </Button>
                         </StackPanel>
-                    </Grid>
+                    </Border>
 
-                    <!-- ANALYTICS SECTION -->
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <!-- Matching column width ensures vertical alignment with the section above -->
-                            <ColumnDefinition Width="280"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
+                    <!-- CARD 2: EXPORT ANALYTICS  -->
+                    <Border Grid.Column="2" Background="#141A21" CornerRadius="12" Padding="40" BorderBrush="#1E262E" BorderThickness="1">
+                        <!-- Drop Shadow for 3D floating effect -->
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="30" Color="Black" Opacity="0.4" ShadowDepth="10"/>
+                        </Border.Effect>
 
-                        <!-- Heading -->
-                        <TextBlock Grid.Column="0" Text="Export Analytics" Foreground="White" FontSize="22" FontWeight="Bold" VerticalAlignment="Top" Margin="0,8,0,0"/>
+                        <StackPanel>
+                            <!-- Card Heading -->
+                            <TextBlock Text="Export Analytics" Foreground="White" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,30"/>
 
-                        <!-- Form Area -->
-                        <StackPanel Grid.Column="1">
-                            <!-- Inputs Row -->
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
-                                <TextBlock Text="Select Report Title" Foreground="White" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center" Width="140"/>
+                            <!-- Input Label -->
+                            <TextBlock Text="Select Report Title" Foreground="#788896" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,10"/>
 
-                                <ComboBox Width="170" SelectedIndex="0">
-                                    <ComboBoxItem Content="&lt;TITLE 01&gt;" />
-                                    <ComboBoxItem Content="Monthly Sales" />
-                                    <ComboBoxItem Content="Annual Revenue" />
-                                </ComboBox>
-                            </StackPanel>
+                            <!-- Title Combo (Margin bottom is 100 to vertically align the export button with Card 1) -->
+                            <ComboBox Height="45" Margin="0,0,0,100" SelectedIndex="0">
+                                <ComboBoxItem Content="&lt;TITLE 01&gt;" />
+                                <ComboBoxItem Content="Monthly Sales" />
+                                <ComboBoxItem Content="Annual Revenue" />
+                            </ComboBox>
 
-                            <!-- Export Button -->
-                            <Button Content="Export" Width="495" Height="45" FontSize="14" FontWeight="Bold" Foreground="#0B0F13" Cursor="Hand" HorizontalAlignment="Left">
+                            <!-- Export Button for Analytics -->
+                            <Button Content="Export Report" Height="48" FontSize="14" FontWeight="Bold" Foreground="#0B0F13" Cursor="Hand" HorizontalAlignment="Stretch">
                                 <Button.Style>
                                     <Style TargetType="Button">
                                         <Setter Property="Background" Value="#00C896"/>
@@ -325,8 +308,9 @@
                                 </Button.Style>
                             </Button>
                         </StackPanel>
-                    </Grid>
-                </StackPanel>
+                    </Border>
+                </Grid>
+
             </Grid>
         </Grid>
     </Border>
