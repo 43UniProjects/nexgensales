@@ -1,8 +1,10 @@
-﻿using NextGenSales.Views;
 using System.Windows;
 using System.Windows.Input;
+using NextGenSales.Core;
+using NextGenSales.Services;
+using NextGenSales.ViewModels;
 
-namespace nexgensales.Views
+namespace NextGenSales.Views
 {
     public partial class ProcessView : Window
     {
@@ -46,7 +48,6 @@ namespace nexgensales.Views
             this.Close();
         }
 
-        
         private void BtnExports_Click(object sender, RoutedEventArgs e)
         {
             ExportView exportWindow = new ExportView();
@@ -58,6 +59,25 @@ namespace nexgensales.Views
         private void BtnClose_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        /// <summary>
+        /// Opens the Analytics Dashboard as a modal dialog.
+        /// The ProcessView is blocked (ShowDialog) until the dashboard is closed.
+        /// </summary>
+        private void BtnRunAnalysis_Click(object sender, RoutedEventArgs e)
+        {
+            var service   = new SalesAnalysisService(new MockDataRepository());
+            var vm        = new AnalyticsDashboardViewModel(service);
+            var dashboard = new AnalyticsDashboardView
+            {
+                DataContext = vm,
+                Owner       = this   // ties the modal to ProcessView
+            };
+
+            // ShowDialog() gives the dashboard exclusive focus and blocks
+            // all interaction with this window until the dashboard is closed.
+            dashboard.ShowDialog();
         }
     }
 }
