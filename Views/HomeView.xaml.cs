@@ -1,4 +1,4 @@
-﻿using nexgensales.Views;
+﻿using NextGenSales.Views;
 using System.Windows;
 using System.Windows.Input;
 
