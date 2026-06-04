@@ -9,13 +9,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ClosedXML" Version="0.105.0" />
-    <PackageReference Include="Dapper" Version="2.1.79" />
-    <PackageReference Include="ExcelDataReader" Version="3.8.0" />
-    <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.4" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.8" />
-    <PackageReference Include="QuestPDF" Version="2026.5.0" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="10.0.8" />
+    <None Remove="assets\home\analys.png" />
+    <None Remove="assets\home\done.png" />
+    <None Remove="assets\home\import.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="assets\home\analys.png" />
+    <Resource Include="assets\home\done.png" />
+    <Resource Include="assets\home\import.png" />
   </ItemGroup>
 
 </Project>
