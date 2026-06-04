@@ -10,7 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace nexgensales.Views
+namespace NextGenSales.Views
 {
     /// <summary>
     /// Interaction logic for Window1.xaml
