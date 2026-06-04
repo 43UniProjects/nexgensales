@@ -67,9 +67,7 @@ namespace nexgensales.ViewModels
             MessageBox.Show("Navigating to Register Window...", "Navigation", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        // ====================================================================
-        // INotifyPropertyChanged Implementation for UI updates
-        // ====================================================================
+        
 
         public event PropertyChangedEventHandler PropertyChanged;
 
