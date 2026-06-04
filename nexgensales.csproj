@@ -8,4 +8,16 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="assets\home\analys.png" />
+    <None Remove="assets\home\done.png" />
+    <None Remove="assets\home\import.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="assets\home\analys.png" />
+    <Resource Include="assets\home\done.png" />
+    <Resource Include="assets\home\import.png" />
+  </ItemGroup>
+
 </Project>
