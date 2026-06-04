@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using nexgensales.Views;
+using System.Windows;
 using System.Windows.Input;
 
 namespace NextGenSales.Views
@@ -47,8 +48,12 @@ namespace NextGenSales.Views
         // Top Right Goto Process Button
         private void BtnGotoProcess_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: Navigate to the next view (e.g., ExportView or AnalyticsView)
-            MessageBox.Show("Navigating to Process...", "Navigation", MessageBoxButton.OK, MessageBoxImage.Information);
+            
+            ProcessView processWindow = new ProcessView();
+            processWindow.Show();
+
+            
+            this.Close();
         }
     }
 }

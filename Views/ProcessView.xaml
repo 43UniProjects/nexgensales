@@ -198,7 +198,7 @@
                     <!-- TOP NAVIGATION BAR -->
                     <Grid Grid.Row="0" Margin="0,0,0,25">
                         <!-- Navigate Back to Home -->
-                        <Button Content="&#x276E;  Home" HorizontalAlignment="Left" Width="130" Height="40" FontSize="13" Foreground="#0B0F13" Cursor="Hand">
+                        <Button Content="&#x276E;  Home" Click="BtnHome_Click" HorizontalAlignment="Left" Width="130" Height="40" FontSize="13" Foreground="#0B0F13" Cursor="Hand">
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <Setter Property="Background" Value="#00C896"/>
@@ -222,7 +222,7 @@
                         </Button>
 
                         <!-- Navigate Forward to Exports -->
-                        <Button Content="Exports  &#x276F;" HorizontalAlignment="Right" Width="130" Height="40" FontSize="13" Foreground="#0B0F13" Cursor="Hand">
+                        <Button Content="Exports  &#x276F;" HorizontalAlignment="Right" Click="BtnExports_Click" Width="130" Height="40" FontSize="13" Foreground="#0B0F13" Cursor="Hand">
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <Setter Property="Background" Value="#00C896"/>

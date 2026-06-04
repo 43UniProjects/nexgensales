@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using NextGenSales.Views;
+using System.Windows;
 using System.Windows.Input;
 
 namespace nexgensales.Views
@@ -36,6 +37,21 @@ namespace nexgensales.Views
             {
                 this.WindowState = WindowState.Normal;
             }
+        }
+
+        private void BtnHome_Click(object sender, RoutedEventArgs e)
+        {
+            HomeView homeWindow = new HomeView();
+            homeWindow.Show();
+            this.Close();
+        }
+
+        
+        private void BtnExports_Click(object sender, RoutedEventArgs e)
+        {
+            ExportView exportWindow = new ExportView();
+            exportWindow.Show();
+            this.Close();
         }
 
         // Close Button Logic
