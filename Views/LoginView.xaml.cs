@@ -43,5 +43,15 @@ namespace nexgensales.Views
         {
             Application.Current.Shutdown();
         }
+
+        // Updates the ViewModel when the password changes (Since PasswordBox doesn't support direct data binding)
+        private void txtPassword_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (this.DataContext != null)
+            {
+                var viewModel = (ViewModels.LoginViewModel)this.DataContext;
+                viewModel.Password = txtPassword.Password;
+            }
+        }
     }
 }
