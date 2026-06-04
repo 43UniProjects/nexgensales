@@ -1,12 +1,19 @@
 ﻿<Window x:Class="NextGenSales.Views.LoginView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:nexgensales.ViewModels"
         Title="NexGenSales - Login" Height="700" Width="1000"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None" 
         AllowsTransparency="True" 
         Background="Transparent"
         ResizeMode="CanResize">
+
+
+    <Window.DataContext>
+        <vm:LoginViewModel />
+    </Window.DataContext>
+
 
     <!-- Main border to maintain rounded corners across the application -->
     <Border Background="#0B0F13" CornerRadius="12">
@@ -151,7 +158,7 @@
 
                             <!-- Username input field -->
                             <TextBlock Text="USERNAME" FontSize="11" FontWeight="Bold" Foreground="#687A8C" Margin="0,0,0,8"/>
-                            <TextBox Height="45" FontSize="14" Foreground="White" Background="#1E262E" BorderThickness="1" BorderBrush="#2D3A46" Padding="15,0" VerticalContentAlignment="Center" Margin="0,0,0,18">
+                            <TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" Height="45" FontSize="14" Foreground="White" Background="#1E262E" BorderThickness="1" BorderBrush="#2D3A46" Padding="15,0" VerticalContentAlignment="Center" Margin="0,0,0,18">
                                 <TextBox.Resources>
                                     <Style TargetType="Border">
                                         <Setter Property="CornerRadius" Value="6"/>
@@ -161,7 +168,7 @@
 
                             <!-- Password input field -->
                             <TextBlock Text="PASSWORD" FontSize="11" FontWeight="Bold" Foreground="#687A8C" Margin="0,0,0,8"/>
-                            <PasswordBox Height="45" FontSize="14" Foreground="White" Background="#1E262E" BorderThickness="1" BorderBrush="#2D3A46" Padding="15,0" VerticalContentAlignment="Center" Margin="0,0,0,10">
+                            <PasswordBox x:Name="txtPassword" PasswordChanged="txtPassword_PasswordChanged" Height="45" FontSize="14" Foreground="White" Background="#1E262E" BorderThickness="1" BorderBrush="#2D3A46" Padding="15,0" VerticalContentAlignment="Center" Margin="0,0,0,10">
                                 <PasswordBox.Resources>
                                     <Style TargetType="Border">
                                         <Setter Property="CornerRadius" Value="6"/>
@@ -183,7 +190,7 @@
                             </TextBlock>
 
                             <!-- Primary login execution button -->
-                            <Button Content="LOGIN" Height="48" FontSize="14" FontWeight="Bold" Foreground="White" Cursor="Hand" Margin="0,0,0,15">
+                            <Button Command="{Binding LoginCommand}" Content="LOGIN" Height="48" FontSize="14" FontWeight="Bold" Foreground="White" Cursor="Hand" Margin="0,0,0,15">
                                 <Button.Style>
                                     <Style TargetType="Button">
                                         <Setter Property="Background" Value="#00C896"/>
@@ -206,7 +213,7 @@
                             </Button>
 
                             <!-- Secondary registration button (Ghost style) -->
-                            <Button Content="CREATE NEW ACCOUNT" Height="48" FontSize="13" FontWeight="Bold" Foreground="#00C896" Cursor="Hand">
+                            <Button Command="{Binding NavigateRegisterCommand}" Content="CREATE NEW ACCOUNT" Height="48" FontSize="13" FontWeight="Bold" Foreground="#00C896" Cursor="Hand">
                                 <Button.Style>
                                     <Style TargetType="Button">
                                         <Setter Property="Background" Value="Transparent"/>
