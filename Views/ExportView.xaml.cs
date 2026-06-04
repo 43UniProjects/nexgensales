@@ -1,18 +1,16 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 
-using nexgensales.ViewModels;
-
-namespace NextGenSales.Views
+namespace nexgensales.Views
 {
-    public partial class LoginView : Window
+    public partial class ExportView : Window
     {
-        public LoginView()
+        public ExportView()
         {
             InitializeComponent();
         }
 
-        // Enables the user to drag and move the application window via the custom title bar
+        // Handles window dragging via the custom title bar
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
@@ -21,13 +19,13 @@ namespace NextGenSales.Views
             }
         }
 
-        // Handles the click event to minimize the application window to the taskbar
+        // Minimizes the window to the taskbar
         private void BtnMinimize_Click(object sender, RoutedEventArgs e)
         {
             this.WindowState = WindowState.Minimized;
         }
 
-        // Toggles the application window state between maximized (full screen) and normal (restored)
+        // Toggles the window state between maximized and normal
         private void BtnMaximize_Click(object sender, RoutedEventArgs e)
         {
             if (this.WindowState == WindowState.Normal)
@@ -40,20 +38,17 @@ namespace NextGenSales.Views
             }
         }
 
-        // Handles the click event to safely terminate and close the application
+        // Safely terminates the application or closes the window
         private void BtnClose_Click(object sender, RoutedEventArgs e)
         {
-            Application.Current.Shutdown();
+            this.Close(); // Used Close() instead of Shutdown() in case it's a child window
         }
 
-        // Updates the ViewModel when the password changes (Since PasswordBox doesn't support direct data binding)
-        private void txtPassword_PasswordChanged(object sender, RoutedEventArgs e)
+        // Handles the navigation back to the Analytics Dashboard
+        private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
-            if (this.DataContext != null)
-            {
-                var viewModel = (LoginViewModel)this.DataContext;
-                viewModel.Password = txtPassword.Password;
-            }
+            // TODO: Navigate to AnalyticsView
+            MessageBox.Show("Navigating back to Analytics Dashboard...", "Navigation", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }

@@ -1,0 +1,245 @@
+﻿<Window x:Class="nexgensales.Views.ProcessView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:nexgensales.Views"
+        mc:Ignorable="d"
+        Title="NexGenSales - Process" Height="700" Width="1100"
+        WindowStartupLocation="CenterScreen" MinHeight="600" MinWidth="900"
+        FontFamily="Segoe UI">
+
+
+    <!-- WINDOW BACKGROUND DESIGN -->
+    <!-- Defines the primary dark-green linear gradient background for NexGenSales identity -->
+    <Window.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#0D2C2A" Offset="0.0" />
+            <GradientStop Color="#164A41" Offset="0.5" />
+            <GradientStop Color="#0B201F" Offset="1.0" />
+        </LinearGradientBrush>
+    </Window.Background>
+
+
+    <!-- MAIN GRID LAYOUT -->
+    <!-- Splits the entire window into 4 main rows: Navigation, Title, DataGrid, and Actions -->
+    <Grid Margin="30">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Row 0: Navigation Buttons Grid -->
+            <RowDefinition Height="Auto"/>
+            <!-- Row 1: Header Labels StackPanel -->
+            <RowDefinition Height="*"/>
+            <!-- Row 2: Main DataGrid (Takes up remaining dynamic space) -->
+            <RowDefinition Height="Auto"/>
+            <!-- Row 3: Filter & Analysis Grid Area -->
+        </Grid.RowDefinitions>
+
+        <!-- ROW 0: TOP NAVIGATION CONTROLS -->
+        <!-- Contains redirect buttons to jump between different views in the workflow -->
+        <Grid Grid.Row="0" Margin="0,0,0,30">
+            <!-- Back Button to Home Interface -->
+            <Button Content="&#x276E;  Goto Home" HorizontalAlignment="Left" Width="120" Height="40" 
+                    Background="#00C896" Foreground="#17202A" FontWeight="Bold" Cursor="Hand" BorderThickness="0">
+                <Button.Resources>
+                    <!-- Overrides the default Button border style to apply a CornerRadius of 8 -->
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="8"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
+
+            <!-- Forward Button to Exports Interface -->
+            <Button Content="Goto Exports  &#x276F;" HorizontalAlignment="Right" Width="130" Height="40" 
+                    Background="#00C896" Foreground="#17202A" FontWeight="Bold" Cursor="Hand" BorderThickness="0">
+                <Button.Resources>
+                    <!-- Overrides the default Button border style to apply a CornerRadius of 8 -->
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="8"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
+        </Grid>
+
+        <!-- ROW 1: VIEW TITLE AND CONTEXT HEADER -->
+        <!-- Renders static page titles to give navigation context to the developer/user -->
+        <StackPanel Grid.Row="1" Margin="0,0,0,10">
+            <TextBlock Text="Record Log" FontSize="26" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,5"/>
+        </StackPanel>
+
+        <!-- ROW 2: DATAGRID COMPONENT (THE MAIN LOG TABLE) -->
+        <!-- Customized tabular display configured with dark styles and row selection logic -->
+        <DataGrid Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True" 
+          Background="#141A21" RowBackground="#1E262E" AlternatingRowBackground="#141A21"
+          Foreground="White" BorderBrush="#2D3A46" BorderThickness="2"
+          GridLinesVisibility="All" HorizontalGridLinesBrush="#2D3A46" VerticalGridLinesBrush="#2D3A46"
+          HeadersVisibility="Column" RowHeight="45" Margin="0,0,0,40"
+          SelectionMode="Single" SelectionUnit="FullRow"
+          HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionChanged="DataGrid_SelectionChanged">
+
+            <!-- COLUMN HEADERS STYLING -->
+            <!-- Configures header cells background color, text padding, and force center-aligns the text -->
+            <DataGrid.ColumnHeaderStyle>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Background" Value="#141A21"/>
+                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                    <Setter Property="Padding" Value="15,0"/>
+                    <Setter Property="Height" Value="45"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <Setter Property="FontSize" Value="13"/>
+                    <Setter Property="BorderBrush" Value="#2D3A46"/>
+                    <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    <!-- Centers column titles -->
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
+
+            <!-- ROW MOUSE HOVER & ACTIVE SELECTION STYLING -->
+            <!-- Triggers runtime color updates based on mouse interaction and active row index selections -->
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Style.Triggers>
+                        <!-- Hover trigger: changes row background color when mouse cursor is placed over it -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#252F39"/>
+                        </Trigger>
+                        <!-- Selection trigger: changes row background color when row is actively clicked/selected -->
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="#002A1F"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+
+            <!-- CELL DESIGN AND SELECTION FOREGROUND (TEXT) HIGHLIGHT -->
+            <!-- Adjusts inner cell text margins and converts selected cell text color to corporate green -->
+            <DataGrid.CellStyle>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="Padding" Value="15,0"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                    <!-- Disables default Windows dotted focus borders -->
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="DataGridCell">
+                                <Border Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" BorderThickness="0">
+                                    <ContentPresenter VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <!-- Changes cell text foreground to corporate green when the respective row index is active -->
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Foreground" Value="#00C896"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.CellStyle>
+
+            <!-- DATA COLUMNS STRUCTURAL LAYOUT -->
+            <!-- Maps properties of data objects to specific table columns. Uses responsive star sizing (*) -->
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Record ID" Binding="{Binding RecordID}" Width="1*"/>
+                <DataGridTextColumn Header="Record Date" Binding="{Binding RecordDate}" Width="1.5*"/>
+                <DataGridTextColumn Header="Upload Date" Binding="{Binding UploadDate}" Width="1.5*"/>
+                <DataGridTextColumn Header="Process State" Binding="{Binding ProcessState}" Width="1.5*"/>
+                <DataGridTextColumn Header="Record Type" Binding="{Binding RecordType}" Width="2*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- ROW 3: REVENUE ANALYSIS AND FILTER INTERFACE -->
+        <!-- Houses filter configurations and the primary submit button for computations -->
+        <Grid Grid.Row="3" Margin="0,10,0,10">
+            <!-- Left-Aligned SubSection Header Title -->
+            <TextBlock Text="Analyse Records" FontSize="20" FontWeight="Bold" Foreground="#FFFFFF" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+            <!-- Centered Layout Alignment Container for ComboBox + Button controls -->
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,50,0,0">
+
+                <!-- Horizontal Filter Wrapper: Combines Text Label and Custom Dropdown Combo -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20">
+                    <TextBlock Text="Select Date Range" FontSize="18" FontWeight="Bold" Foreground="#FFFFFF" VerticalAlignment="Center" Margin="0,0,20,0"/>
+
+                    <!-- CUSTOM STYLE COMBOBOX INTERACTION LAYER -->
+                    <!-- Completely overrides standard Win32 dropdown templates with modern UX design specifications -->
+                    <ComboBox Width="220" Height="45" SelectedIndex="0" Foreground="#FFFFFF" BorderThickness="0" Cursor="Hand" SelectionChanged="ComboBox_SelectionChanged_1">
+                        <ComboBox.Template>
+                            <ControlTemplate TargetType="ComboBox">
+                                <Grid>
+                                    <!-- Visual Base/Border Layer of the ComboBox control -->
+                                    <Border Background="#1C2631" BorderBrush="#3B4758" BorderThickness="1" CornerRadius="8">
+                                        <!-- Adds an directional premium drop shadow offset to the bottom-right corner -->
+                                        <Border.Effect>
+                                            <DropShadowEffect BlurRadius="5" Color="#00C896" Opacity="0.3" Direction="30" ShadowDepth="4"/>
+                                        </Border.Effect>
+                                    </Border>
+
+                                    <!-- Invisible ToggleButton that serves as click capturing trigger for the popup context menu -->
+                                    <ToggleButton x:Name="ToggleButton" BorderThickness="0" Background="Transparent" Focusable="false" 
+                                                  IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press">
+                                        <ToggleButton.Template>
+                                            <ControlTemplate TargetType="ToggleButton">
+                                                <Border Background="Transparent" CornerRadius="8">
+                                                    <!-- Path geometry constructing the customized corporate green dropdown arrow vector -->
+                                                    <Path x:Name="Arrow" Data="M0,0 L5,5 L10,0 Z" Fill="#00C896" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,15,0"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </ToggleButton.Template>
+                                    </ToggleButton>
+
+                                    <!-- Content presenter block for displaying the currently chosen text item on the main collapsed UI -->
+                                    <ContentPresenter IsHitTestVisible="false" Margin="15,0,30,0" VerticalAlignment="Center" HorizontalAlignment="Left" Content="{TemplateBinding SelectionBoxItem}"/>
+
+                                    <!-- Floating Popup container listing the executable filter items array -->
+                                    <Popup x:Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
+                                        <Border x:Name="DropDownBorder" Background="#222A35" BorderBrush="#3B4758" BorderThickness="1" CornerRadius="4" Margin="0,2,0,0" MinWidth="{TemplateBinding ActualWidth}">
+                                            <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                                <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                            </ScrollViewer>
+                                        </Border>
+                                    </Popup>
+                                </Grid>
+                            </ControlTemplate>
+                        </ComboBox.Template>
+
+                        <!-- Static Combo Options Menu Array -->
+                        <ComboBoxItem Content="1 Week" Foreground="White"/>
+                        <ComboBoxItem Content="1 Month" Foreground="White"/>
+                        <ComboBoxItem Content="3 Months" Foreground="White"/>
+                        <ComboBoxItem Content="6 Months" Foreground="White"/>
+                        <ComboBoxItem Content="9 Months" Foreground="White"/>
+                        <ComboBoxItem Content="1 Year" Foreground="White"/>
+                    </ComboBox>
+                </StackPanel>
+
+                <!-- MAIN EXECUTION SUBMIT BUTTON -->
+                <!-- Core execution button styled with custom mouse hover triggers and fixed CornerRadius tracking -->
+                <Button Content="Analyse" Width="350" Height="45" 
+                        Background="#00C896" Foreground="#17202A" FontSize="16" FontWeight="Bold" Cursor="Hand" BorderThickness="0">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <!-- Custom ControlTemplate to strip out old system defaults and provide rounded layouts -->
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <!-- Interactive Hover state trigger: slightly deepens green accent color when cursor moves inside layout limits -->
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#00A87D"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
