@@ -1,8 +1,8 @@
 using System;
+using DayOrder.Services.Data;
 using Microsoft.Data.Sqlite;
 
 using NexGenSales.Models;
-using DayOrder.Services.Data;
 
 namespace NexGenSales.Services.Data;
 

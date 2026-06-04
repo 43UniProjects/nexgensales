@@ -1,6 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 
+using nexgensales.ViewModels;
+
 namespace NextGenSales.Views
 {
     public partial class LoginView : Window
@@ -49,7 +51,7 @@ namespace NextGenSales.Views
         {
             if (this.DataContext != null)
             {
-                var viewModel = (ViewModels.LoginViewModel)this.DataContext;
+                var viewModel = (LoginViewModel)this.DataContext;
                 viewModel.Password = txtPassword.Password;
             }
         }
