@@ -9,7 +9,9 @@
         ResizeMode="CanResize"
         MinHeight="600" MinWidth="900">
 
-    <Window.Resources>
+   <Window.Resources>
+
+        <!-- Custom Style for ComboBox: Applies a dark theme with rounded corners -->
         <Style TargetType="ComboBox">
             <Setter Property="Background" Value="#1C2127"/>
             <Setter Property="Foreground" Value="#D3D9E0"/>
@@ -27,12 +29,15 @@
                                 <ToggleButton.Template>
                                     <ControlTemplate TargetType="ToggleButton">
                                         <Border Background="Transparent">
+                                            <!-- Custom Dropdown Arrow -->
                                             <Path Data="M 0 0 L 4 4 L 8 0 Z" Fill="#00C896" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,15,0"/>
                                         </Border>
                                     </ControlTemplate>
                                 </ToggleButton.Template>
                             </ToggleButton>
                             <ContentPresenter Name="ContentSite" IsHitTestVisible="False" Content="{TemplateBinding SelectionBoxItem}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" HorizontalAlignment="Left"/>
+
+                            <!-- Dropdown Popup Configuration -->
                             <Popup Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
                                 <Border Background="#141A21" BorderBrush="#2D3A46" BorderThickness="1" CornerRadius="6" Margin="0,4,0,0" Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}">
                                     <ScrollViewer Margin="0,5">
@@ -46,6 +51,7 @@
             </Setter>
         </Style>
 
+        <!-- Custom Style for ComboBox Items: Handles hover and selection states -->
         <Style TargetType="ComboBoxItem">
             <Setter Property="Foreground" Value="#A0ABB5"/>
             <Setter Property="Padding" Value="15,10"/>
@@ -71,20 +77,30 @@
         </Style>
     </Window.Resources>
 
+    <!-- ============================================================================== -->
+    <!-- MAIN WINDOW LAYOUT: Custom border acts as the primary container                -->
+    <!-- ============================================================================== -->
     <Border Background="#0B0F13" CornerRadius="12">
         <Grid>
             <Grid.RowDefinitions>
+                <!-- Row 0: Custom Title Bar -->
                 <RowDefinition Height="35"/>
+                <!-- Row 1: Main Content Area -->
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0" Background="Transparent" MouseLeftButtonDown="Window_MouseDown">
+
+                <!-- Application Icon and Title -->
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0,0,0">
                     <TextBlock Text="💼" Foreground="#00C896" FontSize="14" Margin="0,0,8,0" VerticalAlignment="Center"/>
                     <TextBlock Text="NexGenSales - Dashboard" Foreground="#788896" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"/>
                 </StackPanel>
 
+                <!-- Window Control Buttons (Minimize, Maximize, Close) -->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+
+                    <!-- Minimize Button -->
                     <Button Width="45" Height="35" Content="—" FontSize="12" Foreground="#788896" Background="Transparent" BorderThickness="0" Cursor="Hand" Click="BtnMinimize_Click">
                         <Button.Style>
                             <Style TargetType="Button">
@@ -106,6 +122,8 @@
                             </Style>
                         </Button.Style>
                     </Button>
+
+                    <!-- Maximize Button -->
                     <Button Width="45" Height="35" Content="☐" FontSize="14" Foreground="#788896" Background="Transparent" BorderThickness="0" Cursor="Hand" Click="BtnMaximize_Click">
                         <Button.Style>
                             <Style TargetType="Button">
@@ -127,6 +145,8 @@
                             </Style>
                         </Button.Style>
                     </Button>
+
+                    <!-- Close Button -->
                     <Button Width="45" Height="35" Content="✕" FontSize="14" Foreground="#788896" Background="Transparent" BorderThickness="0" Cursor="Hand" Click="BtnClose_Click">
                         <Button.Style>
                             <Style TargetType="Button">
@@ -151,8 +171,9 @@
                 </StackPanel>
             </Grid>
 
-            <Grid Grid.Row="1">
+             <Grid Grid.Row="1">
 
+                <!-- Background Gradient Effect -->
                 <Rectangle>
                     <Rectangle.Fill>
                         <RadialGradientBrush Center="0.5,0.5" RadiusX="0.8" RadiusY="0.8">
@@ -165,13 +186,18 @@
                 <Grid Margin="30">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
+                        <!-- Top Action Buttons -->
                         <RowDefinition Height="Auto"/>
+                        <!-- Welcome Header -->
                         <RowDefinition Height="*"/>
+                        <!-- Workflow Cards (Center) -->
                         <RowDefinition Height="Auto"/>
+                        <!-- Bottom Import Controls -->
                     </Grid.RowDefinitions>
 
+                    <!-- Top Right Action: Process Button -->
                     <Grid Grid.Row="0">
-                        <Button Content="Process &#x276F;" HorizontalAlignment="Left" Padding="15,8" Height="36" Cursor="Hand" Click="BtnGotoProcess_Click" Margin="957,0,0,0" Width="83">
+                        <Button Content="Process &#x276F;" HorizontalAlignment="Left" Padding="15,8" Height="36" Cursor="Hand" Click="BtnGotoProcess_Click" Margin="954,0,0,0" Width="86">
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <Setter Property="Background" Value="#00C896"/>
@@ -196,10 +222,15 @@
                         </Button>
                     </Grid>
 
+                    <!-- Welcome Header -->
                     <TextBlock Grid.Row="1" Text="Welcome to NexGenSales" Foreground="White" FontSize="26" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,30,0,0"/>
 
+                    <!-- ============================================================== -->
+                    <!-- WORKFLOW VISUALIZATION CARDS                                   -->
+                    <!-- ============================================================== -->
                     <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
 
+                        <!-- Card 1: Import Records -->
                         <Border Width="190" Height="250" Background="#141A21" BorderBrush="#1E262E" BorderThickness="1" CornerRadius="16" Margin="0,0,30,0">
                             <Border.Effect>
                                 <DropShadowEffect BlurRadius="25" Color="Black" Opacity="0.4" ShadowDepth="8"/>
@@ -211,8 +242,10 @@
                             </StackPanel>
                         </Border>
 
+                        <!-- Directional Arrow -->
                         <TextBlock Text="»" FontSize="50" Foreground="#00C896" VerticalAlignment="Center" Margin="0,0,30,0" Opacity="0.5"/>
 
+                        <!-- Card 2: Run Analysis -->
                         <Border Width="190" Height="250" Background="#141A21" BorderBrush="#1E262E" BorderThickness="1" CornerRadius="16" Margin="0,0,30,0">
                             <Border.Effect>
                                 <DropShadowEffect BlurRadius="25" Color="Black" Opacity="0.4" ShadowDepth="8"/>
@@ -224,8 +257,10 @@
                             </StackPanel>
                         </Border>
 
+                        <!-- Directional Arrow -->
                         <TextBlock Text="»" FontSize="50" Foreground="#00C896" VerticalAlignment="Center" Margin="0,0,30,0" Opacity="0.5"/>
 
+                        <!-- Card 3: Done / Completion -->
                         <Border Width="190" Height="250" Background="#141A21" BorderBrush="#1E262E" BorderThickness="1" CornerRadius="16">
                             <Border.Effect>
                                 <DropShadowEffect BlurRadius="25" Color="Black" Opacity="0.4" ShadowDepth="8"/>
@@ -238,8 +273,12 @@
 
                     </StackPanel>
 
+                    <!-- ============================================================== -->
+                    <!-- BOTTOM SECTION: IMPORT CONTROLS                                -->
+                    <!-- ============================================================== -->
                     <StackPanel Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,20">
 
+                        <!-- Record Type Selection -->
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20">
                             <TextBlock Text="Select Record Type" Foreground="#788896" FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,20,0"/>
 
@@ -249,6 +288,7 @@
                             </ComboBox>
                         </StackPanel>
 
+                        <!-- Primary Action: Import Record Button -->
                         <Button Content="Import Record" Width="430" Height="48" FontSize="15" FontWeight="Bold" Foreground="#0B0F13" Cursor="Hand">
                             <Button.Style>
                                 <Style TargetType="Button">
@@ -277,4 +317,4 @@
             </Grid>
         </Grid>
     </Border>
-</Window>  
+</Window>
