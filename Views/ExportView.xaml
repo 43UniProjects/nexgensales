@@ -3,14 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="NexGenSales - Export" Height="750" Width="1100"
         WindowStartupLocation="CenterScreen"
-        WindowStyle="None" 
-        AllowsTransparency="True" 
-        Background="Transparent"
-        ResizeMode="CanResize">
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent" ResizeMode="CanResize">
 
-    
+    <!-- GLOBAL RESOURCES: Custom dark theme styles for ComboBox controls -->
     <Window.Resources>
-        <!-- Custom ComboBox style -->
+        <!-- Standardized ComboBox Style -->
         <Style TargetType="ComboBox">
             <Setter Property="Background" Value="#1C2127"/>
             <Setter Property="Foreground" Value="#D3D9E0"/>
@@ -22,9 +19,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="ComboBox">
                         <Grid>
-                            <!-- Dropdown Border -->
                             <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6"/>
-                            <!-- Toggle Button with Custom Teal Arrow -->
                             <ToggleButton Name="ToggleButton" BorderThickness="0" Background="Transparent" Focusable="false" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
                                 <ToggleButton.Template>
                                     <ControlTemplate TargetType="ToggleButton">
@@ -34,9 +29,7 @@
                                     </ControlTemplate>
                                 </ToggleButton.Template>
                             </ToggleButton>
-                            <!-- Selected Item Content -->
                             <ContentPresenter Name="ContentSite" IsHitTestVisible="False" Content="{TemplateBinding SelectionBoxItem}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" HorizontalAlignment="Left"/>
-                            <!-- Dropdown List Popup -->
                             <Popup Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
                                 <Border Background="#141A21" BorderBrush="#2D3A46" BorderThickness="1" CornerRadius="6" Margin="0,4,0,0" Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}">
                                     <ScrollViewer Margin="0,5">
@@ -50,7 +43,7 @@
             </Setter>
         </Style>
 
-        <!-- Custom ComboBoxItem style -->
+        <!-- Standardized ComboBoxItem Style -->
         <Style TargetType="ComboBoxItem">
             <Setter Property="Foreground" Value="#A0ABB5"/>
             <Setter Property="Padding" Value="15,10"/>
@@ -76,7 +69,7 @@
         </Style>
     </Window.Resources>
 
-    <!--  MAIN APPLICATION WRAPPER  -->
+    <!-- MAIN APPLICATION WRAPPER: Enforces rounded corners -->
     <Border Background="#0B0F13" CornerRadius="12">
         <Grid>
             <Grid.RowDefinitions>
@@ -172,145 +165,137 @@
                     </Rectangle.Fill>
                 </Rectangle>
 
-                <!-- BACK BUTTON  -->
-                <Button HorizontalAlignment="Left" VerticalAlignment="Top" Margin="40,30,0,0" Height="36" Padding="15,0" Cursor="Hand" Click="BtnBack_Click" Width="83">
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="Background" Value="#00C896"/>
-                            <Setter Property="Foreground" Value="#0B0F13"/>
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="Button">
-                                        <Border Background="{TemplateBinding Background}" CornerRadius="6">
-                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        </Border>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#00A87D"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock Text="&#x276E;" FontWeight="Bold" Margin="0,0,6,0" FontSize="11"/>
-                        <TextBlock Text="Analytics" FontWeight="Bold" FontSize="12"/>
-                    </StackPanel>
-                </Button>
+                <!-- INNER CONTENT LAYOUT -->
+                <Grid Margin="30">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/> <!-- Top Navigation Row -->
+                        <RowDefinition Height="*"/> <!-- Side-by-Side Cards Row -->
+                    </Grid.RowDefinitions>
 
-                <!--  SIDE-BY-SIDE CARD LAYOUT  -->
-                <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="400"/>
-                        <!-- Card 1 Width -->
-                        <ColumnDefinition Width="60"/>
-                        <!-- Spacing between cards -->
-                        <ColumnDefinition Width="400"/>
-                        <!-- Card 2 Width -->
-                    </Grid.ColumnDefinitions>
+                    <!-- TOP NAVIGATION BAR: Ensures perfect alignment with other views -->
+                    <Grid Grid.Row="0" Margin="0,0,0,25">
+                        <!-- Secondary Back Navigation to Process View -->
+                        <Button Content="&#x276E;  Process" Click="BtnBack_Click" HorizontalAlignment="Left" Width="130" Height="40" FontSize="13" Foreground="#0B0F13" Cursor="Hand">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Background" Value="#00C896"/>
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="6">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#00A87D"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </Grid>
 
-                    <!--  CARD 1: EXPORT PARSED DATA  -->
-                    <Border Grid.Column="0" Background="#141A21" CornerRadius="12" Padding="40" BorderBrush="#1E262E" BorderThickness="1">
-                        <!-- Drop Shadow for 3D floating effect -->
-                        <Border.Effect>
-                            <DropShadowEffect BlurRadius="30" Color="Black" Opacity="0.4" ShadowDepth="10"/>
-                        </Border.Effect>
+                    <!-- SIDE-BY-SIDE CARD LAYOUT: For Export Data and Analytics -->
+                    <Grid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="400"/> <!-- Card 1 Width -->
+                            <ColumnDefinition Width="60"/> <!-- Center Spacing -->
+                            <ColumnDefinition Width="400"/> <!-- Card 2 Width -->
+                        </Grid.ColumnDefinitions>
 
-                        <StackPanel>
-                            <!-- Card Heading -->
-                            <TextBlock Text="Export Parsed Data" Foreground="White" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,30"/>
+                        <!-- CARD 1: EXPORT PARSED DATA -->
+                        <Border Grid.Column="0" Background="#141A21" CornerRadius="12" Padding="40" BorderBrush="#1E262E" BorderThickness="1">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="30" Color="Black" Opacity="0.4" ShadowDepth="10"/>
+                            </Border.Effect>
+                            <StackPanel>
+                                <TextBlock Text="Export Parsed Data" Foreground="White" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,30"/>
 
-                            <!-- Input Label -->
-                            <TextBlock Text="Select Date Range" Foreground="#788896" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                                <TextBlock Text="Select Date Range" Foreground="#788896" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,10"/>
 
-                            <!-- Start Date Combo -->
-                            <ComboBox Height="45" Margin="0,0,0,15" SelectedIndex="0">
-                                <ComboBoxItem Content="Start Date" />
-                                <ComboBoxItem Content="2026-05-01" />
-                                <ComboBoxItem Content="2026-06-01" />
-                            </ComboBox>
+                                <ComboBox Height="45" Margin="0,0,0,15" SelectedIndex="0">
+                                    <ComboBoxItem Content="Start Date" />
+                                    <ComboBoxItem Content="2026-05-01" />
+                                    <ComboBoxItem Content="2026-06-01" />
+                                </ComboBox>
 
-                            <!-- End Date Combo -->
-                            <ComboBox Height="45" Margin="0,0,0,40" SelectedIndex="0">
-                                <ComboBoxItem Content="End Date" />
-                                <ComboBoxItem Content="2026-05-31" />
-                                <ComboBoxItem Content="2026-06-30" />
-                            </ComboBox>
+                                <ComboBox Height="45" Margin="0,0,0,40" SelectedIndex="0">
+                                    <ComboBoxItem Content="End Date" />
+                                    <ComboBoxItem Content="2026-05-31" />
+                                    <ComboBoxItem Content="2026-06-30" />
+                                </ComboBox>
 
-                            <!-- Export Button for Parsed Data -->
-                            <Button Content="Export Data" Height="48" FontSize="14" FontWeight="Bold" Foreground="#0B0F13" Cursor="Hand" HorizontalAlignment="Stretch">
-                                <Button.Style>
-                                    <Style TargetType="Button">
-                                        <Setter Property="Background" Value="#00C896"/>
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate TargetType="Button">
-                                                    <Border Background="{TemplateBinding Background}" CornerRadius="6">
-                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                    </Border>
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                        <Style.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Background" Value="#00A87D"/>
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Button.Style>
-                            </Button>
-                        </StackPanel>
-                    </Border>
+                                <Button Content="Export Data" Height="48" FontSize="14" FontWeight="Bold" Foreground="#0B0F13" Cursor="Hand" HorizontalAlignment="Stretch">
+                                    <Button.Style>
+                                        <Style TargetType="Button">
+                                            <Setter Property="Background" Value="#00C896"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border Background="{TemplateBinding Background}" CornerRadius="6">
+                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="#00A87D"/>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+                            </StackPanel>
+                        </Border>
 
-                    <!-- CARD 2: EXPORT ANALYTICS  -->
-                    <Border Grid.Column="2" Background="#141A21" CornerRadius="12" Padding="40" BorderBrush="#1E262E" BorderThickness="1">
-                        <!-- Drop Shadow for 3D floating effect -->
-                        <Border.Effect>
-                            <DropShadowEffect BlurRadius="30" Color="Black" Opacity="0.4" ShadowDepth="10"/>
-                        </Border.Effect>
+                        <!-- CARD 2: EXPORT ANALYTICS -->
+                        <Border Grid.Column="2" Background="#141A21" CornerRadius="12" Padding="40" BorderBrush="#1E262E" BorderThickness="1">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="30" Color="Black" Opacity="0.4" ShadowDepth="10"/>
+                            </Border.Effect>
+                            <StackPanel>
+                                <TextBlock Text="Export Analytics" Foreground="White" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,30"/>
 
-                        <StackPanel>
-                            <!-- Card Heading -->
-                            <TextBlock Text="Export Analytics" Foreground="White" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,30"/>
+                                <TextBlock Text="Select Report Title" Foreground="#788896" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,10"/>
 
-                            <!-- Input Label -->
-                            <TextBlock Text="Select Report Title" Foreground="#788896" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                                <!-- Margin bottom aligns this button with the one in Card 1 -->
+                                <ComboBox Height="45" Margin="0,0,0,100" SelectedIndex="0">
+                                    <ComboBoxItem Content="&lt;TITLE 01&gt;" />
+                                    <ComboBoxItem Content="Monthly Sales" />
+                                    <ComboBoxItem Content="Annual Revenue" />
+                                </ComboBox>
 
-                            <!-- Title Combo (Margin bottom is 100 to vertically align the export button with Card 1) -->
-                            <ComboBox Height="45" Margin="0,0,0,100" SelectedIndex="0">
-                                <ComboBoxItem Content="&lt;TITLE 01&gt;" />
-                                <ComboBoxItem Content="Monthly Sales" />
-                                <ComboBoxItem Content="Annual Revenue" />
-                            </ComboBox>
+                                <Button Content="Export Report" Height="48" FontSize="14" FontWeight="Bold" Foreground="#0B0F13" Cursor="Hand" HorizontalAlignment="Stretch">
+                                    <Button.Style>
+                                        <Style TargetType="Button">
+                                            <Setter Property="Background" Value="#00C896"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border Background="{TemplateBinding Background}" CornerRadius="6">
+                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="#00A87D"/>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
 
-                            <!-- Export Button for Analytics -->
-                            <Button Content="Export Report" Height="48" FontSize="14" FontWeight="Bold" Foreground="#0B0F13" Cursor="Hand" HorizontalAlignment="Stretch">
-                                <Button.Style>
-                                    <Style TargetType="Button">
-                                        <Setter Property="Background" Value="#00C896"/>
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate TargetType="Button">
-                                                    <Border Background="{TemplateBinding Background}" CornerRadius="6">
-                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                    </Border>
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                        <Style.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Background" Value="#00A87D"/>
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Button.Style>
-                            </Button>
-                        </StackPanel>
-                    </Border>
                 </Grid>
-
             </Grid>
         </Grid>
     </Border>

@@ -195,13 +195,13 @@
                         <!-- Bottom Import Controls -->
                     </Grid.RowDefinitions>
 
-                    <!-- Top Right Action: Process Button -->
-                    <Grid Grid.Row="0">
-                        <Button Content="Process &#x276F;" HorizontalAlignment="Left" Padding="15,8" Height="36" Cursor="Hand" Click="BtnGotoProcess_Click" Margin="954,0,0,0" Width="86">
+                    <!-- TOP NAVIGATION BAR: HOME VIEW -->
+                    <Grid Grid.Row="0" Margin="0,0,0,25">
+                        <!-- Primary Forward Navigation to Process View -->
+                        <Button Content="Process  &#x276F;" Click="BtnGotoProcess_Click" HorizontalAlignment="Right" Width="130" Height="40" FontSize="13" Foreground="#0B0F13" Cursor="Hand">
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <Setter Property="Background" Value="#00C896"/>
-                                    <Setter Property="Foreground" Value="#0B0F13"/>
                                     <Setter Property="FontWeight" Value="Bold"/>
                                     <Setter Property="Template">
                                         <Setter.Value>

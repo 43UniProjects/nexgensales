@@ -222,7 +222,7 @@
                         </Button>
 
                         <!-- Navigate Forward to Exports -->
-                        <Button Content="Exports  &#x276F;" HorizontalAlignment="Right" Click="BtnExports_Click" Width="130" Height="40" FontSize="13" Foreground="#0B0F13" Cursor="Hand">
+                        <Button Content="Exports  &#x276F;" Click="BtnExports_Click" HorizontalAlignment="Right" Width="130" Height="40" FontSize="13" Foreground="#0B0F13" Cursor="Hand">
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <Setter Property="Background" Value="#00C896"/>
@@ -332,22 +332,34 @@
                                 <ColumnDefinition Width="Auto"/> <!-- Action column -->
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0" Text="Analyse Records" FontSize="18" FontWeight="Bold" Foreground="#FFFFFF" VerticalAlignment="Center" Margin="0,0,40,0"/>
+                            <!-- Analysis Section Heading -->
+                            <TextBlock Grid.Column="0" Text="Analyse Records" FontSize="18" FontWeight="Bold" Foreground="#FFFFFF" VerticalAlignment="Center" Margin="0,0,25,0"/>
 
-                            <!-- Date Filter Selection -->
+                            <!-- Multiple Filter Selections Container -->
                             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                                <TextBlock Text="Select Date Range" FontSize="14" FontWeight="SemiBold" Foreground="#788896" VerticalAlignment="Center" Margin="0,0,15,0"/>
-                                <ComboBox Width="200" SelectedIndex="0">
+
+                                <!-- Filter 1: Date Range Selection -->
+                                <TextBlock Text="Date Range" FontSize="13" FontWeight="SemiBold" Foreground="#788896" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                <ComboBox Width="170" SelectedIndex="0">
                                     <ComboBoxItem Content="1 Week"/>
                                     <ComboBoxItem Content="1 Month"/>
                                     <ComboBoxItem Content="3 Months"/>
                                     <ComboBoxItem Content="6 Months"/>
                                     <ComboBoxItem Content="1 Year"/>
                                 </ComboBox>
+
+                                <!-- Filter 2: Report Type Selection -->
+                                <TextBlock Text="Report Type" FontSize="13" FontWeight="SemiBold" Foreground="#788896" VerticalAlignment="Center" Margin="25,0,10,0"/>
+                                <ComboBox Width="170" SelectedIndex="0">
+                                    <ComboBoxItem Content="Sales Data"/>
+                                    <ComboBoxItem Content="Expense Data"/>
+                                    <ComboBoxItem Content="Profit Margin"/>
+                                </ComboBox>
+
                             </StackPanel>
 
                             <!-- Primary Execute Analysis Button -->
-                            <Button Grid.Column="2" Content="Run Analysis" Width="200" Height="45" FontSize="14" FontWeight="Bold" Foreground="#0B0F13" Cursor="Hand">
+                            <Button Grid.Column="2" Content="Run Analysis" Width="180" Height="45" FontSize="14" FontWeight="Bold" Foreground="#0B0F13" Cursor="Hand">
                                 <Button.Style>
                                     <Style TargetType="Button">
                                         <Setter Property="Background" Value="#00C896"/>
