@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NexGenSales.Core;
+using NexGenSales.Models;
+using NexGenSales.Services.Data.Repository;
+using NexGenSales.Services;
 
 namespace NexGenSales.Services;
 
@@ -51,5 +54,33 @@ public class ExcelFileImportService<TEnum, TModel> where TEnum : struct, Enum
         var firstRowKeys = fileData.First().Keys.ToHashSet();
 
         return requiredKeys.All(firstRowKeys.Contains);
+    }
+
+
+    public async Task<bool> Store()
+    {
+
+        if(Records == null || Records.Count <= 0) return false;
+
+        Repository<TModel> repo;
+        SqliteService sqliteService = new();
+
+
+        if (typeof(TModel) == typeof(SalesRecord))
+        {
+            repo = (Repository<TModel>)(object)new SalesRecordRepository(sqliteService);
+        }
+        else
+        {
+            repo = (Repository<TModel>)(object)new ExpenseRecordRepository(sqliteService);
+        }
+
+        try
+        { repo.InsertMany(Records); }
+        catch (InvalidOperationException _)
+        {
+            return false;
+        }
+        return true;
     }
 }
