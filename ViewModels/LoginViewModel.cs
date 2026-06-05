@@ -40,26 +40,6 @@ namespace nexgensales.ViewModels
         // Command to navigate to the registration window
         public ICommand NavigateRegisterCommand { get; }
 
-        public LoginViewModel()
-        {
-            // Initialize commands with their respective execution methods
-            LoginCommand = new RelayCommand(ExecuteLogin, CanExecuteLogin);
-            NavigateRegisterCommand = new RelayCommand(ExecuteNavigateRegister);
-        }
-
-        // Checks if the login button should be enabled (both fields must have text)
-        private bool CanExecuteLogin(object parameter)
-        {
-            return !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Password);
-        }
-
-        // Executes the login process
-        private void ExecuteLogin(object parameter)
-        {
-            // TODO: Add database authentication logic here
-            MessageBox.Show($"Attempting to login with Username: {Username}", "Authentication", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
         // Handles navigation to the RegisterView
         private void ExecuteNavigateRegister(object parameter)
         {

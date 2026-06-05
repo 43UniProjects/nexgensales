@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using NextGenSales.Views;
+using System.Windows;
 using System.Windows.Input;
 
 namespace nexgensales.Views
@@ -50,6 +51,17 @@ namespace nexgensales.Views
             
             ProcessView processWindow = new ProcessView();
             processWindow.Show();
+            this.Close();
+        }
+
+        // Handles quick navigation from the Export view directly back to the Home dashboard
+        private void BtnHome_Click(object sender, RoutedEventArgs e)
+        {
+            // Instantiate and display the Home dashboard
+            HomeView homeWindow = new HomeView();
+            homeWindow.Show();
+
+            // Close the current Export view to free up system resources
             this.Close();
         }
     }
