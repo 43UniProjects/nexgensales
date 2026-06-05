@@ -110,12 +110,24 @@ namespace nexgensales.ViewModels
             }
         }
 
-        /// <summary>
-        /// Reads the structured array and routes files to their respective services for DB insertion.
-        /// </summary>
-        private void ProcessAndImportRecords(List<ImportedFileSummary> filesToProcess)
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            try
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        protected static void ImportRecord(IEnumerable<string> filePaths)
+        {
+
+            var excelFileImportService = new ExcelFileImportService<SalesRecordField, SalesRecord>(
+                new ExcelParser(),
+                RecordMappers.MapToSalesRecord
+            );
+
+            bool importSuccess = excelFileImportService.ImportFiles(filePaths);
+
+            if (importSuccess)
             {
                 // Extract pure arrays of paths filtered by their specific Record Types
                 string[] salesPaths = filesToProcess.Where(f => f.RecordType == "Sales Record").Select(f => f.FilePath).ToArray();
@@ -141,23 +153,8 @@ namespace nexgensales.ViewModels
                 // 2. Process Expenses Records
                 if (expensesPaths.Length > 0)
                 {
-                    var expensesImportService = new ExcelFileImportService<ExpensesRecordField, ExpensesRecord>(
-                        new ExcelParser(), RecordMappers.MapToExpenseRecord);
-
-                    if (expensesImportService.ImportFiles(expensesPaths))
-                    {
-                        new ExpenseRecordRepository(new SqliteService()).InsertMany(expensesImportService.Records);
-                        MessageBox.Show("Expenses records imported and saved successfully!", "Import Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
-                    else
-                    {
-                        MessageBox.Show("Validation failed for one or more Expenses Record files.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
+                    Console.WriteLine($"[HomeViewModel] Failed to store imported data from {filePaths.First()} in DB");
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"An unexpected error occurred:\n{ex.Message}", "Critical Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
