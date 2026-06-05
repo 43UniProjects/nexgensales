@@ -7,7 +7,7 @@
 .env
 
 # pdf files
-.pdf
+*.pdf
 
 # User-specific files
 *.rsuser

@@ -158,7 +158,7 @@
 
                             <!-- Username input field -->
                             <TextBlock Text="USERNAME" FontSize="11" FontWeight="Bold" Foreground="#687A8C" Margin="0,0,0,8"/>
-                            <TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" Height="45" FontSize="14" Foreground="White" Background="#1E262E" BorderThickness="1" BorderBrush="#2D3A46" Padding="15,0" VerticalContentAlignment="Center" Margin="0,0,0,18">
+                            <TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" x:Name="txtUsername" Height="45" FontSize="14" Foreground="White" Background="#1E262E" BorderThickness="1" BorderBrush="#2D3A46" Padding="15,0" VerticalContentAlignment="Center" Margin="0,0,0,18">
                                 <TextBox.Resources>
                                     <Style TargetType="Border">
                                         <Setter Property="CornerRadius" Value="6"/>
@@ -190,7 +190,7 @@
                             </TextBlock>
 
                             <!-- Primary login execution button -->
-                            <Button Command="{Binding LoginCommand}" Content="LOGIN" Height="48" FontSize="14" FontWeight="Bold" Foreground="White" Cursor="Hand" Margin="0,0,0,15">
+                            <Button Command="{Binding LoginCommand}" Content="LOGIN" Click="BtnLogin_Click" Height="48" FontSize="14" FontWeight="Bold" Foreground="White" Cursor="Hand" Margin="0,0,0,15">
                                 <Button.Style>
                                     <Style TargetType="Button">
                                         <Setter Property="Background" Value="#00C896"/>
