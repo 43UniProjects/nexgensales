@@ -1,6 +1,6 @@
 namespace NexGenSales.Models.Enums;
 
-public enum ExpenseField
+public enum ExpensesRecordField
 {
     DateRecorded,
     ExpenseCategory,

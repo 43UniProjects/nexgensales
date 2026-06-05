@@ -8,7 +8,7 @@ public enum SalesRecordField
     QuantitySold,
     UnitPurchaseCost,
     UnitSalePrice,
-    AllowedDiscounts,
+    AllowedDiscount,
     NetRevenue,
     CurrentStock
 }

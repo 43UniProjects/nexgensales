@@ -20,7 +20,7 @@ class SalesRecordRepository(SqliteService sqliteService) : BaseRepository(sqlite
             Quantity_Sold REAL NOT NULL,
             Unit_Purchase_Cost REAL NOT NULL,
             Unit_Sale_Price REAL NOT NULL,
-            Allowed_Discounts REAL DEFAULT 0,
+            Allowed_Discount REAL DEFAULT 0,
             Net_Revenue REAL NOT NULL,
             Current_Stock REAL NOT NULL
         );";
@@ -57,7 +57,7 @@ class SalesRecordRepository(SqliteService sqliteService) : BaseRepository(sqlite
                 Quantity_Sold = reader.GetDouble(reader.GetOrdinal("Quantity_Sold")),
                 Unit_Purchase_Cost = reader.GetDouble(reader.GetOrdinal("Unit_Purchase_Cost")),
                 Unit_Sale_Price = reader.GetDouble(reader.GetOrdinal("Unit_Sale_Price")),
-                Allowed_Discounts = reader.GetDouble(reader.GetOrdinal("Allowed_Discounts")),
+                Allowed_Discount = reader.GetDouble(reader.GetOrdinal("Allowed_Discount")),
                 Net_Revenue = reader.GetDouble(reader.GetOrdinal("Net_Revenue")),
                 Current_Stock = reader.GetDouble(reader.GetOrdinal("Current_Stock"))
             };
@@ -68,5 +68,14 @@ class SalesRecordRepository(SqliteService sqliteService) : BaseRepository(sqlite
         return SalesRecords;
 
     }
+
+    public async Task<bool> InsertNewRecord(SalesRecord newRecord)
+    {
+        
+
+        return true;
+    }
+
+
 
 }
