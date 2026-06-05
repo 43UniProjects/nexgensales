@@ -3,7 +3,7 @@ using NexGenSales.Models;
 
 namespace NexGenSales.Services.Data.Repository;
 
-class ExpenseRecordRepository(SqliteService sqliteService) : Repository<ExpensesRecord>(sqliteService)
+class ExpensesRecordRepository(SqliteService sqliteService) : Repository<ExpensesRecord>(sqliteService)
 {
     public override void InitializeTable()
     {

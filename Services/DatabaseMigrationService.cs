@@ -52,7 +52,7 @@ public class DatabaseMigrationService
             Console.WriteLine("[MIGRATION] Creating database tables, SalesRecords, ExpensesRecords");
             var salesRepo = new SalesRecordRepository(new SqliteService());
             salesRepo.InitializeTable();
-            var expensesRepo = new ExpenseRecordRepository(new SqliteService());
+            var expensesRepo = new ExpensesRecordRepository(new SqliteService());
             expensesRepo.InitializeTable();
 
             currentVersion = 1;

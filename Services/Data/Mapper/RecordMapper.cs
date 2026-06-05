@@ -64,7 +64,7 @@ public static class RecordMappers
 
     
 
-    public static ExpensesRecord MapToExpenseRecord(Dictionary<ExpensesRecordField, object> row)
+    public static ExpensesRecord MapToExpensesRecord(Dictionary<ExpensesRecordField, object> row)
     {
         var record = new ExpensesRecord();
 
