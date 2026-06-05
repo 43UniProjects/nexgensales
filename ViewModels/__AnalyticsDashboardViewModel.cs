@@ -6,8 +6,7 @@ using LiveChartsCore.SkiaSharpView;
 
 using NexGenSales.Models;
 using NexGenSales.Core;
-using DayOrder.Services.Data;
-using NexGenSales.Services.Data;
+using NexGenSales.Services.Data.Reposistory;
 using NexGenSales.core;
 
 namespace NexGenSales.ViewModels
@@ -23,8 +22,8 @@ namespace NexGenSales.ViewModels
         public async Task LoadDashboardData(DateTime startDate, DateTime endDate)
         {
             // 1. Fetch data from SQLite via Dapper Repository
-            List<SalesRecord> rawSales = await _salesRepo.getAllSalesRecords() ?? new List<SalesRecord>();
-            List<ExpensesRecord> rawExpenses = await _expensesRepo.GetAllExpensesRecords() ?? new List<ExpensesRecord>();
+            List<SalesRecord> rawSales = await _salesRepo.GetAll() ?? [];
+            List<ExpensesRecord> rawExpenses = await _expensesRepo.GetAll() ?? [];
 
             // If there's no data at all, nothing to do
             if (!rawSales.Any() && !rawExpenses.Any()) return;
