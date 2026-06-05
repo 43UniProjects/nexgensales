@@ -11,11 +11,17 @@ public class DatabaseMigrationService
 
     private const int TargetVersion = 2; // increment this by one for each new addition to this file
 
-    public DatabaseMigrationService()
+     public DatabaseMigrationService()
     {
-        // IMPORTENT!: upcomment below line when generating .exe and remove conflicting one
-        // string dbFolder = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "Database"));
-        string dbFolder = Path.Combine(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..")), "Database");
+        string dbFolder;
+
+        #if DEBUG
+        // DEVELOPMENT
+        dbFolder = Path.Combine(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..")), "Database");
+        #else
+        // PRODUCTION
+        dbFolder = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "Database"));
+        #endif
 
         Directory.CreateDirectory(dbFolder);
 
