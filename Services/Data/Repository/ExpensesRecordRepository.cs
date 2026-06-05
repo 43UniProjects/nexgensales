@@ -14,15 +14,16 @@ class ExpenseRecordRepository(SqliteService sqliteService) : Repository<Expenses
                 Expense_Category TEXT,
                 Specific_Type TEXT,
                 Amount REAL NOT NULL,
-                Asset_ID TEXT,
+                Asset_ID TEXT
             );";
+            
 
         ExecuteNonQuery(query);
     }
 
     public override async Task<List<ExpensesRecord>> GetAll()
     {
-        return await Get("SELECT * FROM ExpensesRecord");
+        return await Get("SELECT * FROM ExpensesRecord;");
     }
 
 

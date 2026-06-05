@@ -2,6 +2,7 @@
 using System.Windows.Input;
 
 using nexgensales.ViewModels;
+using NexGenSales.Services;
 
 namespace NextGenSales.Views
 {
@@ -10,6 +11,7 @@ namespace NextGenSales.Views
         public LoginView()
         {
             InitializeComponent();
+
         }
 
         // Handles the click event for the Login button

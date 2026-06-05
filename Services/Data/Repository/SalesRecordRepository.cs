@@ -9,7 +9,7 @@ class SalesRecordRepository(SqliteService sqliteService) : Repository<SalesRecor
     public override void InitializeTable()
     {
         string query = @"
-            CREATE TABLE SalesRecord (
+            CREATE TABLE IF NOT EXISTS SalesRecord (
             Transaction_ID INTEGER PRIMARY KEY AUTOINCREMENT,
             Date_Time DATETIME NOT NULL,
             Item_ID TEXT NOT NULL,

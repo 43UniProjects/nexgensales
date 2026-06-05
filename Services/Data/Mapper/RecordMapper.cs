@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using NexGenSales.Models;
 using NexGenSales.Models.Enums;
 
-namespace NexGenSales.Services.Data;
+namespace NexGenSales.Services.Data.Mapper;
 
 public static class RecordMappers
 {

@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using Microsoft.Data.Sqlite;
-
 using NexGenSales.Services.Data.Repository;
 
 namespace NexGenSales.Services;
@@ -14,7 +13,11 @@ public class DatabaseMigrationService
 
     public DatabaseMigrationService()
     {
-        string dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "app.db");
+        string dbFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Database");
+
+        Directory.CreateDirectory(dbFolder);
+
+        string dbPath = Path.Combine(dbFolder, "app.db");
         _connectionString = $"Data Source={dbPath}";
     }
 
@@ -56,4 +59,3 @@ public class DatabaseMigrationService
         cmd.ExecuteNonQuery();
     }
 }
-

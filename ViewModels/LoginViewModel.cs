@@ -1,4 +1,5 @@
-﻿using NextGenSales.Views; // Required to navigate to HomeView
+﻿using NexGenSales.Services;
+using NextGenSales.Views; // Required to navigate to HomeView
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -61,6 +62,8 @@ namespace nexgensales.ViewModels
             if (Username == "nexgen" && Password == "123")
             {
                 // Instantiate and display the Home dashboard upon successful login
+
+                new DatabaseMigrationService().EnsureMigrated();
                 HomeView homeWindow = new HomeView();
                 homeWindow.Show();
 
