@@ -1,7 +1,7 @@
 using Microsoft.Data.Sqlite;
 using NexGenSales.Models;
 
-namespace NexGenSales.Services.Data.Reposistory;
+namespace NexGenSales.Services.Data.Repository;
 
 class SalesRecordRepository(SqliteService sqliteService) : Repository<SalesRecord>(sqliteService)
 {

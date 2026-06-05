@@ -1,4 +1,4 @@
-namespace NexGenSales.Services.Data.Reposistory;
+namespace NexGenSales.Services.Data.Repository;
 
 public abstract class Repository<TModel>
 {

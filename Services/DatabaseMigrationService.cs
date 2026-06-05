@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using Microsoft.Data.Sqlite;
 
-using NexGenSales.Services.Data.Reposistory;
+using NexGenSales.Services.Data.Repository;
 
 namespace NexGenSales.Services;
 
