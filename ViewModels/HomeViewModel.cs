@@ -1,10 +1,10 @@
-﻿using Microsoft.Win32;
-using NexGenSales.Core;
+﻿using NexGenSales.Core;
 using NexGenSales.Models;
 using NexGenSales.Models.Enums;
 using NexGenSales.Services;
 using NexGenSales.Services.Data.Mapper;
 using NexGenSales.Services.Data.Repository;
+using NexGenSales.UserComponents;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -71,38 +71,35 @@ namespace nexgensales.ViewModels
 
         private void ExecuteImportRecord(object parameter)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog
-            {
-                Filter = "Excel Files (*.xlsx)|*.xlsx|CSV Files (*.csv)|*.csv",
-                Title = "Select Record Files to Import",
-                Multiselect = true
-            };
+            var fileOpener = new CustomFileOpener(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
 
-            if (openFileDialog.ShowDialog() == true)
+            // Only set owner if main window exists and is not the file opener itself
+            if (Application.Current.MainWindow != null && Application.Current.MainWindow != fileOpener)
+            {
+                fileOpener.Owner = Application.Current.MainWindow;
+            }
+
+            if (fileOpener.ShowDialog() == true && !string.IsNullOrEmpty(fileOpener.SelectedFilePath))
             {
                 // Create a temporary list to hold the structured file data
                 var tempFilesList = new List<ImportedFileSummary>();
 
-                // Map each selected file path with the currently selected Record Type
-                foreach (string path in openFileDialog.FileNames)
+                // Add the selected file with the currently selected Record Type
+                tempFilesList.Add(new ImportedFileSummary
                 {
-                    tempFilesList.Add(new ImportedFileSummary
-                    {
-                        FilePath = path,
-                        RecordType = SelectedRecordType
-                    });
-                }
+                    FilePath = fileOpener.SelectedFilePath,
+                    RecordType = SelectedRecordType
+                });
 
                 // Assign the structured list to the main array property
                 ImportedFilesArray = tempFilesList;
 
                 string fileNames = string.Join("\n", ImportedFilesArray.Select(f => System.IO.Path.GetFileName(f.FilePath)));
 
-                MessageBox.Show(
+                CustomMessageBox.Show(
+                    Application.Current.MainWindow,
                     $"Successfully structured and queued {ImportedFilesArray.Count} file(s) as [{SelectedRecordType}]:\n\n{fileNames}",
-                    "Import Configuration",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Information
+                    "Import Configuration"
                 );
 
                 // Pass the structured array to the processing method
@@ -129,11 +126,11 @@ namespace nexgensales.ViewModels
                 if (salesImportService.ImportFiles(salesPaths))
                 {
                     new SalesRecordRepository(new SqliteService()).InsertMany(salesImportService.Records);
-                    MessageBox.Show("Sales records imported and saved successfully!", "Import Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    CustomMessageBox.Show(Application.Current.MainWindow, "Sales records imported and saved successfully!", "Import Success");
                 }
                 else
                 {
-                    MessageBox.Show("Validation failed for one or more Sales Record files.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    CustomMessageBox.Show(Application.Current.MainWindow, "Validation failed for one or more Sales Record files.", "Validation Error");
                 }
             }
 
@@ -146,11 +143,11 @@ namespace nexgensales.ViewModels
                 if (expensesImportService.ImportFiles(expensesPaths))
                 {
                     new ExpensesRecordRepository(new SqliteService()).InsertMany(expensesImportService.Records);
-                    MessageBox.Show("Expenses records imported and saved successfully!", "Import Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    CustomMessageBox.Show(Application.Current.MainWindow, "Expenses records imported and saved successfully!", "Import Success");
                 }
                 else
                 {
-                    MessageBox.Show("Validation failed for one or more Expenses Record files.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    CustomMessageBox.Show(Application.Current.MainWindow, "Validation failed for one or more Expenses Record files.", "Validation Error");
                 }
             }
         }
