@@ -338,8 +338,16 @@
                             <!-- Multiple Filter Selections Container -->
                             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
 
-                                <!-- Filter 1: Date Range Selection -->
-                                <TextBlock Text="Date Range" FontSize="13" FontWeight="SemiBold" Foreground="#788896" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                <!-- Filter 1: Report Type Selection -->
+                                <TextBlock Text="Report Type" FontSize="13" FontWeight="SemiBold" Foreground="#788896" VerticalAlignment="Center" Margin="5,0,10,0"/>
+                                <ComboBox Width="170" SelectedIndex="0">
+                                    <ComboBoxItem Content="Sales Data"/>
+                                    <ComboBoxItem Content="Expense Data"/>
+                                    <ComboBoxItem Content="Profit Margin"/>
+                                </ComboBox>
+
+                                <!-- Filter 2: Date Range Selection -->
+                                <TextBlock Text="Date Range" FontSize="13" FontWeight="SemiBold" Foreground="#788896" VerticalAlignment="Center" Margin="28,0,10,0"/>
                                 <ComboBox Width="170" SelectedIndex="0">
                                     <ComboBoxItem Content="1 Week"/>
                                     <ComboBoxItem Content="1 Month"/>
@@ -348,13 +356,7 @@
                                     <ComboBoxItem Content="1 Year"/>
                                 </ComboBox>
 
-                                <!-- Filter 2: Report Type Selection -->
-                                <TextBlock Text="Report Type" FontSize="13" FontWeight="SemiBold" Foreground="#788896" VerticalAlignment="Center" Margin="25,0,10,0"/>
-                                <ComboBox Width="170" SelectedIndex="0">
-                                    <ComboBoxItem Content="Sales Data"/>
-                                    <ComboBoxItem Content="Expense Data"/>
-                                    <ComboBoxItem Content="Profit Margin"/>
-                                </ComboBox>
+
 
                             </StackPanel>
 

@@ -55,9 +55,11 @@ namespace NextGenSales.Views
         {
             
             ProcessView processWindow = new ProcessView();
-            processWindow.Show();
+            processWindow.WindowStartupLocation = WindowStartupLocation.Manual;
+            processWindow.Left = this.Left;
+            processWindow.Top = this.Top;
 
-            
+            processWindow.Show();
             this.Close();
         }
 
@@ -77,6 +79,9 @@ namespace NextGenSales.Views
             {
                 // Instantiate and display the initial authentication view
                 LoginView loginWindow = new LoginView();
+                loginWindow.WindowStartupLocation = WindowStartupLocation.Manual;
+                loginWindow.Left = this.Left;
+                loginWindow.Top = this.Top;
                 loginWindow.Show();
 
                 // Dispose of the current Home dashboard view to secure the session

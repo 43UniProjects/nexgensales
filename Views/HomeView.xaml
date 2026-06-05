@@ -110,15 +110,15 @@
                         <Storyboard RepeatBehavior="Forever">
                             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)">
                                 <SplineDoubleKeyFrame KeyTime="0:0:0.0" Value="0"/>
-                                <SplineDoubleKeyFrame KeyTime="0:0:0.4" Value="-15" KeySpline="0.25,0.1 0.25,1"/>
-                                <SplineDoubleKeyFrame KeyTime="0:0:0.8" Value="0" KeySpline="0.25,0.1 0.25,1"/>
-                                <SplineDoubleKeyFrame KeyTime="0:0:2.4" Value="0"/>
+                                <SplineDoubleKeyFrame KeyTime="0:0:0.8" Value="-15" KeySpline="0.25,0.1 0.25,1"/>
+                                <SplineDoubleKeyFrame KeyTime="0:0:1.6" Value="0" KeySpline="0.25,0.1 0.25,1"/>
+                                <SplineDoubleKeyFrame KeyTime="0:0:13.2" Value="0"/>
                             </DoubleAnimationUsingKeyFrames>
                             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.BlurRadius)">
                                 <SplineDoubleKeyFrame KeyTime="0:0:0.0" Value="25"/>
-                                <SplineDoubleKeyFrame KeyTime="0:0:0.4" Value="45"/>
-                                <SplineDoubleKeyFrame KeyTime="0:0:0.8" Value="25"/>
-                                <SplineDoubleKeyFrame KeyTime="0:0:2.4" Value="25"/>
+                                <SplineDoubleKeyFrame KeyTime="0:0:0.8" Value="45"/>
+                                <SplineDoubleKeyFrame KeyTime="0:0:1.6" Value="25"/>
+                                <SplineDoubleKeyFrame KeyTime="0:0:13.2" Value="25"/>
                             </DoubleAnimationUsingKeyFrames>
                         </Storyboard>
                     </BeginStoryboard>
@@ -126,23 +126,24 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Sequential Wave Animation: Card 2 (Starts with a 0.6s delay) -->
+
+        <!-- Sequential Wave Animation: Card 2 (Starts at 0.8s) -->
         <Style TargetType="Border" x:Key="Card2Style" BasedOn="{StaticResource BaseCardStyle}">
             <Style.Triggers>
                 <EventTrigger RoutedEvent="Loaded">
                     <BeginStoryboard>
                         <Storyboard RepeatBehavior="Forever">
                             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)">
-                                <SplineDoubleKeyFrame KeyTime="0:0:0.6" Value="0"/>
-                                <SplineDoubleKeyFrame KeyTime="0:0:1.0" Value="-15" KeySpline="0.25,0.1 0.25,1"/>
-                                <SplineDoubleKeyFrame KeyTime="0:0:1.4" Value="0" KeySpline="0.25,0.1 0.25,1"/>
-                                <SplineDoubleKeyFrame KeyTime="0:0:2.4" Value="0"/>
+                                <SplineDoubleKeyFrame KeyTime="0:0:0.8" Value="0"/>
+                                <SplineDoubleKeyFrame KeyTime="0:0:1.6" Value="-15" KeySpline="0.25,0.1 0.25,1"/>
+                                <SplineDoubleKeyFrame KeyTime="0:0:2.4" Value="0" KeySpline="0.25,0.1 0.25,1"/>
+                                <SplineDoubleKeyFrame KeyTime="0:0:13.2" Value="0"/>
                             </DoubleAnimationUsingKeyFrames>
                             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.BlurRadius)">
-                                <SplineDoubleKeyFrame KeyTime="0:0:0.6" Value="25"/>
-                                <SplineDoubleKeyFrame KeyTime="0:0:1.0" Value="45"/>
-                                <SplineDoubleKeyFrame KeyTime="0:0:1.4" Value="25"/>
+                                <SplineDoubleKeyFrame KeyTime="0:0:0.8" Value="25"/>
+                                <SplineDoubleKeyFrame KeyTime="0:0:1.6" Value="45"/>
                                 <SplineDoubleKeyFrame KeyTime="0:0:2.4" Value="25"/>
+                                <SplineDoubleKeyFrame KeyTime="0:0:13.2" Value="25"/>
                             </DoubleAnimationUsingKeyFrames>
                         </Storyboard>
                     </BeginStoryboard>
@@ -150,23 +151,23 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Sequential Wave Animation: Card 3 (Starts with a 1.2s delay) -->
+        <!-- Sequential Wave Animation: Card 3 (Starts  at 1.6s) -->
         <Style TargetType="Border" x:Key="Card3Style" BasedOn="{StaticResource BaseCardStyle}">
             <Style.Triggers>
                 <EventTrigger RoutedEvent="Loaded">
                     <BeginStoryboard>
                         <Storyboard RepeatBehavior="Forever">
                             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)">
-                                <SplineDoubleKeyFrame KeyTime="0:0:1.2" Value="0"/>
-                                <SplineDoubleKeyFrame KeyTime="0:0:1.6" Value="-15" KeySpline="0.25,0.1 0.25,1"/>
-                                <SplineDoubleKeyFrame KeyTime="0:0:2.0" Value="0" KeySpline="0.25,0.1 0.25,1"/>
-                                <SplineDoubleKeyFrame KeyTime="0:0:2.4" Value="0"/>
+                                <SplineDoubleKeyFrame KeyTime="0:0:1.6" Value="0"/>
+                                <SplineDoubleKeyFrame KeyTime="0:0:2.4" Value="-15" KeySpline="0.25,0.1 0.25,1"/>
+                                <SplineDoubleKeyFrame KeyTime="0:0:3.2" Value="0" KeySpline="0.25,0.1 0.25,1"/>
+                                <SplineDoubleKeyFrame KeyTime="0:0:13.2" Value="0"/>
                             </DoubleAnimationUsingKeyFrames>
                             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.BlurRadius)">
-                                <SplineDoubleKeyFrame KeyTime="0:0:1.2" Value="25"/>
-                                <SplineDoubleKeyFrame KeyTime="0:0:1.6" Value="45"/>
-                                <SplineDoubleKeyFrame KeyTime="0:0:2.0" Value="25"/>
-                                <SplineDoubleKeyFrame KeyTime="0:0:2.4" Value="25"/>
+                                <SplineDoubleKeyFrame KeyTime="0:0:1.6" Value="25"/>
+                                <SplineDoubleKeyFrame KeyTime="0:0:2.4" Value="45"/>
+                                <SplineDoubleKeyFrame KeyTime="0:0:3.2" Value="25"/>
+                                <SplineDoubleKeyFrame KeyTime="0:0:13.2" Value="25"/>
                             </DoubleAnimationUsingKeyFrames>
                         </Storyboard>
                     </BeginStoryboard>
