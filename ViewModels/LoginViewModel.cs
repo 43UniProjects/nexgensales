@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NextGenSales.Views; // Required to navigate to HomeView
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -40,14 +41,53 @@ namespace nexgensales.ViewModels
         // Command to navigate to the registration window
         public ICommand NavigateRegisterCommand { get; }
 
+        // Constructor: Initializes commands
+        public LoginViewModel()
+        {
+            LoginCommand = new RelayCommand(ExecuteLogin, CanExecuteLogin);
+            NavigateRegisterCommand = new RelayCommand(ExecuteNavigateRegister);
+        }
+
+        // Checks if the login button should be enabled (both fields must have text)
+        private bool CanExecuteLogin(object parameter)
+        {
+            return !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Password);
+        }
+
+        // Executes the authentication process and handles window navigation
+        private void ExecuteLogin(object parameter)
+        {
+            // Temporary hardcoded authentication logic for testing purposes
+            if (Username == "nexgen" && Password == "123")
+            {
+                // Instantiate and display the Home dashboard upon successful login
+                HomeView homeWindow = new HomeView();
+                homeWindow.Show();
+
+                // Safely close the current Login window using the passed CommandParameter
+                if (parameter is Window loginWindow)
+                {
+                    loginWindow.Close();
+                }
+            }
+            else
+            {
+                // Display an error prompt if the provided credentials are invalid
+                MessageBox.Show(
+                    "Invalid Username or Password. Please try again.",
+                    "Authentication Failed",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error
+                );
+            }
+        }
+
         // Handles navigation to the RegisterView
         private void ExecuteNavigateRegister(object parameter)
         {
             // TODO: Add logic to open RegisterView and close LoginView
             MessageBox.Show("Navigating to Register Window...", "Navigation", MessageBoxButton.OK, MessageBoxImage.Information);
         }
-
-        
 
         public event PropertyChangedEventHandler PropertyChanged;
 
