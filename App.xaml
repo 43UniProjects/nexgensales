@@ -1,8 +1,9 @@
 ﻿<Application x:Class="NextGenSales.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:NextGenSales"
              StartupUri="Views/HomeView.xaml">
     <Application.Resources>
-         
+
     </Application.Resources>
 </Application>
