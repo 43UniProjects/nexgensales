@@ -13,7 +13,9 @@ public class DatabaseMigrationService
 
     public DatabaseMigrationService()
     {
-        string dbFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Database");
+        // IMPORTENT!: upcomment below line when generating .exe and remove conflicting one
+        // string dbFolder = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "Database"));
+        string dbFolder = Path.Combine(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..")), "Database");
 
         Directory.CreateDirectory(dbFolder);
 
