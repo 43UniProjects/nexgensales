@@ -77,7 +77,7 @@ public class ExcelFileImportService<TEnum, TModel> where TEnum : struct, Enum
 
         try
         { repo.InsertMany(Records); }
-        catch (InvalidOperationException _)
+        catch (InvalidOperationException)
         {
             return false;
         }

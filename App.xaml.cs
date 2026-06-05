@@ -122,7 +122,7 @@ public class DualConsoleWriter : TextWriter
         _fileWriter.Write(value);
     }
 
-    public override void Write(string? value)
+    public override void Write(string value)
     {
         _originalConsole.Write(value);
         _fileWriter.Write(value);
@@ -134,7 +134,7 @@ public class DualConsoleWriter : TextWriter
         _fileWriter.WriteLine();
     }
 
-    public override void WriteLine(string? value)
+    public override void WriteLine(string value)
     {
         // Automatically inject timestamps into every Console.WriteLine!
         string formattedValue = $"[{DateTime.Now:HH:mm:ss.fff}] {value}";
