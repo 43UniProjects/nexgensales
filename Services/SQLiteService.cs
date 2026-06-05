@@ -11,12 +11,21 @@ public class SqliteService
 
     public SqliteService()
     {
-        string databaseDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Database");
+        string databaseDirectory;
+
+        #if DEBUG
+        // DEVELOPMENT
+        databaseDirectory = Path.Combine(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..")), "Database");
+        #else
+        // PRODUCTION
+        databaseDirectory = Path.Combine(AppContext.BaseDirectory, "Database");
+        #endif
+
         Directory.CreateDirectory(databaseDirectory);
+
         string dbPath = Path.Combine(databaseDirectory, "app.db");
         _connectionString = $"Data Source={dbPath}";
     }
-
     public SqliteConnection CreateConnection()
     {
         return new SqliteConnection(_connectionString);
