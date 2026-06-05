@@ -1,5 +1,6 @@
 ﻿using nexgensales.Views;
 using System.Windows;
+using nexgensales.ViewModels; // Required to access the HomeViewModel
 using System.Windows.Input;
 
 namespace NextGenSales.Views
@@ -9,6 +10,10 @@ namespace NextGenSales.Views
         public HomeView()
         {
             InitializeComponent();
+
+            // Binds the View to its corresponding ViewModel
+           
+            this.DataContext = new HomeViewModel();
         }
 
         // Title bar window dragging

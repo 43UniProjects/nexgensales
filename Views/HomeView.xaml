@@ -288,8 +288,8 @@
                             </ComboBox>
                         </StackPanel>
 
-                        <!-- Primary Action: Import Record Button -->
-                        <Button Content="Import Record" Width="430" Height="48" FontSize="15" FontWeight="Bold" Foreground="#0B0F13" Cursor="Hand">
+                        <!-- Primary Action Button: Triggers the file selection dialog via MVVM binding -->
+                        <Button Content="Import Record" Command="{Binding ImportRecordCommand}" Height="48" FontSize="14" FontWeight="Bold" Foreground="#0B0F13" Cursor="Hand" HorizontalAlignment="Stretch">
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <Setter Property="Background" Value="#00C896"/>
