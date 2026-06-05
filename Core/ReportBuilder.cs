@@ -12,6 +12,15 @@ namespace NextGenSales.Core
     /// </summary>
     public class ReportBuilder
     {
+        // QuestPDF requires a license declaration before any document is generated.
+        // Community license is free for individuals, non-profits, open-source projects,
+        // and companies with less than $1M USD annual revenue.
+        // See: https://www.questpdf.com/license/
+        static ReportBuilder()
+        {
+            QuestPDF.Settings.License = LicenseType.Community;
+        }
+
         public void GenerateReport(List<(string Title, byte[] Image)> charts, string filePath)
         {
             Document.Create(container =>
