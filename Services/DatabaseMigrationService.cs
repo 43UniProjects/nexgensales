@@ -11,17 +11,20 @@ public class DatabaseMigrationService
 
     private const int TargetVersion = 2; // increment this by one for each new addition to this file
 
-     public DatabaseMigrationService()
+    public DatabaseMigrationService()
     {
+
+        Console.WriteLine("[MIGRATION] Initializing...");
+
         string dbFolder;
 
-        #if DEBUG
+#if DEBUG
         // DEVELOPMENT
         dbFolder = Path.Combine(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..")), "Database");
-        #else
+#else
         // PRODUCTION
         dbFolder = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "Database"));
-        #endif
+#endif
 
         Directory.CreateDirectory(dbFolder);
 
@@ -41,8 +44,12 @@ public class DatabaseMigrationService
             throw new InvalidOperationException($"Database version ({currentVersion}) is newer than application code ({TargetVersion}).");
         }
 
+        Console.WriteLine($"[MIGRATION] Database currently at version {currentVersion}");
+
         if (currentVersion < 1)
         {
+            Console.WriteLine("[MIGRATION] Running version 1 script");
+            Console.WriteLine("[MIGRATION] Creating database tables, SalesRecords, ExpensesRecords");
             var salesRepo = new SalesRecordRepository(new SqliteService());
             salesRepo.InitializeTable();
             var expensesRepo = new ExpenseRecordRepository(new SqliteService());
@@ -52,10 +59,13 @@ public class DatabaseMigrationService
         }
 
         SetUserVersion(connection, TargetVersion);
+        Console.WriteLine("[MIGRATION] Database migrated successfully");
     }
 
     private int GetUserVersion(SqliteConnection connection)
     {
+
+        Console.WriteLine("[MIGRATION] Aquiring currect database version...");
         using var cmd = new SqliteCommand("PRAGMA user_version;", connection);
         return Convert.ToInt32(cmd.ExecuteScalar());
     }
