@@ -62,13 +62,22 @@ namespace nexgensales.ViewModels
             {
                 // Instantiate and display the Home dashboard upon successful login
                 HomeView homeWindow = new HomeView();
-                homeWindow.Show();
 
-                // Safely close the current Login window using the passed CommandParameter
                 if (parameter is Window loginWindow)
                 {
+                    homeWindow.WindowStartupLocation = WindowStartupLocation.Manual;
+                    homeWindow.Left = loginWindow.Left;
+                    homeWindow.Top = loginWindow.Top;
+
+                    homeWindow.Show();
                     loginWindow.Close();
                 }
+                else
+                {
+                    homeWindow.Show();
+                }
+
+                
             }
             else
             {
