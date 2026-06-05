@@ -335,11 +335,9 @@
                             <!-- Analysis Section Heading -->
                             <TextBlock Grid.Column="0" Text="Analyse Records" FontSize="18" FontWeight="Bold" Foreground="#FFFFFF" VerticalAlignment="Center" Margin="0,0,25,0"/>
 
-                            <!-- Multiple Filter Selections Container -->
+                            <!-- Date Range Filter -->
                             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-
-                                <!-- Filter 1: Date Range Selection -->
-                                <TextBlock Text="Date Range" FontSize="13" FontWeight="SemiBold" Foreground="#788896" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                <TextBlock Text="Select Date Range" FontSize="13" FontWeight="SemiBold" Foreground="#788896" VerticalAlignment="Center" Margin="0,0,15,0"/>
                                 <ComboBox Width="170" SelectedIndex="0">
                                     <ComboBoxItem Content="1 Week"/>
                                     <ComboBoxItem Content="1 Month"/>
@@ -347,15 +345,6 @@
                                     <ComboBoxItem Content="6 Months"/>
                                     <ComboBoxItem Content="1 Year"/>
                                 </ComboBox>
-
-                                <!-- Filter 2: Report Type Selection -->
-                                <TextBlock Text="Report Type" FontSize="13" FontWeight="SemiBold" Foreground="#788896" VerticalAlignment="Center" Margin="25,0,10,0"/>
-                                <ComboBox Width="170" SelectedIndex="0">
-                                    <ComboBoxItem Content="Sales Data"/>
-                                    <ComboBoxItem Content="Expense Data"/>
-                                    <ComboBoxItem Content="Profit Margin"/>
-                                </ComboBox>
-
                             </StackPanel>
 
                             <!-- Primary Execute Analysis Button -->

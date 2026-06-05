@@ -63,16 +63,17 @@ namespace NextGenSales.Views
 
         /// <summary>
         /// Opens the Analytics Dashboard as a modal dialog.
+        /// Report type is always "Sales" — a separate Expenses dashboard will handle expenses.
         /// The ProcessView is blocked (ShowDialog) until the dashboard is closed.
         /// </summary>
         private void BtnRunAnalysis_Click(object sender, RoutedEventArgs e)
         {
             var service   = new SalesAnalysisService(new MockDataRepository());
-            var vm        = new AnalyticsDashboardViewModel(service);
+            var vm        = new AnalyticsDashboardViewModel(service, "Sales");
             var dashboard = new AnalyticsDashboardView
             {
                 DataContext = vm,
-                Owner       = this   // ties the modal to ProcessView
+                Owner       = this
             };
 
             // ShowDialog() gives the dashboard exclusive focus and blocks
