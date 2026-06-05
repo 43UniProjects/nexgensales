@@ -5,6 +5,7 @@ using NexGenSales.Models.Enums;
 using NexGenSales.Services;
 using NexGenSales.Services.Data.Mapper;
 using NexGenSales.Services.Data.Repository;
+using NexGenSales.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,13 +16,9 @@ using System.Windows.Input;
 
 namespace nexgensales.ViewModels
 {
-    // =========================================================================================
+    
     // DATA MODEL FOR THE IMPORT ARRAY
-    // =========================================================================================
-    /// <summary>
-    /// Represents a data structure to hold both the file path and its corresponding record type.
-    /// This is the custom object requested to store files in an array cleanly.
-    /// </summary>
+    
     public class ImportedFileSummary
     {
         public string FilePath { get; set; }
@@ -32,10 +29,9 @@ namespace nexgensales.ViewModels
     {
         public ICommand ImportRecordCommand { get; }
 
-        // =========================================================================================
+        
         // PROPERTIES
-        // =========================================================================================
-
+        
         // The specific Array/List requested to hold both File Paths and Record Types
         private List<ImportedFileSummary> _importedFilesArray = new List<ImportedFileSummary>();
         public List<ImportedFileSummary> ImportedFilesArray
@@ -65,10 +61,7 @@ namespace nexgensales.ViewModels
             ImportRecordCommand = new RelayCommand(ExecuteImportRecord);
         }
 
-        // =========================================================================================
-        // COMMAND EXECUTION LOGIC
-        // =========================================================================================
-
+        
         private void ExecuteImportRecord(object parameter)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
@@ -98,11 +91,10 @@ namespace nexgensales.ViewModels
 
                 string fileNames = string.Join("\n", ImportedFilesArray.Select(f => System.IO.Path.GetFileName(f.FilePath)));
 
-                MessageBox.Show(
-                    $"Successfully structured and queued {ImportedFilesArray.Count} file(s) as [{SelectedRecordType}]:\n\n{fileNames}",
+                CustomMessageBoxView.Show(
+                    $"Successfully structured {ImportedFilesArray.Count} file(s) as [{SelectedRecordType}] for processing:\n\n{fileNames}",
                     "Import Configuration",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Information
+                    CustomMessageType.Info
                 );
 
                 // Pass the structured array to the processing method
@@ -110,55 +102,59 @@ namespace nexgensales.ViewModels
             }
         }
 
-        // =========================================================================================
+        
         // RECORD PROCESSING LOGIC
-        // =========================================================================================
+        
 
         private void ProcessAndImportRecords(List<ImportedFileSummary> filesToProcess)
         {
-            // Extract pure arrays of paths filtered by their specific Record Types
-            string[] salesPaths = filesToProcess.Where(f => f.RecordType == "Sales Record").Select(f => f.FilePath).ToArray();
-            string[] expensesPaths = filesToProcess.Where(f => f.RecordType == "Expenses Record").Select(f => f.FilePath).ToArray();
-
-            // 1. Process Sales Records
-            if (salesPaths.Length > 0)
+            try
             {
-                var salesImportService = new ExcelFileImportService<SalesRecordField, SalesRecord>(
-                    new ExcelParser(), RecordMappers.MapToSalesRecord);
+                // Extract pure arrays of paths filtered by their specific Record Types
+                string[] salesPaths = filesToProcess.Where(f => f.RecordType == "Sales Record").Select(f => f.FilePath).ToArray();
+                string[] expensesPaths = filesToProcess.Where(f => f.RecordType == "Expenses Record").Select(f => f.FilePath).ToArray();
 
-                if (salesImportService.ImportFiles(salesPaths))
+                // 1. Process Sales Records
+                if (salesPaths.Length > 0)
                 {
-                    new SalesRecordRepository(new SqliteService()).InsertMany(salesImportService.Records);
-                    MessageBox.Show("Sales records imported and saved successfully!", "Import Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    var salesImportService = new ExcelFileImportService<SalesRecordField, SalesRecord>(
+                        new ExcelParser(), RecordMappers.MapToSalesRecord);
+
+                    if (salesImportService.ImportFiles(salesPaths))
+                    {
+                        new SalesRecordRepository(new SqliteService()).InsertMany(salesImportService.Records);
+                        CustomMessageBoxView.Show("Sales records imported and saved successfully!", "Import Success", CustomMessageType.Success);
+                    }
+                    else
+                    {
+                        CustomMessageBoxView.Show("Validation failed for one or more Sales Record files.", "Validation Error", CustomMessageType.Error);
+                    }
                 }
-                else
+
+                // 2. Process Expenses Records
+                if (expensesPaths.Length > 0)
                 {
-                    MessageBox.Show("Validation failed for one or more Sales Record files.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    var expensesImportService = new ExcelFileImportService<ExpensesRecordField, ExpensesRecord>(
+                        new ExcelParser(), RecordMappers.MapToExpensesRecord);
+
+                    if (expensesImportService.ImportFiles(expensesPaths))
+                    {
+                        new ExpensesRecordRepository(new SqliteService()).InsertMany(expensesImportService.Records);
+                        CustomMessageBoxView.Show("Expenses records imported and saved successfully!", "Import Success", CustomMessageType.Success);
+                    }
+                    else
+                    {
+                        CustomMessageBoxView.Show("Validation failed for one or more Expenses Record files.", "Validation Error", CustomMessageType.Error);
+                    }
                 }
             }
-
-            // 2. Process Expenses Records
-            if (expensesPaths.Length > 0)
+            catch (Exception ex)
             {
-                var expensesImportService = new ExcelFileImportService<ExpensesRecordField, ExpensesRecord>(
-                    new ExcelParser(), RecordMappers.MapToExpensesRecord);
-
-                if (expensesImportService.ImportFiles(expensesPaths))
-                {
-                    new ExpensesRecordRepository(new SqliteService()).InsertMany(expensesImportService.Records);
-                    MessageBox.Show("Expenses records imported and saved successfully!", "Import Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-                else
-                {
-                    MessageBox.Show("Validation failed for one or more Expenses Record files.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                CustomMessageBoxView.Show($"An unexpected error occurred:\n{ex.Message}", "Critical Error", CustomMessageType.Error);
             }
         }
 
-        // =========================================================================================
-        // INOTIFYPROPERTYCHANGED IMPLEMENTATION
-        // =========================================================================================
-
+        
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)

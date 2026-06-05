@@ -1,6 +1,7 @@
-﻿using nexgensales.Views;
+﻿using nexgensales.ViewModels; // Required to access the HomeViewModel
+using nexgensales.Views;
+using NexGenSales.Views;
 using System.Windows;
-using nexgensales.ViewModels; // Required to access the HomeViewModel
 using System.Windows.Input;
 
 namespace NextGenSales.Views
@@ -66,25 +67,22 @@ namespace NextGenSales.Views
         // Handles the logout process, terminating the active session and returning to the authentication screen
         private void BtnLogout_Click(object sender, RoutedEventArgs e)
         {
-            // Prompt the user for confirmation before executing the logout action
-            MessageBoxResult result = MessageBox.Show(
+            //  Yes/No Custom Message Box Call
+            bool isLogoutConfirmed = CustomMessageBoxView.Show(
                 "Are you sure you want to log out of the current session?",
                 "Confirm Logout",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Question
-            );
+                CustomMessageType.Warning,
+                CustomMessageButtons.YesNo);
 
-            // Proceed with logout only if the user confirms
-            if (result == MessageBoxResult.Yes)
+            if (isLogoutConfirmed)
             {
-                // Instantiate and display the initial authentication view
+                // If click yes go to login page
                 LoginView loginWindow = new LoginView();
                 loginWindow.WindowStartupLocation = WindowStartupLocation.Manual;
                 loginWindow.Left = this.Left;
                 loginWindow.Top = this.Top;
-                loginWindow.Show();
 
-                // Dispose of the current Home dashboard view to secure the session
+                loginWindow.Show();
                 this.Close();
             }
         }
