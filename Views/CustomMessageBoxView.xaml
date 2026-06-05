@@ -24,6 +24,8 @@
                 <TextBlock Name="TxtTitle" Text="Notification" Foreground="#D3D9E0" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
             </StackPanel>
 
+            <Rectangle Grid.Row="0" VerticalAlignment="Bottom" Height="1" Fill="#2D3A46" Margin="20,0,20,0"/>
+
             <ScrollViewer Grid.Row="1" Margin="20,15,20,5" VerticalScrollBarVisibility="Auto">
                 <TextBlock Name="TxtMessage" Text="Message goes here..." Foreground="#A0ABB5" FontSize="14" TextWrapping="Wrap" VerticalAlignment="Top"/>
             </ScrollViewer>
