@@ -60,5 +60,28 @@ namespace NextGenSales.Views
             
             this.Close();
         }
+
+        // Handles the logout process, terminating the active session and returning to the authentication screen
+        private void BtnLogout_Click(object sender, RoutedEventArgs e)
+        {
+            // Prompt the user for confirmation before executing the logout action
+            MessageBoxResult result = MessageBox.Show(
+                "Are you sure you want to log out of the current session?",
+                "Confirm Logout",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question
+            );
+
+            // Proceed with logout only if the user confirms
+            if (result == MessageBoxResult.Yes)
+            {
+                // Instantiate and display the initial authentication view
+                LoginView loginWindow = new LoginView();
+                loginWindow.Show();
+
+                // Dispose of the current Home dashboard view to secure the session
+                this.Close();
+            }
+        }
     }
 }

@@ -197,7 +197,35 @@
 
                     <!-- TOP NAVIGATION BAR: HOME VIEW -->
                     <Grid Grid.Row="0" Margin="0,0,0,25">
-                        <!-- Primary Forward Navigation to Process View -->
+
+                        <!-- Logout button Left side -->
+                        <Button Content="&#x276E;  Logout" Click="BtnLogout_Click" HorizontalAlignment="Left" Width="130" Height="40" FontSize="13" Foreground="#A0ABB5" Cursor="Hand">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Background" Value="#1C2127"/>
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="6" BorderBrush="#2D3A46" BorderThickness="1">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#E81123"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter Property="BorderBrush" Value="#E81123"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+
+                        <!-- implement Go to process button -->
+
                         <Button Content="Process  &#x276F;" Click="BtnGotoProcess_Click" HorizontalAlignment="Right" Width="130" Height="40" FontSize="13" Foreground="#0B0F13" Cursor="Hand">
                             <Button.Style>
                                 <Style TargetType="Button">
