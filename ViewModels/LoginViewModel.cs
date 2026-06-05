@@ -1,4 +1,5 @@
 ﻿using NexGenSales.Services;
+using NexGenSales.Views;
 using NextGenSales.Views; // Required to navigate to HomeView
 using System;
 using System.ComponentModel;
@@ -85,11 +86,10 @@ namespace nexgensales.ViewModels
             else
             {
                 // Display an error prompt if the provided credentials are invalid
-                MessageBox.Show(
+                CustomMessageBoxView.Show(
                     "Invalid Username or Password. Please try again.",
                     "Authentication Failed",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error
+                    CustomMessageType.Error
                 );
             }
         }
@@ -97,8 +97,10 @@ namespace nexgensales.ViewModels
         // Handles navigation to the RegisterView
         private void ExecuteNavigateRegister(object parameter)
         {
-            // TODO: Add logic to open RegisterView and close LoginView
-            MessageBox.Show("Navigating to Register Window...", "Navigation", MessageBoxButton.OK, MessageBoxImage.Information);
+            CustomMessageBoxView.Show(
+    "Account creation portal is currently under maintenance. Please contact the administrator.",
+    "Feature Unavailable",
+    CustomMessageType.Warning);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

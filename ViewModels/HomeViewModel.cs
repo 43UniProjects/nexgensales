@@ -5,6 +5,7 @@ using NexGenSales.Models.Enums;
 using NexGenSales.Services;
 using NexGenSales.Services.Data.Mapper;
 using NexGenSales.Services.Data.Repository;
+using NexGenSales.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -98,11 +99,11 @@ namespace nexgensales.ViewModels
 
                 string fileNames = string.Join("\n", ImportedFilesArray.Select(f => System.IO.Path.GetFileName(f.FilePath)));
 
-                MessageBox.Show(
-                    $"Successfully structured and queued {ImportedFilesArray.Count} file(s) as [{SelectedRecordType}]:\n\n{fileNames}",
-                    "Import Configuration",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Information
+                CustomMessageBoxView.Show(
+                    $"Sales records {ImportedFilesArray.Count} file(s) as [{SelectedRecordType}] imported and saved to the database successfully! :\n\n{fileNames}",
+                    "Import Success",
+
+                    CustomMessageType.Success
                 );
 
                 // Pass the structured array to the processing method
