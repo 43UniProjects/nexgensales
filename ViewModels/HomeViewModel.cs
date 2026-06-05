@@ -110,50 +110,47 @@ namespace nexgensales.ViewModels
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        // =========================================================================================
+        // RECORD PROCESSING LOGIC
+        // =========================================================================================
 
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void ProcessAndImportRecords(List<ImportedFileSummary> filesToProcess)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+            // Extract pure arrays of paths filtered by their specific Record Types
+            string[] salesPaths = filesToProcess.Where(f => f.RecordType == "Sales Record").Select(f => f.FilePath).ToArray();
+            string[] expensesPaths = filesToProcess.Where(f => f.RecordType == "Expenses Record").Select(f => f.FilePath).ToArray();
 
-        protected static void ImportRecord(IEnumerable<string> filePaths)
-        {
-
-            var excelFileImportService = new ExcelFileImportService<SalesRecordField, SalesRecord>(
-                new ExcelParser(),
-                RecordMappers.MapToSalesRecord
-            );
-
-            bool importSuccess = excelFileImportService.ImportFiles(filePaths);
-
-            if (importSuccess)
+            // 1. Process Sales Records
+            if (salesPaths.Length > 0)
             {
-                // Extract pure arrays of paths filtered by their specific Record Types
-                string[] salesPaths = filesToProcess.Where(f => f.RecordType == "Sales Record").Select(f => f.FilePath).ToArray();
-                string[] expensesPaths = filesToProcess.Where(f => f.RecordType == "Expenses Record").Select(f => f.FilePath).ToArray();
+                var salesImportService = new ExcelFileImportService<SalesRecordField, SalesRecord>(
+                    new ExcelParser(), RecordMappers.MapToSalesRecord);
 
-                // 1. Process Sales Records
-                if (salesPaths.Length > 0)
+                if (salesImportService.ImportFiles(salesPaths))
                 {
-                    var salesImportService = new ExcelFileImportService<SalesRecordField, SalesRecord>(
-                        new ExcelParser(), RecordMappers.MapToSalesRecord);
-
-                    if (salesImportService.ImportFiles(salesPaths))
-                    {
-                        new SalesRecordRepository(new SqliteService()).InsertMany(salesImportService.Records);
-                        MessageBox.Show("Sales records imported and saved successfully!", "Import Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
-                    else
-                    {
-                        MessageBox.Show("Validation failed for one or more Sales Record files.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
+                    new SalesRecordRepository(new SqliteService()).InsertMany(salesImportService.Records);
+                    MessageBox.Show("Sales records imported and saved successfully!", "Import Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
-
-                // 2. Process Expenses Records
-                if (expensesPaths.Length > 0)
+                else
                 {
-                    Console.WriteLine($"[HomeViewModel] Failed to store imported data from {filePaths.First()} in DB");
+                    MessageBox.Show("Validation failed for one or more Sales Record files.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+
+            // 2. Process Expenses Records
+            if (expensesPaths.Length > 0)
+            {
+                var expensesImportService = new ExcelFileImportService<ExpensesRecordField, ExpensesRecord>(
+                    new ExcelParser(), RecordMappers.MapToExpensesRecord);
+
+                if (expensesImportService.ImportFiles(expensesPaths))
+                {
+                    new ExpensesRecordRepository(new SqliteService()).InsertMany(expensesImportService.Records);
+                    MessageBox.Show("Expenses records imported and saved successfully!", "Import Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Validation failed for one or more Expenses Record files.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
@@ -161,7 +158,9 @@ namespace nexgensales.ViewModels
         // =========================================================================================
         // INOTIFYPROPERTYCHANGED IMPLEMENTATION
         // =========================================================================================
+
         public event PropertyChangedEventHandler PropertyChanged;
+
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
