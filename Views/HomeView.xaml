@@ -413,38 +413,46 @@
                         </Border>
                     </StackPanel>
 
-                    <StackPanel Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,20">
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20">
-                            <TextBlock Text="Select Record Type" Foreground="#788896" FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,20,0"/>
+                    <Border Grid.Row="3" Background="#141A21" BorderBrush="#1E262E" BorderThickness="1" CornerRadius="16" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,20" Padding="40,25">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="20" Color="Black" Opacity="0.3" ShadowDepth="5"/>
+                        </Border.Effect>
 
-                            <ComboBox Width="250" SelectedIndex="0">
-                                <ComboBoxItem Content="Sales Record"/>
-                                <ComboBoxItem Content="Expenses Record"/>
-                            </ComboBox>
+                        <StackPanel>
+
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20">
+                                <TextBlock Text="Select Record Type" Foreground="#788896" FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,20,0"/>
+
+                                <ComboBox Width="260" SelectedIndex="0">
+                                    <ComboBoxItem Content="Sales Record"/>
+                                    <ComboBoxItem Content="Expenses Record"/>
+                                </ComboBox>
+                            </StackPanel>
+
+                            <Button Content="Import Record" Command="{Binding ImportRecordCommand}" Height="48" FontSize="14" FontWeight="Bold" Foreground="#0B0F13" Cursor="Hand" HorizontalAlignment="Stretch">
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Background" Value="#00C896"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Background="{TemplateBinding Background}" CornerRadius="6">
+                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#00A87D"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+
                         </StackPanel>
-
-                        <Button Content="Import Record" Command="{Binding ImportRecordCommand}" Height="48" FontSize="14" FontWeight="Bold" Foreground="#0B0F13" Cursor="Hand" HorizontalAlignment="Stretch">
-                            <Button.Style>
-                                <Style TargetType="Button">
-                                    <Setter Property="Background" Value="#00C896"/>
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="Button">
-                                                <Border Background="{TemplateBinding Background}" CornerRadius="6">
-                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                </Border>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="#00A87D"/>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Button.Style>
-                        </Button>
-                    </StackPanel>
+                    </Border>
 
                 </Grid>
             </Grid>
