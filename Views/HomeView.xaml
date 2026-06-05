@@ -363,7 +363,26 @@
                         </Button>
                     </Grid>
 
-                    <TextBlock Grid.Row="1" Text="Welcome to NexGenSales" Foreground="White" FontSize="26" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,30,0,0"/>
+                    <!-- ============================================================== -->
+                    <!-- HEADER SECTION: Application Greeting and Descriptive Subtitle  -->
+                    <!-- ============================================================== -->
+                    <StackPanel Grid.Row="1" HorizontalAlignment="Center" Margin="0,2,0,30">
+
+                        <!-- Main Welcome Title: Utilizes the <Run> tag for inline typography and multi-color formatting -->
+                        <TextBlock FontSize="34" HorizontalAlignment="Center" FontFamily="Segoe UI">
+                            <Run Text="Welcome to " Foreground="White" FontWeight="Light"/>
+                            <Run Text="NexGenSales" Foreground="#00C896" FontWeight="Bold"/>
+                        </TextBlock>
+
+                        <!-- Secondary Subtitle: Fills the negative space and provides context for the dashboard -->
+                        <TextBlock Text="Streamline your workflow, analyze records, and generate insights effortlessly." 
+                                   Foreground="#788896" 
+                                   FontSize="15" 
+                                   FontWeight="Regular" 
+                                   HorizontalAlignment="Center" 
+                                   Margin="0,8,0,0"
+                                   FontFamily="Segoe UI"/>
+                    </StackPanel>
 
                     <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Border Style="{StaticResource Card1Style}" Margin="0,0,30,0">
