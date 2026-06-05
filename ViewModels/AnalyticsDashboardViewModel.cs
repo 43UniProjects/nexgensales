@@ -60,7 +60,8 @@ namespace NextGenSales.ViewModels
         /// </summary>
         public string GenerateReport(List<(string Title, FrameworkElement Chart)> charts)
         {
-            return _service.GenerateReport(charts, "NexGenSales_AnalyticsReport.pdf");
+            return _service.GenerateReport(charts, "Reports/NexGenSales_AnalyticsReport.pdf");
+            
         }
     }
 }
