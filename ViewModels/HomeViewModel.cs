@@ -16,13 +16,9 @@ using System.Windows.Input;
 
 namespace nexgensales.ViewModels
 {
-    // =========================================================================================
+    
     // DATA MODEL FOR THE IMPORT ARRAY
-    // =========================================================================================
-    /// <summary>
-    /// Represents a data structure to hold both the file path and its corresponding record type.
-    /// This is the custom object requested to store files in an array cleanly.
-    /// </summary>
+    
     public class ImportedFileSummary
     {
         public string FilePath { get; set; }
@@ -33,10 +29,9 @@ namespace nexgensales.ViewModels
     {
         public ICommand ImportRecordCommand { get; }
 
-        // =========================================================================================
+        
         // PROPERTIES
-        // =========================================================================================
-
+        
         // The specific Array/List requested to hold both File Paths and Record Types
         private List<ImportedFileSummary> _importedFilesArray = new List<ImportedFileSummary>();
         public List<ImportedFileSummary> ImportedFilesArray
@@ -66,10 +61,7 @@ namespace nexgensales.ViewModels
             ImportRecordCommand = new RelayCommand(ExecuteImportRecord);
         }
 
-        // =========================================================================================
-        // COMMAND EXECUTION LOGIC
-        // =========================================================================================
-
+        
         private void ExecuteImportRecord(object parameter)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
@@ -100,10 +92,9 @@ namespace nexgensales.ViewModels
                 string fileNames = string.Join("\n", ImportedFilesArray.Select(f => System.IO.Path.GetFileName(f.FilePath)));
 
                 CustomMessageBoxView.Show(
-                    $"Sales records {ImportedFilesArray.Count} file(s) as [{SelectedRecordType}] imported and saved to the database successfully! :\n\n{fileNames}",
-                    "Import Success",
-
-                    CustomMessageType.Success
+                    $"Successfully structured {ImportedFilesArray.Count} file(s) as [{SelectedRecordType}] for processing:\n\n{fileNames}",
+                    "Import Configuration",
+                    CustomMessageType.Info
                 );
 
                 // Pass the structured array to the processing method
@@ -111,9 +102,10 @@ namespace nexgensales.ViewModels
             }
         }
 
-        /// <summary>
-        /// Reads the structured array and routes files to their respective services for DB insertion.
-        /// </summary>
+        
+        // RECORD PROCESSING LOGIC
+        
+
         private void ProcessAndImportRecords(List<ImportedFileSummary> filesToProcess)
         {
             try
@@ -143,11 +135,11 @@ namespace nexgensales.ViewModels
                 if (expensesPaths.Length > 0)
                 {
                     var expensesImportService = new ExcelFileImportService<ExpensesRecordField, ExpensesRecord>(
-                        new ExcelParser(), RecordMappers.MapToExpenseRecord);
+                        new ExcelParser(), RecordMappers.MapToExpensesRecord);
 
                     if (expensesImportService.ImportFiles(expensesPaths))
                     {
-                        new ExpenseRecordRepository(new SqliteService()).InsertMany(expensesImportService.Records);
+                        new ExpensesRecordRepository(new SqliteService()).InsertMany(expensesImportService.Records);
                         CustomMessageBoxView.Show("Expenses records imported and saved successfully!", "Import Success", CustomMessageType.Success);
                     }
                     else
@@ -162,10 +154,9 @@ namespace nexgensales.ViewModels
             }
         }
 
-        // =========================================================================================
-        // INOTIFYPROPERTYCHANGED IMPLEMENTATION
-        // =========================================================================================
+        
         public event PropertyChangedEventHandler PropertyChanged;
+
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

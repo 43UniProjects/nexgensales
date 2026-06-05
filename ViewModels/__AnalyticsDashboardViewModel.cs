@@ -14,7 +14,7 @@ namespace NexGenSales.ViewModels
     public partial class AnalyticsDashboardViewModle
     {
         private readonly SalesRecordRepository _salesRepo = new SalesRecordRepository(new SqliteService());
-        private readonly ExpenseRecordRepository _expensesRepo = new ExpenseRecordRepository(new SqliteService());
+        private readonly ExpensesRecordRepository _expensesRepo = new ExpensesRecordRepository(new SqliteService());
 
         /// <summary>
         /// Executes all 9 analytical engines based on the selected date range.

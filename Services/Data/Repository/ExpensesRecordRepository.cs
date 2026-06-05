@@ -3,7 +3,7 @@ using NexGenSales.Models;
 
 namespace NexGenSales.Services.Data.Repository;
 
-class ExpenseRecordRepository(SqliteService sqliteService) : Repository<ExpensesRecord>(sqliteService)
+class ExpensesRecordRepository(SqliteService sqliteService) : Repository<ExpensesRecord>(sqliteService)
 {
     public override void InitializeTable()
     {
@@ -16,7 +16,7 @@ class ExpenseRecordRepository(SqliteService sqliteService) : Repository<Expenses
                 Amount REAL NOT NULL,
                 Asset_ID TEXT
             );";
-            
+
 
         ExecuteNonQuery(query);
     }
@@ -57,14 +57,13 @@ class ExpenseRecordRepository(SqliteService sqliteService) : Repository<Expenses
         return expenseRecords;
     }
 
-    public override bool Insert(ExpensesRecord newRecord)
+    public override bool Insert(ExpensesRecord newRecord, SqliteConnection connection)
     {
         string sql = @"
             INSERT INTO ExpensesRecord(Date_Recorded, Expense_Category, Specific_Type, Amount, Asset_ID)
             VALUES(@Date_Recorded, @Expense_Category, @Specific_Type, @Amount, @Asset_ID)
         ";
 
-        var connection = sqliteService.CreateConnection();
         connection.Open();
 
         using var command = new SqliteCommand(sql, connection);
@@ -91,9 +90,11 @@ class ExpenseRecordRepository(SqliteService sqliteService) : Repository<Expenses
 
     public override void InsertMany(List<ExpensesRecord> newRecords)
     {
+        var connection = sqliteService.CreateConnection();
+
         foreach (var record in newRecords)
         {
-            if (!Insert(record))
+            if (!Insert(record, connection))
             {
                 throw new InvalidOperationException("Failed to insert one or more expense records.");
             }
