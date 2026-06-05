@@ -12,6 +12,7 @@ namespace NexGenSales.Core
 
         public ExcelParser()
         {
+            Console.WriteLine("[ExcelParser] Initializing...");
             // Required for reading older Excel formats natively
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
         }
@@ -33,6 +34,9 @@ namespace NexGenSales.Core
             using (var reader = ExcelReaderFactory.CreateReader(stream))
             {
                 bool isHeaderRow = true;
+
+
+                Console.WriteLine($"[ExcelParser] Parsing the file @({filePath})...");
 
                 while (reader.Read())
                 {
@@ -73,6 +77,8 @@ namespace NexGenSales.Core
                     }
                 }
             }
+
+            Console.WriteLine($"[ExcelParser] Successfully Parsed the file @({filePath})...");
 
             return parsedData;
         }

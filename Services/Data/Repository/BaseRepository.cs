@@ -1,3 +1,5 @@
+using Microsoft.Data.Sqlite;
+
 namespace NexGenSales.Services.Data.Repository;
 
 public abstract class Repository<TModel>
@@ -14,7 +16,7 @@ public abstract class Repository<TModel>
 
     public abstract void InsertMany(List<TModel> newRecords);
 
-    public abstract bool Insert(TModel newRecord);
+    public abstract bool Insert(TModel newRecord, SqliteConnection connection);
 
     public abstract Task<List<TModel>> GetAll();
 

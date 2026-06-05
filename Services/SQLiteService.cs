@@ -11,15 +11,16 @@ public class SqliteService
 
     public SqliteService()
     {
+        Console.WriteLine($"[SqliteService] Initializing...");
         string databaseDirectory;
 
-        #if DEBUG
+#if DEBUG
         // DEVELOPMENT
         databaseDirectory = Path.Combine(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..")), "Database");
-        #else
+#else
         // PRODUCTION
         databaseDirectory = Path.Combine(AppContext.BaseDirectory, "Database");
-        #endif
+#endif
 
         Directory.CreateDirectory(databaseDirectory);
 
@@ -28,6 +29,7 @@ public class SqliteService
     }
     public SqliteConnection CreateConnection()
     {
+        Console.WriteLine($"[SqliteService] Creating new connection...");
         return new SqliteConnection(_connectionString);
     }
 }

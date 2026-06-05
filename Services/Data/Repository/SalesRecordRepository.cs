@@ -67,7 +67,7 @@ class SalesRecordRepository(SqliteService sqliteService) : Repository<SalesRecor
     }
 
 
-    public override bool Insert(SalesRecord newRecord)
+    public override bool Insert(SalesRecord newRecord, SqliteConnection connection)
     {
         const string query = @"
             INSERT INTO SalesRecord (
@@ -93,8 +93,7 @@ class SalesRecordRepository(SqliteService sqliteService) : Repository<SalesRecor
                 @Current_Stock
             );";
 
-        using var connection = sqliteService.CreateConnection();
-        connection.Open();
+
 
         using var command = new SqliteCommand(query, connection);
         command.Parameters.AddWithValue("@Date_Time", newRecord.Date_Time);
@@ -112,9 +111,12 @@ class SalesRecordRepository(SqliteService sqliteService) : Repository<SalesRecor
 
     public override void InsertMany(List<SalesRecord> newRecords)
     {
+
+        var connection = sqliteService.CreateConnection();
+        connection.Open();
         foreach (var record in newRecords)
         {
-            if (!Insert(record))
+            if (!Insert(record, connection))
             {
                 throw new InvalidOperationException("Failed to insert one or more expense records.");
             }

@@ -17,6 +17,8 @@ public static class RecordMappers
             var value = entry.Value;
             if (value == null) continue;
 
+            Console.WriteLine($"[RecordMapper] Parsing field > SalesRecordField.{field}");
+
             switch (field)
             {
                 case SalesRecordField.DateTime:
@@ -48,8 +50,12 @@ public static class RecordMappers
                     if (value is double discountAmount) record.Allowed_Discount = discountAmount;
                     else if (double.TryParse(value.ToString(), out var discountAmountValue)) record.Allowed_Discount = discountAmountValue;
                     break;
+                case SalesRecordField.CurrentStock:
+                    if (value is double currentStock) record.Current_Stock = currentStock;
+                    else if (double.TryParse(value.ToString(), out var currentStockAmount)) record.Current_Stock = currentStockAmount;
+                    break;
                 default:
-                    System.Diagnostics.Debug.Write("GetImportedData switch case for SalesRecord failed!");
+                    Console.WriteLine("[RecordMapper] GetImportedData switch case for SalesRecord failed!");
                     break;
             }
         }
@@ -66,6 +72,8 @@ public static class RecordMappers
             var field = kvp.Key;
             var value = kvp.Value;
             if (value == null) continue;
+
+            Console.WriteLine($"[RecordMapper] Parsing field > SalesRecordField.{field}");
 
             switch (field)
             {
@@ -87,7 +95,7 @@ public static class RecordMappers
                     record.Asset_ID = value.ToString();
                     break;
                 default:
-                    System.Diagnostics.Debug.Write("GetImportedExpensesData switch case for ExpensesRecord failed!");
+                    System.Diagnostics.Debug.Write("[RecordMapper] GetImportedExpensesData switch case for ExpensesRecord failed!");
                     break;
             }
         }

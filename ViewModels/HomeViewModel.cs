@@ -56,7 +56,7 @@ namespace nexgensales.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        protected void ImportRecord(IEnumerable<string> filePaths)
+        protected static void ImportRecord(IEnumerable<string> filePaths)
         {
 
             var excelFileImportService = new ExcelFileImportService<SalesRecordField, SalesRecord>(
@@ -65,6 +65,7 @@ namespace nexgensales.ViewModels
             );
 
             bool importSuccess = excelFileImportService.ImportFiles(filePaths);
+
             if (importSuccess)
             {
                 try
@@ -73,12 +74,8 @@ namespace nexgensales.ViewModels
                 }
                 catch (InvalidOperationException)
                 {
-                    MessageBox.Show($"DB Faliure! Storing data from {filePaths.First()} to DB was unsuccessfull");
+                    Console.WriteLine($"[HomeViewModel] Failed to store imported data from {filePaths.First()} in DB");
                 }
-            }
-            else
-            {
-                MessageBox.Show($"Import Faliure! Importing from {filePaths.First()} was unsuccessfull - Invalid Fields Found");
             }
         }
     }
