@@ -140,7 +140,7 @@ namespace nexgensales.ViewModels
                 if (expensesPaths.Length > 0)
                 {
                     var expensesImportService = new ExcelFileImportService<ExpensesRecordField, ExpensesRecord>(
-                        new ExcelParser(), RecordMappers.MapToExpensesRecord);
+                        new ExcelParser(), RecordMappers.MapToExpenseRecord);
 
                     if (expensesImportService.ImportFiles(expensesPaths))
                     {

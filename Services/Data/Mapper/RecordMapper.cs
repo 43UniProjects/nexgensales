@@ -56,22 +56,7 @@ public static class RecordMappers
         return record;
     }
 
-    /// <summary>
-    /// Maps an array of string values parsed from a file into an ExpensesRecord object.
-    /// Ensure the array indices match the logical order of ExpensesRecordField enum.
-    /// </summary>
-    public static ExpensesRecord MapToExpensesRecord(Dictionary<ExpensesRecordField, object> row)
-    {
-        return new ExpensesRecord
-        {
-            Date_Recorded = Convert.ToDateTime(row[ExpensesRecordField.DateRecorded]),
-            Expense_Category = row[ExpensesRecordField.ExpenseCategory]?.ToString(),
-            Specific_Type = row[ExpensesRecordField.SpecificType]?.ToString(),
-            // Converts the generic object to double safely to match the model property
-            Amount = Convert.ToDouble(row[ExpensesRecordField.Amount]),
-            Asset_ID = row[ExpensesRecordField.AssetId]?.ToString()
-        };
-    }
+    
 
     public static ExpensesRecord MapToExpenseRecord(Dictionary<ExpensesRecordField, object> row)
     {
