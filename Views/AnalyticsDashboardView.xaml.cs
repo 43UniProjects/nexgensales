@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Input;
 using NextGenSales.ViewModels;
 
 namespace NextGenSales.Views
@@ -12,6 +13,32 @@ namespace NextGenSales.Views
             InitializeComponent();
         }
 
+        // ── Title-bar drag ────────────────────────────────────────────────────
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+                this.DragMove();
+        }
+
+        // ── Title-bar controls ────────────────────────────────────────────────
+        private void BtnMinimize_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+        private void BtnMaximize_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = this.WindowState == WindowState.Normal
+                ? WindowState.Maximized
+                : WindowState.Normal;
+        }
+
+        private void BtnClose_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        // ── PDF generation ────────────────────────────────────────────────────
         /// <summary>
         /// Collects all named chart controls, passes them to the ViewModel for PDF generation.
         /// Using code-behind here is intentional — the View owns the visual references.
