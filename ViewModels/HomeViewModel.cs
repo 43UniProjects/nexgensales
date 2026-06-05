@@ -131,11 +131,11 @@ namespace nexgensales.ViewModels
                     if (salesImportService.ImportFiles(salesPaths))
                     {
                         new SalesRecordRepository(new SqliteService()).InsertMany(salesImportService.Records);
-                        MessageBox.Show("Sales records imported and saved successfully!", "Import Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                        CustomMessageBoxView.Show("Sales records imported and saved successfully!", "Import Success", CustomMessageType.Success);
                     }
                     else
                     {
-                        MessageBox.Show("Validation failed for one or more Sales Record files.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        CustomMessageBoxView.Show("Validation failed for one or more Sales Record files.", "Validation Error", CustomMessageType.Error);
                     }
                 }
 
@@ -148,17 +148,17 @@ namespace nexgensales.ViewModels
                     if (expensesImportService.ImportFiles(expensesPaths))
                     {
                         new ExpenseRecordRepository(new SqliteService()).InsertMany(expensesImportService.Records);
-                        MessageBox.Show("Expenses records imported and saved successfully!", "Import Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                        CustomMessageBoxView.Show("Expenses records imported and saved successfully!", "Import Success", CustomMessageType.Success);
                     }
                     else
                     {
-                        MessageBox.Show("Validation failed for one or more Expenses Record files.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        CustomMessageBoxView.Show("Validation failed for one or more Expenses Record files.", "Validation Error", CustomMessageType.Error);
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"An unexpected error occurred:\n{ex.Message}", "Critical Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                CustomMessageBoxView.Show($"An unexpected error occurred:\n{ex.Message}", "Critical Error", CustomMessageType.Error);
             }
         }
 
