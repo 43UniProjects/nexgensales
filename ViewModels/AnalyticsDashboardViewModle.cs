@@ -102,7 +102,7 @@ namespace NexGenSales.ViewModels
                 // --- Criterion 5: Discount Optimization ---
                 // Group by discount percentage to find which discount yields the highest total profit
                 var discountOptimization = rawSales
-                    .GroupBy(s => s.Allowed_Discounts)
+                    .GroupBy(s => s.Allowed_Discount)
                     .OrderBy(g => g.Key)
                     .ToDictionary(
                         g => $"{g.Key}%",

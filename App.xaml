@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:NextGenSales"
              StartupUri="Views/LoginView.xaml">
     <Application.Resources>
-         
+
     </Application.Resources>
 </Application>

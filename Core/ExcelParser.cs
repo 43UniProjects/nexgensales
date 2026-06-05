@@ -22,7 +22,7 @@ namespace NexGenSales.Core
         /// <typeparam name="T">The Enum representing the expected fields (e.g., SalesField)</typeparam>
         /// <param name="filePath">Path to the .xlsx or .csv file</param>
         /// <returns>A strongly-typed list of rows mapped as Dictionary<TEnum, Value></returns>
-        public List<Dictionary<T, object?>> ParseFile<T>(string filePath) where T : struct, Enum
+        public List<Dictionary<T, object>> ParseFile<T>(string filePath) where T : struct, Enum
         {
             ThrowIfDisposed();
 
