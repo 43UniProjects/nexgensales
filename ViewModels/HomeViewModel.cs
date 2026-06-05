@@ -42,7 +42,9 @@ namespace nexgensales.ViewModels
                     MessageBoxImage.Information
                 );
 
-                
+                IEnumerable<string> filePaths = [selectedFilePath];
+
+                ImportRecord(filePaths);
 
             }
         }
@@ -52,6 +54,32 @@ namespace nexgensales.ViewModels
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        protected void ImportRecord(IEnumerable<string> filePaths)
+        {
+
+            var excelFileImportService = new ExcelFileImportService<SalesRecordField, SalesRecord>(
+                new ExcelParser(),
+                RecordMappers.MapToSalesRecord
+            );
+
+            bool importSuccess = excelFileImportService.ImportFiles(filePaths);
+            if (importSuccess)
+            {
+                try
+                {
+                    new SalesRecordRepository(new SqliteService()).InsertMany(excelFileImportService.Records);
+                }
+                catch (InvalidOperationException)
+                {
+                    MessageBox.Show($"DB Faliure! Storing data from {filePaths.First()} to DB was unsuccessfull");
+                }
+            }
+            else
+            {
+                MessageBox.Show($"Import Faliure! Importing from {filePaths.First()} was unsuccessfull - Invalid Fields Found");
+            }
         }
     }
 }
