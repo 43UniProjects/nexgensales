@@ -96,8 +96,10 @@ namespace nexgensales.ViewModels
                 // Assign the structured list to the main array property
                 ImportedFilesArray = tempFilesList;
 
+                string fileNames = string.Join("\n", ImportedFilesArray.Select(f => System.IO.Path.GetFileName(f.FilePath)));
+
                 MessageBox.Show(
-                    $"Successfully structured and queued {ImportedFilesArray.Count} file(s) as [{SelectedRecordType}].",
+                    $"Successfully structured and queued {ImportedFilesArray.Count} file(s) as [{SelectedRecordType}]:\n\n{fileNames}",
                     "Import Configuration",
                     MessageBoxButton.OK,
                     MessageBoxImage.Information
