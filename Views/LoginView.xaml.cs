@@ -13,34 +13,14 @@ namespace NextGenSales.Views
         }
 
         // Handles the click event for the Login button
+        
         private void BtnLogin_Click(object sender, RoutedEventArgs e)
         {
-            // Retrieve user inputs from the UI fields
-            string username = txtUsername.Text;
-            string password = txtPassword.Password;
-
-            // Temporary hardcoded authentication logic for testing purposes
-            // TODO: Replace this with proper SQL database authentication later
-            if (username == "nexgen" && password == "123")
-            {
-                // Instantiate and display the Home dashboard upon successful login
-                HomeView homeWindow = new HomeView();
-                homeWindow.Show();
-
-                // Close the current Login view to release resources
-                this.Close();
-            }
-            else
-            {
-                // Display an error prompt if the provided credentials are invalid
-                MessageBox.Show(
-                    "Invalid Username or Password. Please try again.",
-                    "Authentication Failed",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error
-                );
-            }
+            
+           
         }
+
+        
 
         // Enables the user to drag and move the application window via the custom title bar
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
