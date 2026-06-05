@@ -424,7 +424,7 @@
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20">
                                 <TextBlock Text="Select Record Type" Foreground="#788896" FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,20,0"/>
 
-                                <ComboBox Width="260" SelectedIndex="0">
+                                <ComboBox Width="260" SelectedValue="{Binding SelectedRecordType, Mode=TwoWay}" SelectedValuePath="Content">
                                     <ComboBoxItem Content="Sales Record"/>
                                     <ComboBoxItem Content="Expenses Record"/>
                                 </ComboBox>

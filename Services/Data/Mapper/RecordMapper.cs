@@ -56,6 +56,8 @@ public static class RecordMappers
         return record;
     }
 
+    
+
     public static ExpensesRecord MapToExpenseRecord(Dictionary<ExpensesRecordField, object> row)
     {
         var record = new ExpensesRecord();
@@ -95,4 +97,6 @@ public static class RecordMappers
 
         return record;
     }
+
+
 }
