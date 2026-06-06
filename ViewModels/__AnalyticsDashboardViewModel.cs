@@ -7,9 +7,8 @@ using LiveChartsCore.SkiaSharpView;
 
 using NextGenSales.Models;
 using NextGenSales.Core;
-using NexGenSales.Services.Data.Repository.ExpensesRecordRepository;
-using NexGenSales.Services.Data.Repository.SalesRecordRepository;
-using NextGenSales.core;
+using NextGenSales.Services.Data;
+using NexGenSales.core;
 
 namespace NextGenSales.ViewModels
 {

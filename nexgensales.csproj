@@ -1,23 +1,31 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <NoWarn>$(NoWarn);NU1510;NU1701</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="assets\home\analys.png" />
-    <None Remove="assets\home\done.png" />
-    <None Remove="assets\home\import.png" />
+    <None Remove="Assets\Home\analys.png" />
+    <None Remove="Assets\Home\done.png" />
+    <None Remove="Assets\Home\import.png" />
   </ItemGroup>
 
+  <!-- Future DB-connected analytics logic — excluded until repositories are implemented
   <ItemGroup>
-    <Resource Include="assets\home\analys.png" />
-    <Resource Include="assets\home\done.png" />
-    <Resource Include="assets\home\import.png" />
+    <Compile Remove="ViewModels\__AnalyticsDashboardViewModel.cs" />
+  </ItemGroup>
+
+  -->
+
+  <ItemGroup>
+    <Resource Include="Assets\Home\analys.png" />
+    <Resource Include="Assets\Home\done.png" />
+    <Resource Include="Assets\Home\import.png" />
   </ItemGroup>
 
   <ItemGroup>

@@ -276,6 +276,8 @@ ServiceFabricBackup/
 *.mdf
 *.ldf
 *.ndf
+*.db
+*.sqlite
 
 # Business Intelligence projects
 *.rdl.data
@@ -483,3 +485,5 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+Database/

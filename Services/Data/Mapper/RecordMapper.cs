@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using NexGenSales.Models;
 using NexGenSales.Models.Enums;
 
-namespace NexGenSales.Services.Data;
+namespace NexGenSales.Services.Data.Mapper;
 
 public static class RecordMappers
 {
@@ -16,6 +16,8 @@ public static class RecordMappers
             var field = entry.Key;
             var value = entry.Value;
             if (value == null) continue;
+
+            Console.WriteLine($"[RecordMapper] Parsing field > SalesRecordField.{field}");
 
             switch (field)
             {
@@ -48,15 +50,21 @@ public static class RecordMappers
                     if (value is double discountAmount) record.Allowed_Discount = discountAmount;
                     else if (double.TryParse(value.ToString(), out var discountAmountValue)) record.Allowed_Discount = discountAmountValue;
                     break;
+                case SalesRecordField.CurrentStock:
+                    if (value is double currentStock) record.Current_Stock = currentStock;
+                    else if (double.TryParse(value.ToString(), out var currentStockAmount)) record.Current_Stock = currentStockAmount;
+                    break;
                 default:
-                    System.Diagnostics.Debug.Write("GetImportedData switch case for SalesRecord failed!");
+                    Console.WriteLine("[RecordMapper] GetImportedData switch case for SalesRecord failed!");
                     break;
             }
         }
         return record;
     }
 
-    public static ExpensesRecord MapToExpenseRecord(Dictionary<ExpensesRecordField, object> row)
+    
+
+    public static ExpensesRecord MapToExpensesRecord(Dictionary<ExpensesRecordField, object> row)
     {
         var record = new ExpensesRecord();
 
@@ -66,6 +74,8 @@ public static class RecordMappers
             var field = kvp.Key;
             var value = kvp.Value;
             if (value == null) continue;
+
+            Console.WriteLine($"[RecordMapper] Parsing field > SalesRecordField.{field}");
 
             switch (field)
             {
@@ -87,7 +97,7 @@ public static class RecordMappers
                     record.Asset_ID = value.ToString();
                     break;
                 default:
-                    System.Diagnostics.Debug.Write("GetImportedExpensesData switch case for ExpensesRecord failed!");
+                    System.Diagnostics.Debug.Write("[RecordMapper] GetImportedExpensesData switch case for ExpensesRecord failed!");
                     break;
             }
         }
@@ -95,4 +105,6 @@ public static class RecordMappers
 
         return record;
     }
+
+
 }

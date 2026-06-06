@@ -12,6 +12,7 @@ namespace NexGenSales.Core
 
         public ExcelParser()
         {
+            Console.WriteLine("[ExcelParser] Initializing...");
             // Required for reading older Excel formats natively
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
         }
@@ -26,7 +27,7 @@ namespace NexGenSales.Core
         {
             ThrowIfDisposed();
 
-            var parsedData = new List<Dictionary<T, object?>>();
+            var parsedData = new List<Dictionary<T, object>>();
             var columnMap = new Dictionary<int, T>();
 
             using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
@@ -34,13 +35,16 @@ namespace NexGenSales.Core
             {
                 bool isHeaderRow = true;
 
+
+                Console.WriteLine($"[ExcelParser] Parsing the file @({filePath})...");
+
                 while (reader.Read())
                 {
                     if (isHeaderRow)
                     {
                         for (int col = 0; col < reader.FieldCount; col++)
                         {
-                            string? rawHeader = reader.GetValue(col)?.ToString();
+                            string rawHeader = reader.GetValue(col)?.ToString();
                             if (string.IsNullOrWhiteSpace(rawHeader)) continue;
 
                             // Clean the Excel header to match standard Enum naming
@@ -56,14 +60,14 @@ namespace NexGenSales.Core
                         continue;
                     }
 
-                    var rowData = new Dictionary<T, object?>();
+                    var rowData = new Dictionary<T, object>();
 
                     foreach (var map in columnMap)
                     {
                         int colIndex = map.Key;
                         T systemField = map.Value;
 
-                        object? cellValue = reader.GetValue(colIndex);
+                        object cellValue = reader.GetValue(colIndex);
                         rowData[systemField] = (cellValue == DBNull.Value) ? null : cellValue;
                     }
 
@@ -73,6 +77,8 @@ namespace NexGenSales.Core
                     }
                 }
             }
+
+            Console.WriteLine($"[ExcelParser] Successfully Parsed the file @({filePath})...");
 
             return parsedData;
         }

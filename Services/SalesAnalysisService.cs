@@ -3,9 +3,9 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using LiveCharts;
-using NextGenSales.Core;
+using NexGenSales.Core;
 
-namespace NextGenSales.Services
+namespace NexGenSales.Services
 {
     /// <summary>
     /// Data transfer record carrying all five ready-to-bind chart datasets.

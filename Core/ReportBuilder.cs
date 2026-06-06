@@ -4,7 +4,7 @@ using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using PdfColors = QuestPDF.Helpers.Colors;
 
-namespace NextGenSales.Core
+namespace NexGenSales.Core
 {
     /// <summary>
     /// Assembles a multi-section, paginated A4 PDF report from chart images using QuestPDF.

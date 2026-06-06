@@ -1,4 +1,4 @@
-namespace NextGenSales.Core
+namespace NexGenSales.Core
 {
     /// <summary>
     /// Provides hardcoded pre-calculated data arrays for the analytics dashboard.

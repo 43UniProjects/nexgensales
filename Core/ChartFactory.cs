@@ -2,7 +2,7 @@ using LiveCharts;
 using LiveCharts.Wpf;
 using System.Windows.Media;
 
-namespace NextGenSales.Core
+namespace NexGenSales.Core
 {
     /// <summary>
     /// Static factory that converts pre-calculated data arrays into LiveCharts SeriesCollection objects.

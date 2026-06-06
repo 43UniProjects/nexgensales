@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using LiveCharts;
-using NextGenSales.Core;
-using NextGenSales.Services;
+using NexGenSales.Core;
+using NexGenSales.Services;
 
-namespace NextGenSales.ViewModels
+namespace NexGenSales.ViewModels
 {
     /// <summary>
     /// Drives the AnalyticsDashboardView.

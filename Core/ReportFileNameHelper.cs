@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace NextGenSales.Core
+namespace NexGenSales.Core
 {
     /// <summary>
     /// Generates standardised, timestamped file names for analytics reports.

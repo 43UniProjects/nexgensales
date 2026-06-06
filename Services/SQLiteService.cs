@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using Microsoft.Data.Sqlite;
+using DocumentFormat.OpenXml.Drawing.Charts;
 
 
 public class SqliteService
@@ -10,14 +11,25 @@ public class SqliteService
 
     public SqliteService()
     {
-        string databaseDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Database");
+        Console.WriteLine($"[SqliteService] Initializing...");
+        string databaseDirectory;
+
+#if DEBUG
+        // DEVELOPMENT
+        databaseDirectory = Path.Combine(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..")), "Database");
+#else
+        // PRODUCTION
+        databaseDirectory = Path.Combine(AppContext.BaseDirectory, "Database");
+#endif
+
         Directory.CreateDirectory(databaseDirectory);
+
         string dbPath = Path.Combine(databaseDirectory, "app.db");
         _connectionString = $"Data Source={dbPath}";
     }
-
     public SqliteConnection CreateConnection()
     {
+        Console.WriteLine($"[SqliteService] Creating new connection...");
         return new SqliteConnection(_connectionString);
     }
 }

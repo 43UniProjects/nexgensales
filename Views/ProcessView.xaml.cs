@@ -1,10 +1,10 @@
 using System.Windows;
 using System.Windows.Input;
-using NextGenSales.Core;
-using NextGenSales.Services;
-using NextGenSales.ViewModels;
+using NexGenSales.Core;
+using NexGenSales.Services;
+using NexGenSales.ViewModels;
 
-namespace NextGenSales.Views
+namespace NexGenSales.Views
 {
     public partial class ProcessView : Window
     {
@@ -44,6 +44,9 @@ namespace NextGenSales.Views
         private void BtnHome_Click(object sender, RoutedEventArgs e)
         {
             HomeView homeWindow = new HomeView();
+            homeWindow.WindowStartupLocation = WindowStartupLocation.Manual;
+            homeWindow.Left = this.Left;
+            homeWindow.Top = this.Top;
             homeWindow.Show();
             this.Close();
         }
@@ -51,6 +54,9 @@ namespace NextGenSales.Views
         private void BtnExports_Click(object sender, RoutedEventArgs e)
         {
             ExportView exportWindow = new ExportView();
+            exportWindow.WindowStartupLocation = WindowStartupLocation.Manual;
+            exportWindow.Left = this.Left;
+            exportWindow.Top = this.Top;
             exportWindow.Show();
             this.Close();
         }

@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
-using NextGenSales.ViewModels;
+using NexGenSales.ViewModels;
 
-namespace NextGenSales.Views
+namespace NexGenSales.Views
 {
     public partial class AnalyticsDashboardView : Window
     {

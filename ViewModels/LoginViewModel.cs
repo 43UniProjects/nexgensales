@@ -1,10 +1,12 @@
-﻿using System;
+using NexGenSales.Services;
+using NexGenSales.Views;
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 
-namespace nexgensales.ViewModels
+namespace NexGenSales.ViewModels
 {
     // Handles data binding and logic for the LoginView
     public class LoginViewModel : INotifyPropertyChanged
@@ -40,9 +42,9 @@ namespace nexgensales.ViewModels
         // Command to navigate to the registration window
         public ICommand NavigateRegisterCommand { get; }
 
+        // Constructor: Initializes commands
         public LoginViewModel()
         {
-            // Initialize commands with their respective execution methods
             LoginCommand = new RelayCommand(ExecuteLogin, CanExecuteLogin);
             NavigateRegisterCommand = new RelayCommand(ExecuteNavigateRegister);
         }
@@ -53,21 +55,52 @@ namespace nexgensales.ViewModels
             return !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Password);
         }
 
-        // Executes the login process
+        // Executes the authentication process and handles window navigation
         private void ExecuteLogin(object parameter)
         {
-            // TODO: Add database authentication logic here
-            MessageBox.Show($"Attempting to login with Username: {Username}", "Authentication", MessageBoxButton.OK, MessageBoxImage.Information);
+            // Temporary hardcoded authentication logic for testing purposes
+            if (Username == "nexgen" && Password == "123")
+            {
+                // Instantiate and display the Home dashboard upon successful login
+
+                new DatabaseMigrationService().EnsureMigrated();
+                HomeView homeWindow = new HomeView();
+
+                if (parameter is Window loginWindow)
+                {
+                    homeWindow.WindowStartupLocation = WindowStartupLocation.Manual;
+                    homeWindow.Left = loginWindow.Left;
+                    homeWindow.Top = loginWindow.Top;
+
+                    homeWindow.Show();
+                    loginWindow.Close();
+                }
+                else
+                {
+                    homeWindow.Show();
+                }
+
+                
+            }
+            else
+            {
+                // Display an error prompt if the provided credentials are invalid
+                CustomMessageBoxView.Show(
+                    "Invalid Username or Password. Please try again.",
+                    "Authentication Failed",
+                    CustomMessageType.Error
+                );
+            }
         }
 
         // Handles navigation to the RegisterView
         private void ExecuteNavigateRegister(object parameter)
         {
-            // TODO: Add logic to open RegisterView and close LoginView
-            MessageBox.Show("Navigating to Register Window...", "Navigation", MessageBoxButton.OK, MessageBoxImage.Information);
+            CustomMessageBoxView.Show(
+    "Account creation portal is currently under maintenance. Please contact the administrator.",
+    "Feature Unavailable",
+    CustomMessageType.Warning);
         }
-
-        
 
         public event PropertyChangedEventHandler PropertyChanged;
 

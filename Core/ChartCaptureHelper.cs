@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace NextGenSales.Core
+namespace NexGenSales.Core
 {
     /// <summary>
     /// Captures a WPF FrameworkElement as a PNG byte array suitable for embedding in a PDF report.

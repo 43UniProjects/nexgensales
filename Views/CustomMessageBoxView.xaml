@@ -1,0 +1,95 @@
+﻿<Window x:Class="NexGenSales.Views.CustomMessageBoxView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Message" Height="220" Width="450"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        WindowStartupLocation="CenterScreen" Topmost="True"
+        Loaded="Window_Loaded" 
+        PreviewKeyDown="Window_PreviewKeyDown">
+
+    <Border Background="#141A21" BorderBrush="#1E262E" BorderThickness="1" CornerRadius="12" MouseLeftButtonDown="Window_MouseDown">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="30" Color="Black" Opacity="0.6" ShadowDepth="10"/>
+        </Border.Effect>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="65"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="20,10,0,0">
+                <TextBlock Name="TxtIcon" Text="ℹ️" FontSize="18" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                <TextBlock Name="TxtTitle" Text="Notification" Foreground="#D3D9E0" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <Rectangle Grid.Row="0" VerticalAlignment="Bottom" Height="1" Fill="#2D3A46" Margin="20,0,20,0"/>
+
+            <ScrollViewer Grid.Row="1" Margin="20,15,20,5" VerticalScrollBarVisibility="Auto">
+                <TextBlock Name="TxtMessage" Text="Message goes here..." Foreground="#A0ABB5" FontSize="14" TextWrapping="Wrap" VerticalAlignment="Top"/>
+            </ScrollViewer>
+
+            <Border Grid.Row="2" Background="#0B0F13" CornerRadius="0,0,12,12" BorderBrush="#1E262E" BorderThickness="0,1,0,0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,20,0">
+
+                    <Button Name="BtnNo" IsCancel="True" Content="No" Visibility="Collapsed" Width="90" Height="35" Margin="0,0,10,0" FontSize="13" FontWeight="Bold" Cursor="Hand" Click="BtnNo_Click">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="#1C2127"/>
+                                <Setter Property="Foreground" Value="#D3D9E0"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}" CornerRadius="6" BorderBrush="#2D3A46" BorderThickness="1">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#2D3A46"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                    </Trigger>
+                                    <Trigger Property="IsFocused" Value="True">
+                                        <Setter Property="BorderBrush" Value="#00C896"/>
+                                        <Setter Property="BorderThickness" Value="2"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
+                    <Button Name="BtnOk" IsDefault="True" Content="OK" Width="100" Height="35" FontSize="13" FontWeight="Bold" Cursor="Hand" Click="BtnOk_Click">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="#00C896"/>
+                                <Setter Property="Foreground" Value="#0B0F13"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}" CornerRadius="6" BorderBrush="Transparent" BorderThickness="2">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#00A87D"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                    </Trigger>
+                                    <Trigger Property="IsFocused" Value="True">
+                                        <Setter Property="BorderBrush" Value="White"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+</Window>
