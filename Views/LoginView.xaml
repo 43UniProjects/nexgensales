@@ -213,7 +213,7 @@
                             </Button>
 
                             <!-- Secondary registration button (Ghost style) -->
-                            <Button Command="{Binding NavigateRegisterCommand}" Content="CREATE NEW ACCOUNT" Height="48" FontSize="13" FontWeight="Bold" Foreground="#00C896" Cursor="Hand">
+                            <Button Command="{Binding RequestAccountCommand}" Content="REQUEST AN ACCOUNT" Height="48" FontSize="13" FontWeight="Bold" Foreground="#00C896" Cursor="Hand">
                                 <Button.Style>
                                     <Style TargetType="Button">
                                         <Setter Property="Background" Value="Transparent"/>
