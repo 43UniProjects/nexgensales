@@ -73,6 +73,8 @@ namespace nexgensales.ViewModels
                     homeWindow.Left = loginWindow.Left;
                     homeWindow.Top = loginWindow.Top;
 
+                    homeWindow.WindowState = loginWindow.WindowState;
+
                     homeWindow.Show();
                     loginWindow.Close();
                 }

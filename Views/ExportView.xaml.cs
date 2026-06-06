@@ -53,6 +53,9 @@ namespace nexgensales.Views
             processWindow.WindowStartupLocation = WindowStartupLocation.Manual;
             processWindow.Left = this.Left;
             processWindow.Top = this.Top;
+
+            processWindow.WindowState = this.WindowState;
+
             processWindow.Show();
             this.Close();
         }
@@ -65,6 +68,9 @@ namespace nexgensales.Views
             homeWindow.WindowStartupLocation = WindowStartupLocation.Manual;
             homeWindow.Left = this.Left;
             homeWindow.Top = this.Top;
+
+            homeWindow.WindowState = this.WindowState;
+
             homeWindow.Show();
 
             // Close the current Export view to free up system resources
