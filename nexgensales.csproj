@@ -15,12 +15,7 @@
     <None Remove="Assets\Home\import.png" />
   </ItemGroup>
 
-  <!-- Future DB-connected analytics logic — excluded until repositories are implemented
-  <ItemGroup>
-    <Compile Remove="ViewModels\__AnalyticsDashboardViewModel.cs" />
-  </ItemGroup>
 
-  -->
 
   <ItemGroup>
     <Resource Include="Assets\Home\analys.png" />

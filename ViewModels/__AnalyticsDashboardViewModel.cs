@@ -4,13 +4,11 @@ using System.Linq;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 
+using NexGenSales.Models;
+using NexGenSales.Core;
+using NexGenSales.Services.Data.Repository;
 
-using NextGenSales.Models;
-using NextGenSales.Core;
-using NextGenSales.Services.Data;
-using NexGenSales.core;
-
-namespace NextGenSales.ViewModels
+namespace NexGenSales.ViewModels
 {
     public partial class AnalyticsDashboardViewModle
     {
@@ -65,7 +63,7 @@ namespace NextGenSales.ViewModels
                     }).ToList();
 
                 var supplierProfits = supplierStats.ToDictionary(s => s.Supplier, s => s.Profit);
-                ISeries[] SupplierProfitabilitySeries = ChartFactory.CreateContributionPieChart(supplierProfits).ToArray();
+                //ISeries[] SupplierProfitabilitySeries = ChartFactory.CreateContributionPieChart(supplierProfits).ToArray();
 
                 foreach (var sup in supplierStats.Where(s => s.Margin < 0.15)) // 15% margin threshold
                 {
