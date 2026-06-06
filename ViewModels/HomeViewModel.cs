@@ -1,4 +1,4 @@
-﻿using Microsoft.Win32;
+using Microsoft.Win32;
 using NexGenSales.Core;
 using NexGenSales.Models;
 using NexGenSales.Models.Enums;
@@ -14,7 +14,7 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 
-namespace nexgensales.ViewModels
+namespace NexGenSales.ViewModels
 {
     
     // DATA MODEL FOR THE IMPORT ARRAY

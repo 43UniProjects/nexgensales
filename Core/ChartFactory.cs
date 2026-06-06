@@ -1,186 +1,124 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
+using LiveCharts;
+using LiveCharts.Wpf;
+using System.Windows.Media;
 
-namespace NexGenSales.core
+namespace NexGenSales.Core
 {
+    /// <summary>
+    /// Static factory that converts pre-calculated data arrays into LiveCharts SeriesCollection objects.
+    /// One method per analysis type. No business logic, no data fetching — pure chart construction.
+    /// </summary>
     public static class ChartFactory
     {
-        // ==========================================
-        // 1. SALES ANALYSIS WRAPPERS
-        // ==========================================
+        // ── Shared colour palette ─────────────────────────────────────────────────
+        private static readonly SolidColorBrush AccentTeal =
+            new(Color.FromRgb(0x00, 0xE5, 0xA0));
 
-        /// <summary>
-        /// Trend Analysis: Day-wise total revenue (Line Chart)
-        /// </summary>
-        public static ISeries[] CreateRevenueTrendSeries(Dictionary<string, double> dailyRevenue)
-        {
-            return new ISeries[]
-            {
-                new LineSeries<double>
-                {
-                    Name = "Net Revenue",
-                    Values = dailyRevenue.Values.ToArray(),
-                    Fill = null, // Keeps it a clean line (no under-fill)
-                    GeometrySize = 8,
-                    LineSmoothness = 0.5 // Gives that modern curved look
-                }
-            };
-        }
+        private static readonly SolidColorBrush AccentTealFill =
+            new(Color.FromArgb(0x55, 0x00, 0xE5, 0xA0));
 
-        /// <summary>
-        /// Item Velocity: Top selling items (Bar/Column Chart)
-        /// </summary>
-        public static ISeries[] CreateItemVelocitySeries(Dictionary<string, double> itemVolumes)
-        {
-            return new ISeries[]
-            {
-                new ColumnSeries<double>
-                {
-                    Name = "Units Sold",
-                    Values = itemVolumes.Values.ToArray(),
-                    MaxBarWidth = 40,
-                    DataLabelsPaint = new SolidColorPaint(SKColors.DarkSlateGray),
-                    DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top
-                }
-            };
-        }
+        private static readonly SolidColorBrush LowMarginRed =
+            new(Color.FromRgb(0xFF, 0x6B, 0x35));
 
-        /// <summary>
-        /// Supplier Profitability & Revenue Contribution (Pie/Doughnut Chart)
-        /// Creates a slice for each supplier based on their generated profit.
-        /// </summary>
-        public static IEnumerable<ISeries> CreateContributionPieChart(Dictionary<string, double> contributions)
+        private static readonly Color[] PiePalette =
         {
-            var series = new List<ISeries>();
-            foreach (var item in contributions)
+            Color.FromRgb(0x00, 0xE5, 0xA0), // teal
+            Color.FromRgb(0x00, 0xC8, 0xE5), // cyan
+            Color.FromRgb(0x8B, 0x5C, 0xF6), // purple
+            Color.FromRgb(0xF5, 0x9E, 0x0B), // amber
+            Color.FromRgb(0xEC, 0x48, 0x99), // pink
+        };
+
+        // ── 1. Supplier Profitability — Column chart, flagged bars in red ─────────
+        /// <summary>
+        /// Creates one ColumnSeries per supplier so each bar can be individually coloured.
+        /// Low-margin suppliers (IsLowMargin = true) are rendered in red.
+        /// </summary>
+        public static SeriesCollection CreateSupplierProfitabilityChart(
+            string[] suppliers, double[] ratios, bool[] isLowMargin)
+        {
+            var series = new SeriesCollection();
+            for (int i = 0; i < suppliers.Length; i++)
             {
-                series.Add(new PieSeries<double>
+                series.Add(new ColumnSeries
                 {
-                    Name = item.Key,
-                    Values = new double[] { item.Value },
-                    InnerRadius = 50, // Makes it a modern Doughnut chart instead of a standard Pie
-                    ToolTipLabelFormatter = point => $"{point.Context.Series.Name}: ${point}"
+                    Title      = suppliers[i],
+                    Values     = new ChartValues<double> { ratios[i] },
+                    Fill       = isLowMargin[i] ? LowMarginRed : AccentTeal,
+                    DataLabels = true,
+                    LabelPoint = p => p.Y.ToString("P0")
                 });
             }
             return series;
         }
 
-        /// <summary>
-        /// Discount Optimization: The "Win-Win" Bell Curve (Line Chart)
-        /// Plots total profit against discount percentages to show the sweet spot peak.
-        /// </summary>
-        public static ISeries[] CreateDiscountOptimizationSeries(double[] profitAtVariousDiscounts)
+        // ── 2. Item Velocity — Column chart ───────────────────────────────────────
+        public static SeriesCollection CreateItemVelocityChart(string[] items, int[] quantities)
         {
-            return new ISeries[]
+            return new SeriesCollection
             {
-                new LineSeries<double>
+                new ColumnSeries
                 {
-                    Name = "Projected Total Profit",
-                    Values = profitAtVariousDiscounts, // e.g., index 0 = 0% discount, index 10 = 10% discount
-                    Stroke = new SolidColorPaint(SKColors.Purple) { StrokeThickness = 3 },
-                    GeometryFill = new SolidColorPaint(SKColors.White),
-                    GeometryStroke = new SolidColorPaint(SKColors.Purple) { StrokeThickness = 2 }
+                    Title      = "Units Sold",
+                    Values     = new ChartValues<int>(quantities),
+                    Fill       = AccentTeal,
+                    DataLabels = true
                 }
             };
         }
 
-        // ==========================================
-        // 2. EXPENSES & PREDICTIONS WRAPPERS
-        // ==========================================
-
-        /// <summary>
-        /// Macro-Forecasting: Will current profit cover end-of-month expenses?
-        /// Uses a line chart for profit and a visual "Section" for the target line.
-        /// </summary>
-        public static ISeries[] CreateMacroForecastingSeries(double[] cumulativeDailyProfit)
+        // ── 3. Revenue Contribution — Pie (doughnut) chart ────────────────────────
+        public static SeriesCollection CreateRevenueContributionChart(
+            string[] items, double[] revenues)
         {
-            return new ISeries[]
+            var series = new SeriesCollection();
+            for (int i = 0; i < items.Length; i++)
             {
-                new LineSeries<double>
+                series.Add(new PieSeries
                 {
-                    Name = "Cumulative Profit",
-                    Values = cumulativeDailyProfit,
-                    Fill = new SolidColorPaint(SKColors.LightGreen.WithAlpha(50)),
-                    Stroke = new SolidColorPaint(SKColors.Green) { StrokeThickness = 3 }
+                    Title      = items[i],
+                    Values     = new ChartValues<double> { revenues[i] },
+                    Fill       = new SolidColorBrush(PiePalette[i % PiePalette.Length]),
+                    DataLabels = true,
+                    LabelPoint = p => $"{p.Participation:P0}"
+                });
+            }
+            return series;
+        }
+
+        // ── 4. Trend Analysis — Line chart ────────────────────────────────────────
+        public static SeriesCollection CreateTrendAnalysisChart(string[] days, double[] revenues)
+        {
+            return new SeriesCollection
+            {
+                new LineSeries
+                {
+                    Title            = "Total Revenue",
+                    Values           = new ChartValues<double>(revenues),
+                    Stroke           = AccentTeal,
+                    Fill             = AccentTealFill,
+                    PointGeometrySize = 10,
+                    PointForeground  = new SolidColorBrush(Colors.White),
+                    DataLabels       = false
                 }
             };
         }
 
-        /// <summary>
-        /// Generates the fixed target line (L_total) for the Macro-Forecast chart.
-        /// Apply this to the Y-Axis of the chart in the ViewModel.
-        /// </summary>
-        /// 
-        /*
-        public static Axis[] CreateMacroForecastingYAxis(double totalMonthlyLiabilities)
+        // ── 5. Discount Effectiveness — Column chart ──────────────────────────────
+        public static SeriesCollection CreateDiscountEffectivenessChart(
+            string[] labels, double[] scores)
         {
-            return new Axis[]
+            return new SeriesCollection
             {
-                new Axis
+                new ColumnSeries
                 {
-                    // Adds a hard red line across the chart indicating the survival target
-                    Sections = new LiveChartsCore.Measure.RectangularSection[]
-                    {
-                        new LiveChartsCore.Measure.RectangularSection
-                        {
-                            Yi = totalMonthlyLiabilities,
-                            Yj = totalMonthlyLiabilities,
-                            Stroke = new SolidColorPaint(SKColors.Red) { StrokeThickness = 2, PathEffect = new DashEffect(new float[] { 6, 6 }) }
-                        }
-                    }
+                    Title      = "Effectiveness Score",
+                    Values     = new ChartValues<double>(scores),
+                    Fill       = AccentTeal,
+                    DataLabels = true,
+                    LabelPoint = p => p.Y.ToString("F1")
                 }
             };
         }
-
-        /// <summary>
-        /// Anomaly Detection: Utility Spikes vs Historical Average
-        /// </summary>
-        public static ISeries[] CreateAnomalyDetectionSeries(double[] actualExpenses, double movingAverage)
-        {
-            return new ISeries[]
-            {
-                new LineSeries<double>
-                {
-                    Name = "Actual Utility Expense",
-                    Values = actualExpenses,
-                    Stroke = new SolidColorPaint(SKColors.DarkOrange) { StrokeThickness = 2 }
-                },
-                new LineSeries<double>
-                {
-                    Name = "Historical Average",
-                    // Creates a flat line at the moving average across all points
-                    Values = Enumerable.Repeat(movingAverage, actualExpenses.Length).ToArray(),
-                    Stroke = new SolidColorPaint(SKColors.Gray) { StrokeThickness = 2, PathEffect = new DashEffect(new float[] { 4, 4 }) },
-                    GeometrySize = 0 // Hide the dots on the average line
-                }
-            };
-        }
-
-        // ==========================================
-        // 3. UTILITY METHODS (AXIS LABELS)
-        // ==========================================
-        
-        /// <summary>
-        /// Generates the X-Axis string labels (e.g., Dates, Item Names, Supplier Names).
-        /// </summary>
-        public static Axis[] CreateStringXAxis(string[] labels, string axisTitle = "")
-        {
-            return new Axis[]
-            {
-                new Axis
-                {
-                    Name = axisTitle,
-                    Labels = labels,
-                    LabelsRotation = 45, // Tilts labels so they don't overlap
-                    TextSize = 12
-                }
-            };
-        }
-        */
     }
 }
