@@ -41,13 +41,13 @@ namespace nexgensales.ViewModels
         public ICommand LoginCommand { get; }
 
         // Command to navigate to the registration window
-        public ICommand NavigateRegisterCommand { get; }
+        public ICommand RequestAccountCommand { get; }
 
         // Constructor: Initializes commands
         public LoginViewModel()
         {
             LoginCommand = new RelayCommand(ExecuteLogin, CanExecuteLogin);
-            NavigateRegisterCommand = new RelayCommand(ExecuteNavigateRegister);
+            RequestAccountCommand = new RelayCommand(ExecuteRequestAccountCommand);
         }
 
         // Checks if the login button should be enabled (both fields must have text)
@@ -73,6 +73,8 @@ namespace nexgensales.ViewModels
                     homeWindow.Left = loginWindow.Left;
                     homeWindow.Top = loginWindow.Top;
 
+                    homeWindow.WindowState = loginWindow.WindowState;
+
                     homeWindow.Show();
                     loginWindow.Close();
                 }
@@ -95,12 +97,12 @@ namespace nexgensales.ViewModels
         }
 
         // Handles navigation to the RegisterView
-        private void ExecuteNavigateRegister(object parameter)
+        private void ExecuteRequestAccountCommand(object parameter)
         {
             CustomMessageBoxView.Show(
-    "Account creation portal is currently under maintenance. Please contact the administrator.",
-    "Feature Unavailable",
-    CustomMessageType.Warning);
+    "NexGenSales is an enterprise application with restricted access.\n\nTo obtain a licensed account for your business, please contact our support team at:\n📞 +94 71 111 1111\n✉️ sales@nexgensales.com",
+    "Access Restricted",
+    CustomMessageType.Info);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

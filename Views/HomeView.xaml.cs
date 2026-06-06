@@ -60,6 +60,8 @@ namespace NextGenSales.Views
             processWindow.Left = this.Left;
             processWindow.Top = this.Top;
 
+            processWindow.WindowState = this.WindowState;
+
             processWindow.Show();
             this.Close();
         }
@@ -81,6 +83,8 @@ namespace NextGenSales.Views
                 loginWindow.WindowStartupLocation = WindowStartupLocation.Manual;
                 loginWindow.Left = this.Left;
                 loginWindow.Top = this.Top;
+
+                loginWindow.WindowState = this.WindowState;
 
                 loginWindow.Show();
                 this.Close();

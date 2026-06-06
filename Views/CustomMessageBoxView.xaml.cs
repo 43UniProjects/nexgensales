@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Linq;
 
 namespace NexGenSales.Views
 {
@@ -115,6 +116,20 @@ namespace NexGenSales.Views
         public static bool Show(string message, string title = "Notification", CustomMessageType type = CustomMessageType.Info, CustomMessageButtons buttons = CustomMessageButtons.Ok)
         {
             CustomMessageBoxView msgBox = new CustomMessageBoxView(message, title, type, buttons);
+
+            Window activeWindow = System.Windows.Application.Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive);
+
+            if (activeWindow != null)
+            {
+                msgBox.Owner = activeWindow;
+                msgBox.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            }
+            else
+            {
+                
+                msgBox.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            }
+
             msgBox.ShowDialog();
             return msgBox.Result;
         }

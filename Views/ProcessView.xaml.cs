@@ -45,6 +45,8 @@ namespace nexgensales.Views
             homeWindow.WindowStartupLocation = WindowStartupLocation.Manual;
             homeWindow.Left = this.Left;
             homeWindow.Top = this.Top;
+
+            homeWindow.WindowState = this.WindowState;
             homeWindow.Show();
             this.Close();
         }
@@ -56,6 +58,7 @@ namespace nexgensales.Views
             exportWindow.WindowStartupLocation = WindowStartupLocation.Manual;
             exportWindow.Left = this.Left;
             exportWindow.Top = this.Top;
+            exportWindow.WindowState = this.WindowState;
             exportWindow.Show();
             this.Close();
         }
