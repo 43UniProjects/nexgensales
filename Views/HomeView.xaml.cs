@@ -1,10 +1,9 @@
-﻿using nexgensales.ViewModels; // Required to access the HomeViewModel
-using nexgensales.Views;
 using NexGenSales.Views;
+using NexGenSales.ViewModels; // Required to access the HomeViewModel
 using System.Windows;
 using System.Windows.Input;
 
-namespace NextGenSales.Views
+namespace NexGenSales.Views
 {
     public partial class HomeView : Window
     {

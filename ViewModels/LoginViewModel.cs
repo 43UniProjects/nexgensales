@@ -1,13 +1,12 @@
-﻿using NexGenSales.Services;
+using NexGenSales.Services;
 using NexGenSales.Views;
-using NextGenSales.Views; // Required to navigate to HomeView
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 
-namespace nexgensales.ViewModels
+namespace NexGenSales.ViewModels
 {
     // Handles data binding and logic for the LoginView
     public class LoginViewModel : INotifyPropertyChanged

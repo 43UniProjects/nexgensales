@@ -1,10 +1,10 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Input;
 
-using nexgensales.ViewModels;
+using NexGenSales.ViewModels;
 using NexGenSales.Services;
 
-namespace NextGenSales.Views
+namespace NexGenSales.Views
 {
     public partial class LoginView : Window
     {

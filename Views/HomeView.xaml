@@ -1,4 +1,4 @@
-﻿<Window x:Class="NextGenSales.Views.HomeView"
+<Window x:Class="NexGenSales.Views.HomeView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="NexGenSales - Home" Height="750" Width="1100"

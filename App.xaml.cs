@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace NextGenSales;
+namespace NexGenSales;
 
 /// <summary>
 /// Interaction logic for App.xaml

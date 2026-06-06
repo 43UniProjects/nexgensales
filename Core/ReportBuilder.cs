@@ -1,58 +1,27 @@
-using System;
 using System.Collections.Generic;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
+using PdfColors = QuestPDF.Helpers.Colors;
 
 namespace NexGenSales.Core
 {
+    /// <summary>
+    /// Assembles a multi-section, paginated A4 PDF report from chart images using QuestPDF.
+    /// Accepts a list of (title, image) pairs and renders each as a titled section.
+    /// </summary>
     public class ReportBuilder
     {
-        // Internal interface to hold our modular blocks
-        private interface IReportBlock { }
-        private class TitleBlock : IReportBlock { public required string Text { get; set; } }
-        private class TextBlock : IReportBlock { public required string Text { get; set; } }
-        private class ImageBlock : IReportBlock { public required byte[] ImageData { get; set; } }
-
-        private readonly List<IReportBlock> _blocks = new List<IReportBlock>();
-        private readonly string _documentTitle;
-
-        public ReportBuilder(string documentTitle = "NexGenSales Executive Report")
+        // QuestPDF requires a license declaration before any document is generated.
+        // Community license is free for individuals, non-profits, open-source projects,
+        // and companies with less than $1M USD annual revenue.
+        // See: https://www.questpdf.com/license/
+        static ReportBuilder()
         {
-            // QuestPDF requires a license declaration. Community is free for SMEs.
             QuestPDF.Settings.License = LicenseType.Community;
-            _documentTitle = documentTitle;
         }
 
-        // --- Fluent Methods to Add Blocks ---
-
-        public ReportBuilder AddTitle(string title)
-        {
-            _blocks.Add(new TitleBlock { Text = title });
-            return this;
-        }
-
-        public ReportBuilder AddDescription(string text)
-        {
-            _blocks.Add(new TextBlock { Text = text });
-            return this;
-        }
-
-        public ReportBuilder AddGraph(byte[] chartImageData)
-        {
-            if (chartImageData != null && chartImageData.Length > 0)
-            {
-                _blocks.Add(new ImageBlock { ImageData = chartImageData });
-            }
-            return this;
-        }
-
-        // --- The Final Compilation Method ---
-
-        /// <summary>
-        /// Compiles the added blocks and generates the physical PDF file.
-        /// </summary>
-        public void Generate(string outputPath)
+        public void GenerateReport(List<(string Title, byte[] Image)> charts, string filePath)
         {
             Document.Create(container =>
             {
@@ -60,45 +29,49 @@ namespace NexGenSales.Core
                 {
                     page.Size(PageSizes.A4);
                     page.Margin(2, Unit.Centimetre);
-                    page.PageColor(Colors.White);
-                    page.DefaultTextStyle(x => x.FontSize(11).FontFamily(Fonts.Arial));
+                    page.PageColor(PdfColors.White);
 
-                    // Header
-                    page.Header().Text(_documentTitle)
-                        .SemiBold().FontSize(20).FontColor(Colors.Blue.Darken2);
-
-                    // Content Core (Loops through our modular blocks)
-                    page.Content().PaddingVertical(1, Unit.Centimetre).Column(column =>
+                    // ── Header ──────────────────────────────────────────────────
+                    page.Header().Column(header =>
                     {
-                        column.Spacing(15); // Space between blocks
+                        header.Item()
+                              .Text("NexGenSales — Sales Analysis Report")
+                              .SemiBold().FontSize(20).FontColor(PdfColors.Blue.Darken2);
 
-                        foreach (var block in _blocks)
+                        header.Item().PaddingTop(4)
+                              .LineHorizontal(2).LineColor(PdfColors.Blue.Lighten3);
+                    });
+
+                    // ── Body — one section per chart ────────────────────────────
+                    page.Content().Column(col =>
+                    {
+                        foreach (var (title, image) in charts)
                         {
-                            if (block is TitleBlock title)
-                            {
-                                column.Item().Text(title.Text).FontSize(16).Bold().FontColor(Colors.Grey.Darken3);
-                            }
-                            else if (block is TextBlock textBlock)
-                            {
-                                column.Item().Text(textBlock.Text).LineHeight(1.2f);
-                            }
-                            else if (block is ImageBlock image)
-                            {
-                                // Adds the captured WPF byte array directly into the PDF layout
-                                column.Item().Image(image.ImageData);
-                            }
+                            col.Item().PaddingTop(1, Unit.Centimetre)
+                               .Text(title).Bold().FontSize(14)
+                               .FontColor(PdfColors.Grey.Darken2);
+
+                            col.Item().PaddingTop(0.3f, Unit.Centimetre)
+                               .Image(image);
+
+                            col.Item().PaddingTop(0.5f, Unit.Centimetre)
+                               .LineHorizontal(1).LineColor(PdfColors.Grey.Lighten2);
                         }
                     });
 
-                    // Footer
-                    page.Footer().AlignCenter().Text(x => 
-                    {
-                        x.Span("Generated by NexGenSales | Page ");
-                        x.CurrentPageNumber();
-                    });
+                    // ── Footer ──────────────────────────────────────────────────
+                    page.Footer()
+                        .AlignCenter()
+                        .DefaultTextStyle(s => s.FontSize(9).FontColor(PdfColors.Grey.Medium))
+                        .Text(x =>
+                        {
+                            x.Span("NexGenSales Analytics  •  Page ");
+                            x.CurrentPageNumber();
+                            x.Span(" of ");
+                            x.TotalPages();
+                        });
                 });
-            })
-            .GeneratePdf(outputPath);
+            }).GeneratePdf(filePath);
         }
     }
 }

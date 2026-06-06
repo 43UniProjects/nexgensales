@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -15,6 +15,8 @@
     <None Remove="Assets\Home\import.png" />
   </ItemGroup>
 
+
+
   <ItemGroup>
     <Resource Include="Assets\Home\analys.png" />
     <Resource Include="Assets\Home\done.png" />
@@ -25,6 +27,7 @@
     <PackageReference Include="ClosedXML" Version="0.105.0" />
     <PackageReference Include="Dapper" Version="2.1.79" />
     <PackageReference Include="ExcelDataReader" Version="3.8.0" />
+    <PackageReference Include="LiveCharts.Wpf" Version="0.9.7" />
     <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.4" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.1" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.8" />

@@ -1,8 +1,8 @@
-﻿using NextGenSales.Views;
+using NexGenSales.Views;
 using System.Windows;
 using System.Windows.Input;
 
-namespace nexgensales.Views
+namespace NexGenSales.Views
 {
     public partial class ExportView : Window
     {
