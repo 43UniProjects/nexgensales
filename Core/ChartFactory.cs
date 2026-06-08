@@ -1,6 +1,8 @@
 using LiveCharts;
 using LiveCharts.Wpf;
+using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Effects;
 
 namespace NexGenSales.Core
 {
@@ -45,6 +47,9 @@ namespace NexGenSales.Core
                     Title      = suppliers[i],
                     Values     = new ChartValues<double> { ratios[i] },
                     Fill       = isLowMargin[i] ? LowMarginRed : AccentTeal,
+                    Foreground = new SolidColorBrush(Colors.White),
+                    FontWeight = FontWeights.Bold,
+                    Effect     = new DropShadowEffect { Color = Colors.Black, ShadowDepth = 0, BlurRadius = 3, Opacity = 1 },
                     DataLabels = true,
                     LabelPoint = p => p.Y.ToString("P0")
                 });
@@ -62,6 +67,9 @@ namespace NexGenSales.Core
                     Title      = "Units Sold",
                     Values     = new ChartValues<int>(quantities),
                     Fill       = AccentTeal,
+                    Foreground = new SolidColorBrush(Colors.White),
+                    FontWeight = FontWeights.Bold,
+                    Effect     = new DropShadowEffect { Color = Colors.Black, ShadowDepth = 0, BlurRadius = 3, Opacity = 1 },
                     DataLabels = true
                 }
             };
@@ -79,6 +87,9 @@ namespace NexGenSales.Core
                     Title      = items[i],
                     Values     = new ChartValues<double> { revenues[i] },
                     Fill       = new SolidColorBrush(PiePalette[i % PiePalette.Length]),
+                    Foreground = new SolidColorBrush(Colors.White),
+                    FontWeight = FontWeights.Bold,
+                    Effect     = new DropShadowEffect { Color = Colors.Black, ShadowDepth = 0, BlurRadius = 3, Opacity = 1 },
                     DataLabels = true,
                     LabelPoint = p => $"{p.Participation:P0}"
                 });
@@ -115,6 +126,9 @@ namespace NexGenSales.Core
                     Title      = "Effectiveness Score",
                     Values     = new ChartValues<double>(scores),
                     Fill       = AccentTeal,
+                    Foreground = new SolidColorBrush(Colors.White),
+                    FontWeight = FontWeights.Bold,
+                    Effect     = new DropShadowEffect { Color = Colors.Black, ShadowDepth = 0, BlurRadius = 3, Opacity = 1 },
                     DataLabels = true,
                     LabelPoint = p => p.Y.ToString("F1")
                 }
