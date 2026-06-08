@@ -255,7 +255,7 @@
 
                                     <lvc:CartesianChart x:Name="SupplierChart"
                                                         Series="{Binding SupplierSeries}"
-                                                        Height="220"
+                                                        Height="320"
                                                         LegendLocation="Bottom"
                                                         Foreground="White">
                                         <lvc:CartesianChart.AxisX>
@@ -296,7 +296,7 @@
 
                                     <lvc:CartesianChart x:Name="VelocityChart"
                                                         Series="{Binding VelocitySeries}"
-                                                        Height="260"
+                                                        Height="320"
                                                         LegendLocation="None"
                                                         Foreground="White">
                                         <lvc:CartesianChart.AxisX>
@@ -331,7 +331,7 @@
 
                                     <lvc:PieChart x:Name="RevenueChart"
                                                   Series="{Binding RevenueSeries}"
-                                                  Height="310"
+                                                  Height="400"
                                                   LegendLocation="Right"
                                                   InnerRadius="70"
                                                   Foreground="White"/>
@@ -349,7 +349,7 @@
 
                                     <lvc:CartesianChart x:Name="TrendChart"
                                                         Series="{Binding TrendSeries}"
-                                                        Height="260"
+                                                        Height="320"
                                                         LegendLocation="None"
                                                         Foreground="White">
                                         <lvc:CartesianChart.AxisX>
@@ -377,7 +377,7 @@
 
                                     <lvc:CartesianChart x:Name="DiscountChart"
                                                         Series="{Binding DiscountSeries}"
-                                                        Height="240"
+                                                        Height="320"
                                                         LegendLocation="None"
                                                         Foreground="White">
                                         <lvc:CartesianChart.AxisX>

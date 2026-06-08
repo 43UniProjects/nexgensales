@@ -61,6 +61,40 @@ namespace NexGenSales.ViewModels
         }
 
         /// <summary>
+        /// Temporarily switches chart labels to dark text without drop shadows for PDF printing,
+        /// or restores them to white text with drop shadows for the dark UI.
+        /// </summary>
+        public void SetPrintMode(bool isPrintMode)
+        {
+            var brush = isPrintMode ? new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Black) : new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.White);
+            var effect = isPrintMode ? null : new System.Windows.Media.Effects.DropShadowEffect { Color = System.Windows.Media.Colors.Black, ShadowDepth = 0, BlurRadius = 3, Opacity = 1 };
+
+            Action<SeriesCollection> apply = (sc) =>
+            {
+                foreach (var series in sc)
+                {
+                    if (series is LiveCharts.Wpf.Series lvcSeries)
+                    {
+                        lvcSeries.Foreground = brush;
+                        lvcSeries.Effect = effect;
+
+                        // Force LiveCharts to recreate the label visuals with the new brush
+                        bool hadLabels = lvcSeries.DataLabels;
+                        lvcSeries.DataLabels = false;
+                        lvcSeries.DataLabels = hadLabels;
+                    }
+                }
+            };
+
+            apply(SupplierSeries);
+            apply(VelocitySeries);
+            apply(RevenueSeries);
+            apply(TrendSeries);
+            apply(DiscountSeries);
+        }
+
+
+        /// <summary>
         /// Called by the View's code-behind to generate the PDF.
         /// File name is auto-generated with the current timestamp and report type.
         /// Returns the absolute path of the saved file.
