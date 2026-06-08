@@ -58,11 +58,21 @@ public class DatabaseMigrationService
             currentVersion = 1;
         }
 
+        if (currentVersion < 2)
+        {
+            Console.WriteLine("[MIGRATION] Running version 2 script");
+            Console.WriteLine("[MIGRATION] Creating database table RecordMetadata");
+            var recordMetadataRepo = new RecordMetadataRepository(new SqliteService());
+            recordMetadataRepo.InitializeTable();
+
+            currentVersion = 2;
+        }
+
         SetUserVersion(connection, TargetVersion);
         Console.WriteLine("[MIGRATION] Database migrated successfully");
     }
 
-    private int GetUserVersion(SqliteConnection connection)
+    private static int GetUserVersion(SqliteConnection connection)
     {
 
         Console.WriteLine("[MIGRATION] Aquiring currect database version...");
@@ -70,7 +80,7 @@ public class DatabaseMigrationService
         return Convert.ToInt32(cmd.ExecuteScalar());
     }
 
-    private void SetUserVersion(SqliteConnection connection, int version)
+    private static void SetUserVersion(SqliteConnection connection, int version)
     {
         // PRAGMA statements do not accept parameterized inputs, string interpolation is required here
         using var cmd = new SqliteCommand($"PRAGMA user_version = {version};", connection);

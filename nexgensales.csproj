@@ -15,8 +15,6 @@
     <None Remove="Assets\Home\import.png" />
   </ItemGroup>
 
-
-
   <ItemGroup>
     <Resource Include="Assets\Home\analys.png" />
     <Resource Include="Assets\Home\done.png" />
