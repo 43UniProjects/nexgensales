@@ -19,10 +19,10 @@ namespace NexGenSales.Core
         {
             if (visual == null) return null;
 
-            // Ensure WPF has calculated final dimensions before capturing
+            // Ensure WPF has calculated final dimensions
             visual.UpdateLayout();
 
-            int width  = (int)visual.ActualWidth;
+            int width = (int)visual.ActualWidth;
             int height = (int)visual.ActualHeight;
 
             if (width == 0 || height == 0) return null;
@@ -35,6 +35,7 @@ namespace NexGenSales.Core
 
             using var stream = new MemoryStream();
             encoder.Save(stream);
+
             return stream.ToArray();
         }
     }

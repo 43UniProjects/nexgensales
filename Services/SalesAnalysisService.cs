@@ -12,7 +12,7 @@ namespace NexGenSales.Services
     /// Produced by SalesAnalysisService.GetAllChartData() and consumed by AnalyticsDashboardViewModel.
     /// </summary>
     public record AnalyticsChartData(
-        SeriesCollection SupplierSeries,  string[] SupplierLabels,  string LowMarginWarning,
+        SeriesCollection SupplierSeries,  string[] SupplierLabels,
         SeriesCollection VelocitySeries,  string[] VelocityLabels,
         SeriesCollection RevenueSeries,
         SeriesCollection TrendSeries,     string[] TrendLabels,
@@ -21,15 +21,15 @@ namespace NexGenSales.Services
 
     /// <summary>
     /// Single orchestration service for analytics output.
-    /// Pulls raw arrays from MockDataRepository, builds chart series via ChartFactory,
+    /// Pulls raw arrays from DataRepository, builds chart series via ChartFactory,
     /// and produces PDF reports via ChartCaptureHelper + ReportBuilder.
     /// </summary>
     public class SalesAnalysisService
     {
-        private readonly MockDataRepository _repository;
+        private readonly DataRepository _repository;
         private readonly ReportBuilder      _reportBuilder;
 
-        public SalesAnalysisService(MockDataRepository repository)
+        public SalesAnalysisService(DataRepository repository)
         {
             _repository    = repository;
             _reportBuilder = new ReportBuilder();
@@ -42,21 +42,15 @@ namespace NexGenSales.Services
         /// </summary>
         public AnalyticsChartData GetAllChartData()
         {
-            var (suppliers, ratios, flagged) = _repository.GetSupplierProfitabilityData();
+            var (suppliers, ratios) = _repository.GetSupplierProfitabilityData();
             var (items,     quantities)      = _repository.GetItemVelocityData();
             var (revItems,  avgRevenues)     = _repository.GetRevenueContributionData();
             var (days,      revenues)        = _repository.GetTrendAnalysisData();
             var (labels,    scores)          = _repository.GetDiscountEffectivenessData();
 
-            // Build the low-margin warning string for the UI
-            var lowMarginNames = suppliers.Where((s, i) => flagged[i]).ToArray();
-            string warning = lowMarginNames.Length > 0
-                ? $"⚠  Low-margin suppliers flagged: {string.Join(", ", lowMarginNames)}"
-                : "✓  All suppliers are within acceptable margin thresholds.";
-
             return new AnalyticsChartData(
-                ChartFactory.CreateSupplierProfitabilityChart(suppliers, ratios, flagged),
-                suppliers, warning,
+                ChartFactory.CreateSupplierProfitabilityChart(suppliers, ratios),
+                suppliers,
                 ChartFactory.CreateItemVelocityChart(items, quantities), items,
                 ChartFactory.CreateRevenueContributionChart(revItems, avgRevenues),
                 ChartFactory.CreateTrendAnalysisChart(days, revenues), days,

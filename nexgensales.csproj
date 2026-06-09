@@ -15,8 +15,6 @@
     <None Remove="Assets\Home\import.png" />
   </ItemGroup>
 
-
-
   <ItemGroup>
     <Resource Include="Assets\Home\analys.png" />
     <Resource Include="Assets\Home\done.png" />
@@ -33,6 +31,10 @@
     <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.8" />
     <PackageReference Include="QuestPDF" Version="2026.5.0" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="10.0.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Database\" />
   </ItemGroup>
 
 </Project>

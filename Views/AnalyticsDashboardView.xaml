@@ -13,8 +13,6 @@
         FontFamily="Segoe UI">
 
     <Window.Resources>
-
-        <!-- ══ Chart card surface ═══════════════════════════════════════════════ -->
         <Style x:Key="ChartCard" TargetType="Border">
             <Setter Property="Background"      Value="#141A21"/>
             <Setter Property="CornerRadius"    Value="12"/>
@@ -28,8 +26,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
-        <!-- ══ Section index number (dim) ══════════════════════════════════════ -->
         <Style x:Key="SectionIndex" TargetType="TextBlock">
             <Setter Property="Foreground"        Value="#3A5A3A"/>
             <Setter Property="FontSize"          Value="13"/>
@@ -37,16 +33,12 @@
             <Setter Property="Margin"            Value="0,0,10,0"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
-
-        <!-- ══ Chart title (teal accent) ═══════════════════════════════════════ -->
         <Style x:Key="ChartTitle" TargetType="TextBlock">
             <Setter Property="Foreground"        Value="#00C896"/>
             <Setter Property="FontSize"          Value="15"/>
             <Setter Property="FontWeight"        Value="SemiBold"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
-
-        <!-- ══ Primary action button (teal filled) ═════════════════════════════ -->
         <Style x:Key="TealButton" TargetType="Button">
             <Setter Property="Background"      Value="#00C896"/>
             <Setter Property="Foreground"      Value="#0B0F13"/>
@@ -57,11 +49,8 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="Bd"
-                                Background="{TemplateBinding Background}"
-                                CornerRadius="6">
-                            <ContentPresenter HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"/>
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
@@ -75,8 +64,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
-        <!-- ══ Title-bar window control button (shared base) ═══════════════════ -->
         <Style x:Key="TitleBarButton" TargetType="Button">
             <Setter Property="Background"      Value="Transparent"/>
             <Setter Property="Foreground"      Value="#788896"/>
@@ -86,15 +73,12 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}">
-                            <ContentPresenter HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"/>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
-
-        <!-- ══ Custom dark ScrollBar ════════════════════════════════════════════ -->
         <Style TargetType="ScrollBar">
             <Setter Property="Background"    Value="Transparent"/>
             <Setter Property="Width"         Value="6"/>
@@ -107,9 +91,7 @@
                                     <Thumb>
                                         <Thumb.Template>
                                             <ControlTemplate TargetType="Thumb">
-                                                <Border Background="#2D3A46"
-                                                        CornerRadius="3"
-                                                        Margin="1,0"/>
+                                                <Border Background="#2D3A46" CornerRadius="3" Margin="1,0"/>
                                             </ControlTemplate>
                                         </Thumb.Template>
                                     </Thumb>
@@ -120,47 +102,26 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
         <Style TargetType="ScrollViewer">
             <Setter Property="VerticalScrollBarVisibility"   Value="Auto"/>
             <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
         </Style>
-
     </Window.Resources>
 
-    <!-- ══ Root: rounded frameless border ══════════════════════════════════════ -->
     <Border Background="#0B0F13" CornerRadius="12">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="35"/>  <!-- Custom title bar -->
-                <RowDefinition Height="*"/>   <!-- Main content    -->
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- ══════════════════════════════════════════════════════════════════
-                 CUSTOM TITLE BAR
-                 ══════════════════════════════════════════════════════════════════ -->
             <Grid Grid.Row="0" Background="Transparent" MouseLeftButtonDown="Window_MouseDown">
-
-                <!-- Branding -->
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0,0,0">
-                    <TextBlock Text="💼" Foreground="#00C896" FontSize="14"
-                               Margin="0,0,8,0" VerticalAlignment="Center"/>
-                    <TextBlock Text="NexGenSales - Analytics Dashboard"
-                               Foreground="#788896" FontSize="12" FontWeight="SemiBold"
-                               VerticalAlignment="Center"/>
-                    <Border Background="#1C2127" CornerRadius="4"
-                            Padding="8,2" Margin="12,0,0,0" VerticalAlignment="Center">
-                        <TextBlock Text="Simulation — Hardcoded Preview Data"
-                                   Foreground="#4A5A6A" FontSize="10"/>
-                    </Border>
+                    <TextBlock Text="💼" Foreground="#00C896" FontSize="14" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                    <TextBlock Text="NexGenSales - Analytics Dashboard" Foreground="#788896" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"/>
                 </StackPanel>
-
-                <!-- Window controls -->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-
-                    <!-- Minimise -->
-                    <Button Width="45" Height="35" Content="—" FontSize="12"
-                            Click="BtnMinimize_Click">
+                    <Button Width="45" Height="35" Content="—" FontSize="12" Click="BtnMinimize_Click">
                         <Button.Style>
                             <Style TargetType="Button" BasedOn="{StaticResource TitleBarButton}">
                                 <Style.Triggers>
@@ -172,10 +133,7 @@
                             </Style>
                         </Button.Style>
                     </Button>
-
-                    <!-- Maximise -->
-                    <Button Width="45" Height="35" Content="☐" FontSize="14"
-                            Click="BtnMaximize_Click">
+                    <Button Width="45" Height="35" Content="☐" FontSize="14" Click="BtnMaximize_Click">
                         <Button.Style>
                             <Style TargetType="Button" BasedOn="{StaticResource TitleBarButton}">
                                 <Style.Triggers>
@@ -187,10 +145,7 @@
                             </Style>
                         </Button.Style>
                     </Button>
-
-                    <!-- Close -->
-                    <Button Width="45" Height="35" Content="✕" FontSize="14"
-                            Click="BtnClose_Click">
+                    <Button Width="45" Height="35" Content="✕" FontSize="14" Click="BtnClose_Click">
                         <Button.Style>
                             <Style TargetType="Button" BasedOn="{StaticResource TitleBarButton}">
                                 <Style.Triggers>
@@ -202,16 +157,10 @@
                             </Style>
                         </Button.Style>
                     </Button>
-
                 </StackPanel>
             </Grid>
 
-            <!-- ══════════════════════════════════════════════════════════════════
-                 MAIN CONTENT AREA
-                 ══════════════════════════════════════════════════════════════════ -->
             <Grid Grid.Row="1">
-
-                <!-- Radial gradient background (identical to other views) -->
                 <Rectangle>
                     <Rectangle.Fill>
                         <RadialGradientBrush Center="0.5,0.5" RadiusX="0.8" RadiusY="0.8">
@@ -223,198 +172,254 @@
 
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>  <!-- Page heading    -->
-                        <RowDefinition Height="*"/>     <!-- Scrollable body -->
-                        <RowDefinition Height="Auto"/>  <!-- Footer bar      -->
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <!-- ── Page heading ──────────────────────────────────────── -->
                     <StackPanel Grid.Row="0" Margin="30,20,30,0">
-                        <TextBlock Text="Analytics Dashboard"
-                                   Foreground="White" FontSize="22" FontWeight="Bold"/>
-                        <TextBlock Text="Sales simulation data — 5 analysis modules"
-                                   Foreground="#788896" FontSize="13" Margin="0,4,0,0"/>
-                        <!-- Teal underline accent -->
-                        <Border Height="2" Background="#00C896" CornerRadius="1"
-                                HorizontalAlignment="Left" Width="60" Margin="0,10,0,0"/>
+                        <TextBlock Text="Analytics Dashboard" Foreground="White" FontSize="22" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding DashboardSubtitle}" Foreground="#788896" FontSize="13" Margin="0,4,0,0"/>
+                        <Border Height="2" Background="#00C896" CornerRadius="1" HorizontalAlignment="Left" Width="60" Margin="0,10,0,0"/>
                     </StackPanel>
 
-                    <!-- ── Scrollable chart cards ─────────────────────────────── -->
-                    <ScrollViewer Grid.Row="1" Margin="30,18,30,0"
-                                  VerticalScrollBarVisibility="Auto">
+                    <ScrollViewer Grid.Row="1" Margin="30,18,30,0" VerticalScrollBarVisibility="Auto">
                         <StackPanel>
 
-                            <!-- ── 01  Supplier Profitability ─────────────────── -->
-                            <Border Style="{StaticResource ChartCard}">
-                                <StackPanel>
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
-                                        <TextBlock Text="01" Style="{StaticResource SectionIndex}"/>
-                                        <TextBlock Text="Supplier Profitability"
-                                                   Style="{StaticResource ChartTitle}"/>
+                            <StackPanel Visibility="{Binding SalesVisibility}">
+                                <Border Style="{StaticResource ChartCard}">
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                                            <TextBlock Text="01" Style="{StaticResource SectionIndex}"/>
+                                            <TextBlock Text="Supplier Profitability" Style="{StaticResource ChartTitle}"/>
+                                        </StackPanel>
+                                        <lvc:CartesianChart x:Name="SupplierChart" Series="{Binding SupplierSeries}" Height="320" LegendLocation="Bottom" Foreground="White">
+                                            <lvc:CartesianChart.AxisX>
+                                                <lvc:Axis Title="Profit Ratio" LabelFormatter="{Binding PercentFormatter}" Foreground="#788896">
+                                                    <lvc:Axis.Separator>
+                                                        <lvc:Separator IsEnabled="False"/>
+                                                    </lvc:Axis.Separator>
+                                                </lvc:Axis>
+                                            </lvc:CartesianChart.AxisX>
+                                            <lvc:CartesianChart.AxisY>
+                                                <lvc:Axis Foreground="#788896" ShowLabels="False">
+                                                    <lvc:Axis.Separator>
+                                                        <lvc:Separator Stroke="#26788896" StrokeThickness="1"/>
+                                                    </lvc:Axis.Separator>
+                                                </lvc:Axis>
+                                            </lvc:CartesianChart.AxisY>
+                                        </lvc:CartesianChart>
                                     </StackPanel>
-
-                                    <lvc:CartesianChart x:Name="SupplierChart"
-                                                        Series="{Binding SupplierSeries}"
-                                                        Height="220"
-                                                        LegendLocation="Bottom"
-                                                        Foreground="#A0ABB5">
-                                        <lvc:CartesianChart.AxisX>
-                                            <lvc:Axis Title="Profit Ratio"
-                                                      LabelFormatter="{Binding PercentFormatter}"
-                                                      Foreground="#788896"/>
-                                        </lvc:CartesianChart.AxisX>
-                                        <lvc:CartesianChart.AxisY>
-                                            <lvc:Axis Foreground="#788896" ShowLabels="False"/>
-                                        </lvc:CartesianChart.AxisY>
-                                    </lvc:CartesianChart>
-
-                                    <!-- Low-margin warning -->
-                                    <Border Background="#1C1208" CornerRadius="6"
-                                            Padding="12,6" Margin="0,10,0,0">
-                                        <TextBlock Text="{Binding LowMarginWarning}"
-                                                   Foreground="#F59E0B" FontSize="12"/>
-                                    </Border>
-                                </StackPanel>
-                            </Border>
-
-                            <!-- ── 02  Item Velocity ──────────────────────────── -->
-                            <Border Style="{StaticResource ChartCard}">
-                                <StackPanel>
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
-                                        <TextBlock Text="02" Style="{StaticResource SectionIndex}"/>
-                                        <TextBlock Text="Item Velocity — Volume Ranking"
-                                                   Style="{StaticResource ChartTitle}"/>
+                                </Border>
+                                <Border Style="{StaticResource ChartCard}">
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                                            <TextBlock Text="02" Style="{StaticResource SectionIndex}"/>
+                                            <TextBlock Text="Item Velocity — Volume Ranking" Style="{StaticResource ChartTitle}"/>
+                                        </StackPanel>
+                                        <lvc:CartesianChart x:Name="VelocityChart" Series="{Binding VelocitySeries}" Height="320" LegendLocation="None" Foreground="White">
+                                            <lvc:CartesianChart.AxisX>
+                                                <lvc:Axis Labels="{Binding VelocityLabels}" Title="Item ID" Foreground="#788896">
+                                                    <lvc:Axis.Separator>
+                                                        <lvc:Separator IsEnabled="False"/>
+                                                    </lvc:Axis.Separator>
+                                                </lvc:Axis>
+                                            </lvc:CartesianChart.AxisX>
+                                            <lvc:CartesianChart.AxisY>
+                                                <lvc:Axis Title="Units Sold" Foreground="#788896">
+                                                    <lvc:Axis.Separator>
+                                                        <lvc:Separator Stroke="#26788896" StrokeThickness="1"/>
+                                                    </lvc:Axis.Separator>
+                                                </lvc:Axis>
+                                            </lvc:CartesianChart.AxisY>
+                                        </lvc:CartesianChart>
                                     </StackPanel>
-
-                                    <lvc:CartesianChart x:Name="VelocityChart"
-                                                        Series="{Binding VelocitySeries}"
-                                                        Height="260"
-                                                        LegendLocation="None"
-                                                        Foreground="#A0ABB5">
-                                        <lvc:CartesianChart.AxisX>
-                                            <lvc:Axis Labels="{Binding VelocityLabels}"
-                                                      Title="Item ID"
-                                                      Foreground="#788896"/>
-                                        </lvc:CartesianChart.AxisX>
-                                        <lvc:CartesianChart.AxisY>
-                                            <lvc:Axis Title="Units Sold"
-                                                      Foreground="#788896"/>
-                                        </lvc:CartesianChart.AxisY>
-                                    </lvc:CartesianChart>
-                                </StackPanel>
-                            </Border>
-
-                            <!-- ── 03  Revenue Contribution ───────────────────── -->
-                            <Border Style="{StaticResource ChartCard}">
-                                <StackPanel>
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
-                                        <TextBlock Text="03" Style="{StaticResource SectionIndex}"/>
-                                        <TextBlock Text="Revenue Contribution by Item"
-                                                   Style="{StaticResource ChartTitle}"/>
+                                </Border>
+                                <Border Style="{StaticResource ChartCard}">
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                                            <TextBlock Text="03" Style="{StaticResource SectionIndex}"/>
+                                            <TextBlock Text="Revenue Contribution by Item" Style="{StaticResource ChartTitle}"/>
+                                        </StackPanel>
+                                        <lvc:PieChart x:Name="RevenueChart" Series="{Binding RevenueSeries}" Height="400" LegendLocation="Right" InnerRadius="70" Foreground="White"/>
                                     </StackPanel>
-
-                                    <lvc:PieChart x:Name="RevenueChart"
-                                                  Series="{Binding RevenueSeries}"
-                                                  Height="310"
-                                                  LegendLocation="Right"
-                                                  InnerRadius="70"
-                                                  Foreground="#A0ABB5"/>
-                                </StackPanel>
-                            </Border>
-
-                            <!-- ── 04  Revenue Trend ──────────────────────────── -->
-                            <Border Style="{StaticResource ChartCard}">
-                                <StackPanel>
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
-                                        <TextBlock Text="04" Style="{StaticResource SectionIndex}"/>
-                                        <TextBlock Text="Revenue Trend Analysis — 7 Days"
-                                                   Style="{StaticResource ChartTitle}"/>
+                                </Border>
+                                <Border Style="{StaticResource ChartCard}">
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                                            <TextBlock Text="04" Style="{StaticResource SectionIndex}"/>
+                                            <TextBlock Text="Revenue Trend Analysis — 7 Days" Style="{StaticResource ChartTitle}"/>
+                                        </StackPanel>
+                                        <lvc:CartesianChart x:Name="TrendChart" Series="{Binding TrendSeries}" Height="320" LegendLocation="None" Foreground="White">
+                                            <lvc:CartesianChart.AxisX>
+                                                <lvc:Axis Labels="{Binding TrendLabels}" Title="Day of Week" Foreground="#788896"/>
+                                            </lvc:CartesianChart.AxisX>
+                                            <lvc:CartesianChart.AxisY>
+                                                <lvc:Axis Title="Revenue" LabelFormatter="{Binding CurrencyFormatter}" Foreground="#788896"/>
+                                            </lvc:CartesianChart.AxisY>
+                                        </lvc:CartesianChart>
                                     </StackPanel>
-
-                                    <lvc:CartesianChart x:Name="TrendChart"
-                                                        Series="{Binding TrendSeries}"
-                                                        Height="260"
-                                                        LegendLocation="None"
-                                                        Foreground="#A0ABB5">
-                                        <lvc:CartesianChart.AxisX>
-                                            <lvc:Axis Labels="{Binding TrendLabels}"
-                                                      Title="Day of Week"
-                                                      Foreground="#788896"/>
-                                        </lvc:CartesianChart.AxisX>
-                                        <lvc:CartesianChart.AxisY>
-                                            <lvc:Axis Title="Revenue"
-                                                      LabelFormatter="{Binding CurrencyFormatter}"
-                                                      Foreground="#788896"/>
-                                        </lvc:CartesianChart.AxisY>
-                                    </lvc:CartesianChart>
-                                </StackPanel>
-                            </Border>
-
-                            <!-- ── 05  Discount Effectiveness ─────────────────── -->
-                            <Border Style="{StaticResource ChartCard}">
-                                <StackPanel>
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
-                                        <TextBlock Text="05" Style="{StaticResource SectionIndex}"/>
-                                        <TextBlock Text="Discount Effectiveness"
-                                                   Style="{StaticResource ChartTitle}"/>
+                                </Border>
+                                <Border Style="{StaticResource ChartCard}">
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                                            <TextBlock Text="05" Style="{StaticResource SectionIndex}"/>
+                                            <TextBlock Text="Discount Effectiveness" Style="{StaticResource ChartTitle}"/>
+                                        </StackPanel>
+                                        <lvc:CartesianChart x:Name="DiscountChart" Series="{Binding DiscountSeries}" Height="320" LegendLocation="None" Foreground="White">
+                                            <lvc:CartesianChart.AxisX>
+                                                <lvc:Axis Labels="{Binding DiscountLabels}" Title="Discount Tier" Foreground="#788896">
+                                                    <lvc:Axis.Separator>
+                                                        <lvc:Separator IsEnabled="False"/>
+                                                    </lvc:Axis.Separator>
+                                                </lvc:Axis>
+                                            </lvc:CartesianChart.AxisX>
+                                            <lvc:CartesianChart.AxisY>
+                                                <lvc:Axis Title="Effectiveness Score" LabelFormatter="{Binding ScoreFormatter}" Foreground="#788896">
+                                                    <lvc:Axis.Separator>
+                                                        <lvc:Separator Stroke="#26788896" StrokeThickness="1"/>
+                                                    </lvc:Axis.Separator>
+                                                </lvc:Axis>
+                                            </lvc:CartesianChart.AxisY>
+                                        </lvc:CartesianChart>
+                                        <Border Background="#0D1F16" CornerRadius="6" Padding="12,6" Margin="0,10,0,0">
+                                            <TextBlock Text="★  10% discount yields the highest effectiveness score (89.2)" Foreground="#00C896" FontSize="12"/>
+                                        </Border>
                                     </StackPanel>
+                                </Border>
+                            </StackPanel>
 
-                                    <lvc:CartesianChart x:Name="DiscountChart"
-                                                        Series="{Binding DiscountSeries}"
-                                                        Height="240"
-                                                        LegendLocation="None"
-                                                        Foreground="#A0ABB5">
-                                        <lvc:CartesianChart.AxisX>
-                                            <lvc:Axis Labels="{Binding DiscountLabels}"
-                                                      Title="Discount Tier"
-                                                      Foreground="#788896"/>
-                                        </lvc:CartesianChart.AxisX>
-                                        <lvc:CartesianChart.AxisY>
-                                            <lvc:Axis Title="Effectiveness Score"
-                                                      LabelFormatter="{Binding ScoreFormatter}"
-                                                      Foreground="#788896"/>
-                                        </lvc:CartesianChart.AxisY>
-                                    </lvc:CartesianChart>
 
-                                    <!-- Insight callout -->
-                                    <Border Background="#0D1F16" CornerRadius="6"
-                                            Padding="12,6" Margin="0,10,0,0">
-                                        <TextBlock Text="★  10% discount yields the highest effectiveness score (89.2)"
-                                                   Foreground="#00C896" FontSize="12"/>
-                                    </Border>
-                                </StackPanel>
-                            </Border>
+                            <StackPanel Visibility="{Binding ExpenseVisibility}">
 
-                            <!-- Bottom scroll breathing room -->
+                                <Border Style="{StaticResource ChartCard}" Background="#1C2127">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock Text="Total Expenses For Period:" Style="{StaticResource ChartTitle}" FontSize="24" Margin="0,0,20,0"/>
+                                        <TextBlock Text="{Binding TotalExpensesDisplay}" Foreground="White" FontSize="28" FontWeight="Bold"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Style="{StaticResource ChartCard}">
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                                            <TextBlock Text="01" Style="{StaticResource SectionIndex}"/>
+                                            <TextBlock Text="Expense Category Breakdown" Style="{StaticResource ChartTitle}"/>
+                                        </StackPanel>
+                                        <lvc:PieChart Series="{Binding ExpenseCategorySeries}" Height="350" LegendLocation="Right" InnerRadius="70" Foreground="White"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Style="{StaticResource ChartCard}">
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                                            <TextBlock Text="02" Style="{StaticResource SectionIndex}"/>
+                                            <TextBlock Text="Daily Expense Trend" Style="{StaticResource ChartTitle}"/>
+                                        </StackPanel>
+                                        <lvc:CartesianChart Series="{Binding ExpenseTrendSeries}" Height="320" LegendLocation="None" Foreground="White">
+                                            <lvc:CartesianChart.AxisX>
+                                                <lvc:Axis Labels="{Binding ExpenseTrendLabels}" Title="Date" Foreground="#788896"/>
+                                            </lvc:CartesianChart.AxisX>
+                                            <lvc:CartesianChart.AxisY>
+                                                <lvc:Axis Title="Amount" LabelFormatter="{Binding CurrencyFormatter}" Foreground="#788896"/>
+                                            </lvc:CartesianChart.AxisY>
+                                        </lvc:CartesianChart>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Style="{StaticResource ChartCard}">
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                                            <TextBlock Text="03" Style="{StaticResource SectionIndex}"/>
+                                            <TextBlock Text="Highest Specific Expenses" Style="{StaticResource ChartTitle}"/>
+                                        </StackPanel>
+                                        <lvc:CartesianChart Series="{Binding SpecificTypeSeries}" Height="320" LegendLocation="None" Foreground="White">
+                                            <lvc:CartesianChart.AxisX>
+                                                <lvc:Axis Labels="{Binding SpecificTypeLabels}" Title="Expense Type" Foreground="#788896"/>
+                                            </lvc:CartesianChart.AxisX>
+                                            <lvc:CartesianChart.AxisY>
+                                                <lvc:Axis Title="Amount" LabelFormatter="{Binding CurrencyFormatter}" Foreground="#788896"/>
+                                            </lvc:CartesianChart.AxisY>
+                                        </lvc:CartesianChart>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Style="{StaticResource ChartCard}">
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                                            <TextBlock Text="04" Style="{StaticResource SectionIndex}"/>
+                                            <TextBlock Text="Asset Depreciation &amp; Maintenance Costs" Style="{StaticResource ChartTitle}"/>
+                                        </StackPanel>
+                                        <lvc:CartesianChart Series="{Binding AssetMaintenanceSeries}" Height="320" LegendLocation="None" Foreground="White">
+                                            <lvc:CartesianChart.AxisX>
+                                                <lvc:Axis Labels="{Binding AssetLabels}" Title="Asset ID" Foreground="#788896"/>
+                                            </lvc:CartesianChart.AxisX>
+                                            <lvc:CartesianChart.AxisY>
+                                                <lvc:Axis Title="Maintenance Cost" LabelFormatter="{Binding CurrencyFormatter}" Foreground="#788896"/>
+                                            </lvc:CartesianChart.AxisY>
+                                        </lvc:CartesianChart>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Style="{StaticResource ChartCard}">
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                                            <TextBlock Text="05" Style="{StaticResource SectionIndex}"/>
+                                            <TextBlock Text="Detected Cost Anomalies (Unusual Spikes)" Style="{StaticResource ChartTitle}"/>
+                                        </StackPanel>
+                                        <Grid Margin="0,10,0,0">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="*"/>
+                                            </Grid.RowDefinitions>
+                                            <Grid Grid.Row="0" Margin="0,0,0,15">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="1.5*"/>
+                                                    <ColumnDefinition Width="2*"/>
+                                                    <ColumnDefinition Width="3*"/>
+                                                    <ColumnDefinition Width="1.5*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="Date" Foreground="#788896" FontWeight="Bold"/>
+                                                <TextBlock Grid.Column="1" Text="Category" Foreground="#788896" FontWeight="Bold"/>
+                                                <TextBlock Grid.Column="2" Text="Description" Foreground="#788896" FontWeight="Bold"/>
+                                                <TextBlock Grid.Column="3" Text="Amount" Foreground="#788896" FontWeight="Bold" HorizontalAlignment="Right"/>
+                                            </Grid>
+                                            <ItemsControl Grid.Row="1" ItemsSource="{Binding AnomaliesList}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border BorderBrush="#1E262E" BorderThickness="0,0,0,1" Padding="0,12">
+                                                            <Grid>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="1.5*"/>
+                                                                    <ColumnDefinition Width="2*"/>
+                                                                    <ColumnDefinition Width="3*"/>
+                                                                    <ColumnDefinition Width="1.5*"/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <TextBlock Grid.Column="0" Text="{Binding Date_Recorded, StringFormat={}{0:yyyy-MM-dd}}" Foreground="White"/>
+                                                                <TextBlock Grid.Column="1" Text="{Binding Expense_Category}" Foreground="White"/>
+                                                                <TextBlock Grid.Column="2" Text="{Binding Specific_Type}" Foreground="White"/>
+                                                                <TextBlock Grid.Column="3" Text="{Binding Amount, StringFormat='Rs. {0:N0}'}" Foreground="#E81123" FontWeight="Bold" HorizontalAlignment="Right"/>
+                                                            </Grid>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </Grid>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
                             <Border Height="20"/>
-
                         </StackPanel>
                     </ScrollViewer>
 
-                    <!-- ── Footer — Generate Report ──────────────────────────── -->
-                    <Border Grid.Row="2" Background="#141A21"
-                            BorderBrush="#1E262E" BorderThickness="0,1,0,0"
-                            Padding="30,0">
+                    <Border Grid.Row="2" Background="#141A21" BorderBrush="#1E262E" BorderThickness="0,1,0,0" Padding="30,0">
                         <Grid Height="68">
-                            <!-- Status indicator (left) -->
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <Ellipse Width="8" Height="8" Fill="#00C896" Margin="0,0,8,0"/>
-                                <TextBlock Text="5 analyses complete — ready for export"
-                                           Foreground="#788896" FontSize="13"
-                                           VerticalAlignment="Center"/>
+                                <TextBlock Text="Analysis complete — ready for export" Foreground="#788896" FontSize="13" VerticalAlignment="Center"/>
                             </StackPanel>
-
-                            <!-- Generate PDF button (right) -->
-                            <Button x:Name="GenerateReportButton"
-                                    Content="🖨  Generate Report"
-                                    Style="{StaticResource TealButton}"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Center"
-                                    Width="200" Height="44"
-                                    Click="GenerateReport_Click"/>
+                            <Button x:Name="GenerateReportButton" Content="🖨  Generate Report" Style="{StaticResource TealButton}" HorizontalAlignment="Right" VerticalAlignment="Center" Width="200" Height="44" Click="GenerateReport_Click"/>
                         </Grid>
                     </Border>
-
                 </Grid>
             </Grid>
         </Grid>

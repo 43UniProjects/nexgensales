@@ -1,3 +1,4 @@
+using System;
 using System.Windows;
 using System.Windows.Input;
 using NexGenSales.Core;
@@ -13,7 +14,7 @@ namespace NexGenSales.Views
             InitializeComponent();
         }
 
-        // Window Dragging Logic
+        // Enable dragging the window by holding the left mouse button
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
@@ -41,6 +42,7 @@ namespace NexGenSales.Views
             }
         }
 
+        // Navigate to the Home window
         private void BtnHome_Click(object sender, RoutedEventArgs e)
         {
             HomeView homeWindow = new HomeView();
@@ -53,6 +55,7 @@ namespace NexGenSales.Views
             this.Close();
         }
 
+        // Navigate to the Export window
         private void BtnExports_Click(object sender, RoutedEventArgs e)
         {
             ExportView exportWindow = new ExportView();
@@ -72,22 +75,83 @@ namespace NexGenSales.Views
 
         /// <summary>
         /// Opens the Analytics Dashboard as a modal dialog.
-        /// Report type is always "Sales" — a separate Expenses dashboard will handle expenses.
-        /// The ProcessView is blocked (ShowDialog) until the dashboard is closed.
+        /// Handles both Sales and Expenses based on the selected report type.
         /// </summary>
-        private void BtnRunAnalysis_Click(object sender, RoutedEventArgs e)
+        private async void BtnRunAnalysis_Click(object sender, RoutedEventArgs e)
         {
-            var service   = new SalesAnalysisService(new MockDataRepository());
-            var vm        = new AnalyticsDashboardViewModel(service, "Sales");
-            var dashboard = new AnalyticsDashboardView
-            {
-                DataContext = vm,
-                Owner       = this
-            };
+            string reportType = (CmbReportType.SelectedItem as System.Windows.Controls.ComboBoxItem)?.Content?.ToString() ?? "Sales Data";
+            string dateRangeStr = (CmbDateRange.SelectedItem as System.Windows.Controls.ComboBoxItem)?.Content?.ToString() ?? "1 Month";
 
-            // ShowDialog() gives the dashboard exclusive focus and blocks
-            // all interaction with this window until the dashboard is closed.
-            dashboard.ShowDialog();
+            DateTime endDate = DateTime.Now;
+            DateTime startDate = endDate;
+
+            switch (dateRangeStr)
+            {
+                case "1 Week": startDate = startDate.AddDays(-7); break;
+                case "1 Month": startDate = startDate.AddMonths(-1); break;
+                case "3 Months": startDate = startDate.AddMonths(-3); break;
+                case "6 Months": startDate = startDate.AddMonths(-6); break;
+                case "1 Year": startDate = startDate.AddYears(-1); break;
+                default: startDate = startDate.AddMonths(-1); break;
+            }
+
+            if (reportType == "Expense Data")
+            {
+                try
+                {
+                    // 1. Retrieve expense data from the database for the selected date range
+                    var sqliteService = new SqliteService();
+                    var expenseRepo = new NexGenSales.Services.Data.Repository.ExpensesRecordRepository(sqliteService);
+                    var expensesData = await expenseRepo.GetExpensesByDateRangeAsync(startDate, endDate);
+
+                    if (expensesData == null || expensesData.Count == 0)
+                    {
+                        MessageBox.Show("No Expenses data found in the database for the selected date range. Please select a different Date Range.", "No Data", MessageBoxButton.OK, MessageBoxImage.Information);
+                        return;
+                    }
+
+                    // 2. Analyze the retrieved expense data
+                    var service = new ExpensesAnalysisService();
+                    var analysisResult = service.Analyze(expensesData);
+
+                    // 3. Create the dashboard ViewModel for expenses and open the dashboard window
+                    var vm = new AnalyticsDashboardViewModel(analysisResult, service, "Expenses");
+                    var dashboard = new AnalyticsDashboardView
+                    {
+                        DataContext = vm,
+                        Owner = this
+                    };
+
+                    dashboard.ShowDialog();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"An error occurred while running the Expenses Analysis:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            else
+            {
+                try
+                {
+                    // 1. Execute the existing sales analysis logic
+                    var dataRepo = new DataRepository(startDate);
+                    var service = new SalesAnalysisService(dataRepo);
+
+                    // 2. Create the dashboard ViewModel for sales and open the dashboard window
+                    var vm = new AnalyticsDashboardViewModel(service, "Sales");
+                    var dashboard = new AnalyticsDashboardView
+                    {
+                        DataContext = vm,
+                        Owner = this
+                    };
+
+                    dashboard.ShowDialog();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"An error occurred while running the Sales Analysis:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
         }
     }
 }
