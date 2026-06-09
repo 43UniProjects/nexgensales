@@ -2,7 +2,7 @@
 
 We recently updated the project to use a real database repository instead of hard-coded mock data. This guide shows how to implement the SQL queries inside `DataRepository.cs`.
 
-## 1. How the Date Range Works
+## 1. How the Date Range Works Underthehood
 
 The UI now captures the user's selected "Date Range" (e.g., 1 Month) and calculates a `startDate`.
 This `startDate` is passed into the constructor of `DataRepository` and saved in a private field:
