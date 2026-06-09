@@ -22,7 +22,6 @@ namespace NexGenSales.ViewModels
         // ── 1. Supplier Profitability ─────────────────────────────────────────────
         public SeriesCollection SupplierSeries  { get; }
         public string[]         SupplierLabels  { get; }
-        public string           LowMarginWarning { get; }
 
         // ── 2. Item Velocity ──────────────────────────────────────────────────────
         public SeriesCollection VelocitySeries { get; }
@@ -53,7 +52,6 @@ namespace NexGenSales.ViewModels
             var data = _service.GetAllChartData();
 
             SupplierSeries   = data.SupplierSeries;  SupplierLabels  = data.SupplierLabels;
-            LowMarginWarning = data.LowMarginWarning;
             VelocitySeries   = data.VelocitySeries;  VelocityLabels  = data.VelocityLabels;
             RevenueSeries    = data.RevenueSeries;
             TrendSeries      = data.TrendSeries;      TrendLabels     = data.TrendLabels;

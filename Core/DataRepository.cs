@@ -18,15 +18,14 @@ namespace NexGenSales.Core
 
         /// <summary>
         /// Cost-to-profit ratio per supplier.
-        /// IsLowMargin flags any supplier whose profit ratio is below 20%.
         /// TODO: Query SalesRecord table where Date_Time >= _startDate.
         /// Group by Supplier_ID, calculate Total Revenue (Sum of Net_Revenue) and Total Cost (Sum of Quantity_Sold * Unit_Purchase_Cost).
         /// Profit Ratio = (Total Revenue - Total Cost) / Total Revenue.
         /// </summary>
-        public (string[] Suppliers, double[] ProfitRatios, bool[] IsLowMargin) GetSupplierProfitabilityData()
+        public (string[] Suppliers, double[] ProfitRatios) GetSupplierProfitabilityData()
         {
             // Dummy return for compilation. To be implemented.
-            return (Array.Empty<string>(), Array.Empty<double>(), Array.Empty<bool>());
+            return (Array.Empty<string>(), Array.Empty<double>());
         }
 
         /// <summary>
