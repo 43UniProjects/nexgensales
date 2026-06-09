@@ -13,6 +13,10 @@ namespace NexGenSales.Core
         /// </summary>
         public (string[] Suppliers, double[] ProfitRatios, bool[] IsLowMargin) GetSupplierProfitabilityData()
         {
+          
+          
+          
+          
             return (
                 Suppliers:    new[] { "SUP-ALPHA", "SUP-BETA", "SUP-GAMMA", "SUP-DELTA", "SUP-ECHO" },
                 ProfitRatios: new[] { 0.42,         0.31,        0.12,         0.38,        0.18       },
