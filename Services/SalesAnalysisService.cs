@@ -21,15 +21,15 @@ namespace NexGenSales.Services
 
     /// <summary>
     /// Single orchestration service for analytics output.
-    /// Pulls raw arrays from MockDataRepository, builds chart series via ChartFactory,
+    /// Pulls raw arrays from DataRepository, builds chart series via ChartFactory,
     /// and produces PDF reports via ChartCaptureHelper + ReportBuilder.
     /// </summary>
     public class SalesAnalysisService
     {
-        private readonly MockDataRepository _repository;
+        private readonly DataRepository _repository;
         private readonly ReportBuilder      _reportBuilder;
 
-        public SalesAnalysisService(MockDataRepository repository)
+        public SalesAnalysisService(DataRepository repository)
         {
             _repository    = repository;
             _reportBuilder = new ReportBuilder();

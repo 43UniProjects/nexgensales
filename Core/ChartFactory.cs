@@ -1,6 +1,8 @@
 using LiveCharts;
 using LiveCharts.Wpf;
+using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Effects;
 
 namespace NexGenSales.Core
 {
@@ -29,10 +31,24 @@ namespace NexGenSales.Core
             Color.FromRgb(0xEC, 0x48, 0x99), // pink
         };
 
-        // ── 1. Supplier Profitability — Column chart, flagged bars in red ─────────
+        // Unique per-supplier colour palette (8 harmonious colours)
+        private static readonly Color[] SupplierPalette =
+        {
+            Color.FromRgb(0x00, 0xE5, 0xA0), // teal
+            Color.FromRgb(0x00, 0xC8, 0xE5), // cyan
+            Color.FromRgb(0x8B, 0x5C, 0xF6), // purple
+            Color.FromRgb(0xF5, 0x9E, 0x0B), // amber
+            Color.FromRgb(0xEC, 0x48, 0x99), // pink
+            Color.FromRgb(0x3B, 0x82, 0xF6), // blue
+            Color.FromRgb(0xEF, 0x44, 0x44), // red
+            Color.FromRgb(0x10, 0xB9, 0x81), // emerald
+        };
+
+        // ── 1. Supplier Profitability — Column chart, unique colour per supplier ─────
         /// <summary>
         /// Creates one ColumnSeries per supplier so each bar can be individually coloured.
-        /// Low-margin suppliers (IsLowMargin = true) are rendered in red.
+        /// Each supplier gets a unique colour from SupplierPalette; low-margin suppliers
+        /// additionally receive a desaturated fill to visually flag underperformance.
         /// </summary>
         public static SeriesCollection CreateSupplierProfitabilityChart(
             string[] suppliers, double[] ratios, bool[] isLowMargin)
@@ -40,11 +56,20 @@ namespace NexGenSales.Core
             var series = new SeriesCollection();
             for (int i = 0; i < suppliers.Length; i++)
             {
+                // Pick a unique colour per supplier; desaturate slightly for low-margin
+                Color baseColor  = SupplierPalette[i % SupplierPalette.Length];
+                SolidColorBrush fill = isLowMargin[i]
+                    ? new SolidColorBrush(Color.FromArgb(0xCC, baseColor.R, baseColor.G, baseColor.B))
+                    : new SolidColorBrush(baseColor);
+
                 series.Add(new ColumnSeries
                 {
                     Title      = suppliers[i],
                     Values     = new ChartValues<double> { ratios[i] },
-                    Fill       = isLowMargin[i] ? LowMarginRed : AccentTeal,
+                    Fill       = fill,
+                    Foreground = new SolidColorBrush(Colors.White),
+                    FontWeight = FontWeights.Bold,
+                    Effect     = new DropShadowEffect { Color = Colors.Black, ShadowDepth = 0, BlurRadius = 3, Opacity = 1 },
                     DataLabels = true,
                     LabelPoint = p => p.Y.ToString("P0")
                 });
@@ -62,6 +87,9 @@ namespace NexGenSales.Core
                     Title      = "Units Sold",
                     Values     = new ChartValues<int>(quantities),
                     Fill       = AccentTeal,
+                    Foreground = new SolidColorBrush(Colors.White),
+                    FontWeight = FontWeights.Bold,
+                    Effect     = new DropShadowEffect { Color = Colors.Black, ShadowDepth = 0, BlurRadius = 3, Opacity = 1 },
                     DataLabels = true
                 }
             };
@@ -79,6 +107,9 @@ namespace NexGenSales.Core
                     Title      = items[i],
                     Values     = new ChartValues<double> { revenues[i] },
                     Fill       = new SolidColorBrush(PiePalette[i % PiePalette.Length]),
+                    Foreground = new SolidColorBrush(Colors.White),
+                    FontWeight = FontWeights.Bold,
+                    Effect     = new DropShadowEffect { Color = Colors.Black, ShadowDepth = 0, BlurRadius = 3, Opacity = 1 },
                     DataLabels = true,
                     LabelPoint = p => $"{p.Participation:P0}"
                 });
@@ -115,6 +146,9 @@ namespace NexGenSales.Core
                     Title      = "Effectiveness Score",
                     Values     = new ChartValues<double>(scores),
                     Fill       = AccentTeal,
+                    Foreground = new SolidColorBrush(Colors.White),
+                    FontWeight = FontWeights.Bold,
+                    Effect     = new DropShadowEffect { Color = Colors.Black, ShadowDepth = 0, BlurRadius = 3, Opacity = 1 },
                     DataLabels = true,
                     LabelPoint = p => p.Y.ToString("F1")
                 }

@@ -77,17 +77,40 @@ namespace NexGenSales.Views
         /// </summary>
         private void BtnRunAnalysis_Click(object sender, RoutedEventArgs e)
         {
-            var service   = new SalesAnalysisService(new MockDataRepository());
-            var vm        = new AnalyticsDashboardViewModel(service, "Sales");
-            var dashboard = new AnalyticsDashboardView
-            {
-                DataContext = vm,
-                Owner       = this
-            };
+            string reportType = (CmbReportType.SelectedItem as System.Windows.Controls.ComboBoxItem)?.Content?.ToString() ?? "Sales Data";
+            string dateRangeStr = (CmbDateRange.SelectedItem as System.Windows.Controls.ComboBoxItem)?.Content?.ToString() ?? "1 Month";
 
-            // ShowDialog() gives the dashboard exclusive focus and blocks
-            // all interaction with this window until the dashboard is closed.
-            dashboard.ShowDialog();
+            DateTime startDate = DateTime.Today;
+            switch (dateRangeStr)
+            {
+                case "1 Week": startDate = startDate.AddDays(-7); break;
+                case "1 Month": startDate = startDate.AddMonths(-1); break;
+                case "3 Months": startDate = startDate.AddMonths(-3); break;
+                case "6 Months": startDate = startDate.AddMonths(-6); break;
+                case "1 Year": startDate = startDate.AddYears(-1); break;
+                default: startDate = startDate.AddMonths(-1); break;
+            }
+
+            if (reportType == "Expense Data")
+            {
+                var service = new ExpensesAnalysisService();
+                service.RunAnalysis(startDate);
+            }
+            else
+            {
+                var dataRepo = new DataRepository(startDate);
+                var service   = new SalesAnalysisService(dataRepo);
+                var vm        = new AnalyticsDashboardViewModel(service, "Sales");
+                var dashboard = new AnalyticsDashboardView
+                {
+                    DataContext = vm,
+                    Owner       = this
+                };
+
+                // ShowDialog() gives the dashboard exclusive focus and blocks
+                // all interaction with this window until the dashboard is closed.
+                dashboard.ShowDialog();
+            }
         }
     }
 }
