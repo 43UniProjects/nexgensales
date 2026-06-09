@@ -35,7 +35,7 @@ class SalesRecordRepository(SqliteService sqliteService) : Repository<SalesRecor
     {
         var SalesRecords = new List<SalesRecord>();
 
-        var connection = sqliteService.CreateConnection();
+        using var connection = sqliteService.CreateConnection();
 
         await connection.OpenAsync();
 
@@ -112,13 +112,15 @@ class SalesRecordRepository(SqliteService sqliteService) : Repository<SalesRecor
     public override void InsertMany(List<SalesRecord> newRecords)
     {
 
-        var connection = sqliteService.CreateConnection();
+        using var connection = sqliteService.CreateConnection();
         connection.Open();
         foreach (var record in newRecords)
         {
             if (!Insert(record, connection))
             {
-                throw new InvalidOperationException("Failed to insert one or more expense records.");
+                string err = $"Failed to insert record of {record.Date_Time:yyyy.MM.dd HH:mm:ss}.";
+                Console.WriteLine($"[DB ERROR] {err}");
+                throw new InvalidOperationException(err);
             }
         }
     }

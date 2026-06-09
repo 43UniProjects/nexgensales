@@ -16,9 +16,9 @@ using System.Windows.Input;
 
 namespace NexGenSales.ViewModels
 {
-    
+
     // DATA MODEL FOR THE IMPORT ARRAY
-    
+
     public class ImportedFileSummary
     {
         public string FilePath { get; set; }
@@ -29,11 +29,11 @@ namespace NexGenSales.ViewModels
     {
         public ICommand ImportRecordCommand { get; }
 
-        
+
         // PROPERTIES
-        
+
         // The specific Array/List requested to hold both File Paths and Record Types
-        private List<ImportedFileSummary> _importedFilesArray = new List<ImportedFileSummary>();
+        private List<ImportedFileSummary> _importedFilesArray = [];
         public List<ImportedFileSummary> ImportedFilesArray
         {
             get { return _importedFilesArray; }
@@ -61,7 +61,7 @@ namespace NexGenSales.ViewModels
             ImportRecordCommand = new RelayCommand(ExecuteImportRecord);
         }
 
-        
+
         private void ExecuteImportRecord(object parameter)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
@@ -89,22 +89,19 @@ namespace NexGenSales.ViewModels
                 // Assign the structured list to the main array property
                 ImportedFilesArray = tempFilesList;
 
-                string fileNames = string.Join("\n", ImportedFilesArray.Select(f => System.IO.Path.GetFileName(f.FilePath)));
+                string fileNames = string.Join("\n", ImportedFilesArray.Select(file => System.IO.Path.GetFileName(file.FilePath)));
 
-                CustomMessageBoxView.Show(
-                    $"Successfully structured {ImportedFilesArray.Count} file(s) as [{SelectedRecordType}] for processing:\n\n{fileNames}",
-                    "Import Configuration",
-                    CustomMessageType.Info
-                );
+                Console.WriteLine(
+                    $"Successfully structured {ImportedFilesArray.Count} file(s) as [{SelectedRecordType}] for processing\n File Names: {fileNames}");
 
                 // Pass the structured array to the processing method
                 ProcessAndImportRecords(ImportedFilesArray);
             }
         }
 
-        
+
         // RECORD PROCESSING LOGIC
-        
+
 
         private void ProcessAndImportRecords(List<ImportedFileSummary> filesToProcess)
         {
@@ -122,6 +119,8 @@ namespace NexGenSales.ViewModels
 
                     if (salesImportService.ImportFiles(salesPaths))
                     {
+                        new RecordMetadataRepository(new SqliteService()).InsertMany(ExtractRecordMetadata(null, salesImportService.Records));
+
                         new SalesRecordRepository(new SqliteService()).InsertMany(salesImportService.Records);
                         CustomMessageBoxView.Show("Sales records imported and saved successfully!", "Import Success", CustomMessageType.Success);
                     }
@@ -134,11 +133,15 @@ namespace NexGenSales.ViewModels
                 // 2. Process Expenses Records
                 if (expensesPaths.Length > 0)
                 {
+
                     var expensesImportService = new ExcelFileImportService<ExpensesRecordField, ExpensesRecord>(
                         new ExcelParser(), RecordMappers.MapToExpensesRecord);
 
                     if (expensesImportService.ImportFiles(expensesPaths))
                     {
+
+                        new RecordMetadataRepository(new SqliteService()).InsertMany(ExtractRecordMetadata(expensesImportService.Records, null));
+
                         new ExpensesRecordRepository(new SqliteService()).InsertMany(expensesImportService.Records);
                         CustomMessageBoxView.Show("Expenses records imported and saved successfully!", "Import Success", CustomMessageType.Success);
                     }
@@ -147,6 +150,7 @@ namespace NexGenSales.ViewModels
                         CustomMessageBoxView.Show("Validation failed for one or more Expenses Record files.", "Validation Error", CustomMessageType.Error);
                     }
                 }
+
             }
             catch (Exception ex)
             {
@@ -154,12 +158,67 @@ namespace NexGenSales.ViewModels
             }
         }
 
-        
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        private static List<RecordMetadata> ExtractRecordMetadata(List<ExpensesRecord> expensesRecords, List<SalesRecord> salesRecords)
+        {
+            List<RecordMetadata> recordMetadataList = [];
+
+            if (expensesRecords != null && expensesRecords.Count > 0)
+            {
+                DateTime? lastRecordDate = null;
+
+                foreach (var record in expensesRecords)
+                {
+                    Console.WriteLine("[HomeViewModel] Extracting expenses record metadata");
+                    if (lastRecordDate?.Date != record.Date_Recorded.Date)
+                    {
+                        RecordMetadata newRecordMetadata = new()
+                        {
+                            Record_Type = "Expenses Record",
+                            Record_Date = record.Date_Recorded,
+                            Upload_Date = DateTime.Now,
+                            Process_State = "RAW" // RAW = fresh uploaded data record, ANALYSED = analysed data
+                        };
+
+                        recordMetadataList.Add(newRecordMetadata);
+                        lastRecordDate = record.Date_Recorded;
+                    }
+                }
+            }
+
+            if (salesRecords != null && salesRecords.Count > 0)
+            {
+                DateTime? lastRecordDate = null;
+
+                foreach (var record in salesRecords)
+                {
+                    Console.WriteLine("[HomeViewModel] Extracting sales record metadata");
+                    if (lastRecordDate?.Date != record.Date_Time.Date)
+                    {
+                        RecordMetadata newRecordMetadata = new()
+                        {
+                            Record_Type = "Sales Record",
+                            Record_Date = record.Date_Time,
+                            Upload_Date = DateTime.Now,
+                            Process_State = "RAW" // RAW = fresh uploaded data record, ANALYSED = analysed data
+                        };
+
+                        recordMetadataList.Add(newRecordMetadata);
+
+                        lastRecordDate = record.Date_Time;
+                    }
+                }
+            }
+
+            return recordMetadataList;
+        }
+
     }
 }

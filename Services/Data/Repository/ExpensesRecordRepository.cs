@@ -31,7 +31,7 @@ class ExpensesRecordRepository(SqliteService sqliteService) : Repository<Expense
     {
         var expenseRecords = new List<ExpensesRecord>();
 
-        var connection = sqliteService.CreateConnection();
+        using var connection = sqliteService.CreateConnection();
 
         await connection.OpenAsync();
 
@@ -96,7 +96,9 @@ class ExpensesRecordRepository(SqliteService sqliteService) : Repository<Expense
         {
             if (!Insert(record, connection))
             {
-                throw new InvalidOperationException("Failed to insert one or more expense records.");
+                string err = $"Failed to insert record of {record.Date_Recorded:yyyy.MM.dd HH:mm:ss}.";
+                Console.WriteLine($"[DB ERROR] {err}");
+                throw new InvalidOperationException(err);
             }
         }
     }
