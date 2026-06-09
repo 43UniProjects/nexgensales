@@ -340,7 +340,7 @@
 
                                 <!-- Filter 1: Report Type Selection -->
                                 <TextBlock Text="Report Type" FontSize="13" FontWeight="SemiBold" Foreground="#788896" VerticalAlignment="Center" Margin="5,0,10,0"/>
-                                <ComboBox Width="170" SelectedIndex="0">
+                                <ComboBox Width="170" SelectedIndex="0" x:Name="CmbReportType">
                                     <ComboBoxItem Content="Sales Data"/>
                                     <ComboBoxItem Content="Expense Data"/>
                                     <ComboBoxItem Content="Profit Margin"/>
@@ -348,7 +348,7 @@
 
                                 <!-- Filter 2: Date Range Selection -->
                                 <TextBlock Text="Date Range" FontSize="13" FontWeight="SemiBold" Foreground="#788896" VerticalAlignment="Center" Margin="28,0,10,0"/>
-                                <ComboBox Width="170" SelectedIndex="0">
+                                <ComboBox Width="170" SelectedIndex="0" x:Name="CmbDateRange">
                                     <ComboBoxItem Content="1 Week"/>
                                     <ComboBoxItem Content="1 Month"/>
                                     <ComboBoxItem Content="3 Months"/>

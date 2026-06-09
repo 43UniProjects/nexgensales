@@ -13,9 +13,6 @@ namespace NexGenSales.Core
     public class ReportBuilder
     {
         // QuestPDF requires a license declaration before any document is generated.
-        // Community license is free for individuals, non-profits, open-source projects,
-        // and companies with less than $1M USD annual revenue.
-        // See: https://www.questpdf.com/license/
         static ReportBuilder()
         {
             QuestPDF.Settings.License = LicenseType.Community;
@@ -45,17 +42,26 @@ namespace NexGenSales.Core
                     // ── Body — one section per chart ────────────────────────────
                     page.Content().Column(col =>
                     {
-                        foreach (var (title, image) in charts)
+                        for (int i = 0; i < charts.Count; i++)
                         {
+                            var (title, image) = charts[i];
+
                             col.Item().PaddingTop(1, Unit.Centimetre)
                                .Text(title).Bold().FontSize(14)
                                .FontColor(PdfColors.Grey.Darken2);
 
                             col.Item().PaddingTop(0.3f, Unit.Centimetre)
-                               .Image(image);
+                               .AlignCenter()
+                               .Image(image).FitWidth();
 
                             col.Item().PaddingTop(0.5f, Unit.Centimetre)
                                .LineHorizontal(1).LineColor(PdfColors.Grey.Lighten2);
+
+                            // Force a page break after every 2 charts (except the last one)
+                            if ((i + 1) % 2 == 0 && i < charts.Count - 1)
+                            {
+                                col.Item().PageBreak();
+                            }
                         }
                     });
 
