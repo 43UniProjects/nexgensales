@@ -19,8 +19,6 @@ namespace NexGenSales.Core
         private static readonly SolidColorBrush AccentTealFill =
             new(Color.FromArgb(0x55, 0x00, 0xE5, 0xA0));
 
-        private static readonly SolidColorBrush LowMarginRed =
-            new(Color.FromRgb(0xFF, 0x6B, 0x35));
 
         private static readonly Color[] PiePalette =
         {
@@ -47,20 +45,17 @@ namespace NexGenSales.Core
         // ── 1. Supplier Profitability — Column chart, unique colour per supplier ─────
         /// <summary>
         /// Creates one ColumnSeries per supplier so each bar can be individually coloured.
-        /// Each supplier gets a unique colour from SupplierPalette; low-margin suppliers
-        /// additionally receive a desaturated fill to visually flag underperformance.
+        /// Each supplier gets a unique colour from SupplierPalette.
         /// </summary>
         public static SeriesCollection CreateSupplierProfitabilityChart(
-            string[] suppliers, double[] ratios, bool[] isLowMargin)
+            string[] suppliers, double[] ratios)
         {
             var series = new SeriesCollection();
             for (int i = 0; i < suppliers.Length; i++)
             {
-                // Pick a unique colour per supplier; desaturate slightly for low-margin
+                // Pick a unique colour per supplier
                 Color baseColor  = SupplierPalette[i % SupplierPalette.Length];
-                SolidColorBrush fill = isLowMargin[i]
-                    ? new SolidColorBrush(Color.FromArgb(0xCC, baseColor.R, baseColor.G, baseColor.B))
-                    : new SolidColorBrush(baseColor);
+                SolidColorBrush fill = new SolidColorBrush(baseColor);
 
                 series.Add(new ColumnSeries
                 {
