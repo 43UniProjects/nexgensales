@@ -12,7 +12,6 @@ namespace NexGenSales.Views
             InitializeComponent();
 
             // Binds the View to its corresponding ViewModel
-           
             this.DataContext = new HomeViewModel();
         }
 
