@@ -276,12 +276,6 @@
                                         </lvc:CartesianChart.AxisY>
                                     </lvc:CartesianChart>
 
-                                    <!-- Low-margin warning -->
-                                    <Border Background="#1C1208" CornerRadius="6"
-                                            Padding="12,6" Margin="0,10,0,0">
-                                        <TextBlock Text="{Binding LowMarginWarning}"
-                                                   Foreground="#F59E0B" FontSize="12"/>
-                                    </Border>
                                 </StackPanel>
                             </Border>
 

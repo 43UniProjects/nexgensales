@@ -35,36 +35,15 @@ namespace NexGenSales.Core
         }
 
         /// <summary>
-        /// Calculates the cost-to-profit ratio for each supplier within the selected timeframe.
-        /// Flags any supplier whose profit margin falls below the 20% threshold.
+        /// Cost-to-profit ratio per supplier.
+        /// TODO: Query SalesRecord table where Date_Time >= _startDate.
+        /// Group by Supplier_ID, calculate Total Revenue (Sum of Net_Revenue) and Total Cost (Sum of Quantity_Sold * Unit_Purchase_Cost).
+        /// Profit Ratio = (Total Revenue - Total Cost) / Total Revenue.
         /// </summary>
-        /// <returns>A tuple containing arrays of Supplier IDs, Profit Ratios, and Low Margin flags.</returns>
-        public (string[] Suppliers, double[] ProfitRatios, bool[] IsLowMargin) GetSupplierProfitabilityData()
+        public (string[] Suppliers, double[] ProfitRatios) GetSupplierProfitabilityData()
         {
-            Console.WriteLine("[DataRepository] LINQ: Calculating Supplier Profitability...");
-
-            var supplierGroups = _filteredSales
-                .GroupBy(s => s.Supplier_ID)
-                .Select(g => {
-                    double totalRevenue = g.Sum(s => s.Net_Revenue);
-                    double totalCost = g.Sum(s => s.Quantity_Sold * s.Unit_Purchase_Cost);
-
-                    // Calculate profit margin ratio; avoid division by zero
-                    double ratio = totalRevenue > 0 ? (totalRevenue - totalCost) / totalRevenue : 0;
-
-                    return new
-                    {
-                        Supplier = g.Key,
-                        ProfitRatio = ratio,
-                        IsLow = ratio < 0.20 // Flag as low margin if profit ratio is below 20%
-                    };
-                }).ToList();
-
-            var suppliers = supplierGroups.Select(x => x.Supplier).ToArray();
-            var ratios = supplierGroups.Select(x => x.ProfitRatio).ToArray();
-            var isLowMargin = supplierGroups.Select(x => x.IsLow).ToArray();
-
-            return (suppliers, ratios, isLowMargin);
+            // Dummy return for compilation. To be implemented.
+            return (Array.Empty<string>(), Array.Empty<double>());
         }
 
         /// <summary>
