@@ -102,4 +102,39 @@ class ExpensesRecordRepository(SqliteService sqliteService) : Repository<Expense
             }
         }
     }
+
+    public async Task<List<ExpensesRecord>> GetExpensesByDateRangeAsync(DateTime startDate, DateTime endDate)
+    {
+        var expenseRecords = new List<ExpensesRecord>();
+
+        using var connection = sqliteService.CreateConnection();
+        await connection.OpenAsync();
+
+        string sql = @"
+            SELECT * FROM ExpensesRecord 
+            WHERE Date_Recorded >= @StartDate AND Date_Recorded <= @EndDate;";
+
+        using var command = new Microsoft.Data.Sqlite.SqliteCommand(sql, connection);
+        command.Parameters.AddWithValue("@StartDate", startDate.ToString("yyyy-MM-dd HH:mm:ss"));
+        command.Parameters.AddWithValue("@EndDate", endDate.ToString("yyyy-MM-dd HH:mm:ss"));
+
+        using var reader = await command.ExecuteReaderAsync();
+
+        while (await reader.ReadAsync())
+        {
+            var model = new ExpensesRecord
+            { 
+                Expense_ID = reader.GetInt32(reader.GetOrdinal("Transaction_ID")),
+                Date_Recorded = reader.GetDateTime(reader.GetOrdinal("Date_Recorded")),
+                Expense_Category = reader.IsDBNull(reader.GetOrdinal("Expense_Category")) ? null : reader.GetString(reader.GetOrdinal("Expense_Category")),
+                Specific_Type = reader.IsDBNull(reader.GetOrdinal("Specific_Type")) ? null : reader.GetString(reader.GetOrdinal("Specific_Type")),
+                Amount = reader.GetDouble(reader.GetOrdinal("Amount")),
+                Asset_ID = reader.IsDBNull(reader.GetOrdinal("Asset_ID")) ? null : reader.GetString(reader.GetOrdinal("Asset_ID")),
+            };
+
+            expenseRecords.Add(model);
+        }
+
+        return expenseRecords;
+    }
 }
