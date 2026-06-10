@@ -33,4 +33,13 @@
     <PackageReference Include="System.Text.Encoding.CodePages" Version="10.0.8" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Database\" />
+  </ItemGroup>
+
+  <Target Name="Husky" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug'">
+    <Exec Command="dotnet tool restore" StandardOutputImportance="Low" StandardErrorImportance="High" />
+    <Exec Command="dotnet husky install" StandardOutputImportance="Low" StandardErrorImportance="High" />
+  </Target>
+
 </Project>
