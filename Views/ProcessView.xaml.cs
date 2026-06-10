@@ -1,17 +1,46 @@
 using System;
 using System.Windows;
 using System.Windows.Input;
+using System.Threading.Tasks;
 using NexGenSales.Core;
 using NexGenSales.Services;
+using NexGenSales.Services.Data.Repository;
 using NexGenSales.ViewModels;
 
 namespace NexGenSales.Views
 {
     public partial class ProcessView : Window
     {
+        private readonly RecordMetadataRepository _metadataRepo;
+
         public ProcessView()
         {
             InitializeComponent();
+
+            // Initialize the repository for the table
+            var sqliteService = new SqliteService();
+            _metadataRepo = new RecordMetadataRepository(sqliteService);
+
+            // Add the Loaded event handler
+            this.Loaded += Window_Loaded;
+        }
+
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            await LoadTableDataAsync();
+        }
+
+        private async Task LoadTableDataAsync()
+        {
+            try
+            {
+                var logs = await _metadataRepo.GetAll();
+                DgRecordLogs.ItemsSource = logs;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to load record logs:\n{ex.Message}", "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         // Enable dragging the window by holding the left mouse button
@@ -95,6 +124,9 @@ namespace NexGenSales.Views
                 default: startDate = startDate.AddMonths(-1); break;
             }
 
+            // Map UI ComboBox text to your exact DB Record_Type strings
+            string dbRecordType = reportType == "Expense Data" ? "Expenses Record" : "Sales Record";
+
             if (reportType == "Expense Data")
             {
                 try
@@ -123,6 +155,10 @@ namespace NexGenSales.Views
                     };
 
                     dashboard.ShowDialog();
+
+                    // 4. Update states in database to ANALYZED and refresh grid
+                    await _metadataRepo.UpdateRecordStateAsync(dbRecordType, startDate, endDate);
+                    await LoadTableDataAsync();
                 }
                 catch (Exception ex)
                 {
@@ -146,6 +182,10 @@ namespace NexGenSales.Views
                     };
 
                     dashboard.ShowDialog();
+
+                    // 3. Update states in database to ANALYZED and refresh grid
+                    await _metadataRepo.UpdateRecordStateAsync(dbRecordType, startDate, endDate);
+                    await LoadTableDataAsync();
                 }
                 catch (Exception ex)
                 {
