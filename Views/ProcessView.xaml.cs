@@ -84,6 +84,16 @@ namespace NexGenSales.Views
             this.Close();
         }
 
+        // Open the Prediction Dashboard as a dialog
+        private void BtnPrediction_Click(object sender, RoutedEventArgs e)
+        {
+            PredictionView predictionWindow = new PredictionView
+            {
+                Owner = this
+            };
+            predictionWindow.ShowDialog();
+        }
+
         // Navigate to the Export window
         private void BtnExports_Click(object sender, RoutedEventArgs e)
         {

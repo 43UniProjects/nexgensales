@@ -134,19 +134,17 @@ namespace NexGenSales.Views
             try
             {
                 string fullPath = vm.GenerateReport(charts);
-                MessageBox.Show(
+                CustomMessageBoxView.Show(
                     $"Report successfully saved to:\n{fullPath}",
                     "✓ Report Generated",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Information);
+                    CustomMessageType.Success);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
+                CustomMessageBoxView.Show(
                     $"Failed to generate report:\n{ex.Message}",
                     "Error",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                    CustomMessageType.Error);
             }
             finally
             {
