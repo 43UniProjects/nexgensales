@@ -7,9 +7,9 @@ using NexGenSales.Services.Data.Repository;
 namespace NexGenSales.Core
 {
     /// <summary>
-    /// Provides aggregated data arrays for the analytics dashboard using C# LINQ.
-    /// Acts as an intermediate data layer, fetching raw data from the SQLite database 
-    /// via the SalesRecordRepository and processing it in-memory.
+    /// Serves as the primary data aggregation layer for the Analytics Dashboard.
+    /// Fetches raw sales records from the SQLite database and performs in-memory 
+    /// LINQ queries to generate metrics based on a specified date range.
     /// </summary>
     public class DataRepository
     {
@@ -17,43 +17,68 @@ namespace NexGenSales.Core
         private readonly List<SalesRecord> _filteredSales;
 
         /// <summary>
-        /// Initializes a new instance of the DataRepository and fetches relevant records.
+        /// Initializes the repository, fetches all sales records, and filters them 
+        /// to include only transactions that occurred on or after the specified start date.
         /// </summary>
-        /// <param name="startDate">The starting date for the data analysis period.</param>
+        /// <param name="startDate">The beginning of the date range for data analysis.</param>
         public DataRepository(DateTime startDate)
         {
             _startDate = startDate;
 
-            // Initialize the base repository and SQLite service to fetch data
+            // Initialize database service and fetch all available records
             var salesRepo = new SalesRecordRepository(new SqliteService());
-
-            // Fetch all sales records from the database asynchronously, blocking for the result
             var allSales = salesRepo.GetAll().GetAwaiter().GetResult() ?? new List<SalesRecord>();
 
-            // Filter the fetched records in-memory based on the selected start date
+            // Apply in-memory time-series filtering
             _filteredSales = allSales.Where(s => s.Date_Time >= _startDate).ToList();
         }
 
         /// <summary>
-        /// Cost-to-profit ratio per supplier.
-        /// TODO: Query SalesRecord table where Date_Time >= _startDate.
-        /// Group by Supplier_ID, calculate Total Revenue (Sum of Net_Revenue) and Total Cost (Sum of Quantity_Sold * Unit_Purchase_Cost).
-        /// Profit Ratio = (Total Revenue - Total Cost) / Total Revenue.
+        /// Calculates the profit margin ratio for each supplier and identifies those 
+        /// falling below the acceptable 20% threshold.
         /// </summary>
-        public (string[] Suppliers, double[] ProfitRatios) GetSupplierProfitabilityData()
+        /// <returns>Tuple containing Supplier IDs, Profit Ratios, and Low Margin alert flags.</returns>
+        public (string[] Suppliers, double[] ProfitRatios, bool[] IsLowMargin) GetSupplierProfitabilityData()
         {
-            // Dummy return for compilation. To be implemented.
-            return (Array.Empty<string>(), Array.Empty<double>());
+            Console.WriteLine("[DataRepository] LINQ: Calculating Supplier Profitability...");
+
+            // Safeguard against empty data sets to prevent UI crashes
+            if (_filteredSales == null || !_filteredSales.Any())
+                return (Array.Empty<string>(), Array.Empty<double>(), Array.Empty<bool>());
+
+            var supplierGroups = _filteredSales
+                .GroupBy(s => s.Supplier_ID)
+                .Select(g => {
+                    double totalRevenue = g.Sum(s => s.Net_Revenue);
+                    double totalCost = g.Sum(s => s.Quantity_Sold * s.Unit_Purchase_Cost);
+
+                    // Prevent division by zero; calculate standard profit margin
+                    double ratio = totalRevenue > 0 ? (totalRevenue - totalCost) / totalRevenue : 0;
+
+                    return new
+                    {
+                        Supplier = g.Key,
+                        ProfitRatio = ratio,
+                        IsLow = ratio < 0.20 // Flag true if margin is below 20%
+                    };
+                }).ToList();
+
+            return (supplierGroups.Select(x => x.Supplier).ToArray(),
+                    supplierGroups.Select(x => x.ProfitRatio).ToArray(),
+                    supplierGroups.Select(x => x.IsLow).ToArray());
         }
 
         /// <summary>
-        /// Determines the highest-volume items based on total units sold.
-        /// Identifies the top 10 best-selling items for the selected period.
+        /// Identifies the top 10 fastest-moving items based on total quantity sold.
         /// </summary>
-        /// <returns>A tuple containing arrays of Item IDs and their corresponding quantities sold.</returns>
+        /// <returns>Tuple containing Item IDs and their total sales quantities.</returns>
         public (string[] Items, int[] QuantitiesSold) GetItemVelocityData()
         {
             Console.WriteLine("[DataRepository] LINQ: Calculating Item Velocity...");
+
+            // Return empty arrays if no data is available for the selected period
+            if (_filteredSales == null || !_filteredSales.Any())
+                return (Array.Empty<string>(), Array.Empty<int>());
 
             var velocityGroups = _filteredSales
                 .GroupBy(s => s.Item_ID)
@@ -62,24 +87,25 @@ namespace NexGenSales.Core
                     TotalQty = (int)g.Sum(s => s.Quantity_Sold)
                 })
                 .OrderByDescending(x => x.TotalQty)
-                .Take(10) // Limit to the top 10 performing items
+                .Take(10) // Restrict to top 10 best-sellers
                 .ToList();
 
-            var items = velocityGroups.Select(x => x.ItemId).ToArray();
-            var quantities = velocityGroups.Select(x => x.TotalQty).ToArray();
-
-            return (items, quantities);
+            return (velocityGroups.Select(x => x.ItemId).ToArray(),
+                    velocityGroups.Select(x => x.TotalQty).ToArray());
         }
 
         /// <summary>
-        /// Calculates the average daily revenue contribution for the top 5 performing items.
+        /// Calculates the average daily revenue generated by the top 5 performing items.
         /// </summary>
-        /// <returns>A tuple containing arrays of Item IDs and their average daily revenues.</returns>
+        /// <returns>Tuple containing Item IDs and their daily average revenue.</returns>
         public (string[] Items, double[] AvgDailyRevenue) GetRevenueContributionData()
         {
             Console.WriteLine("[DataRepository] LINQ: Calculating Revenue Contribution...");
 
-            // Determine the total number of days in the selected period (minimum 1 day to prevent division by zero)
+            if (_filteredSales == null || !_filteredSales.Any())
+                return (Array.Empty<string>(), Array.Empty<double>());
+
+            // Calculate total days in the selected range (minimum 1 to avoid division by zero)
             double totalDays = (DateTime.Today - _startDate).TotalDays;
             if (totalDays < 1) totalDays = 1;
 
@@ -90,44 +116,47 @@ namespace NexGenSales.Core
                     AvgRev = g.Sum(s => s.Net_Revenue) / totalDays
                 })
                 .OrderByDescending(x => x.AvgRev)
-                .Take(5) // Limit to the top 5 revenue-generating items
+                .Take(5) // Restrict to top 5 revenue generators
                 .ToList();
 
-            var items = revenueGroups.Select(x => x.ItemId).ToArray();
-            var avgDaily = revenueGroups.Select(x => x.AvgRev).ToArray();
-
-            return (items, avgDaily);
+            return (revenueGroups.Select(x => x.ItemId).ToArray(),
+                    revenueGroups.Select(x => x.AvgRev).ToArray());
         }
 
         /// <summary>
-        /// Aggregates total revenue on a daily basis to visualize performance trends over time.
+        /// Aggregates net revenue on a daily basis to map the sales trend over time.
         /// </summary>
-        /// <returns>A tuple containing arrays of formatted date strings and corresponding total revenues.</returns>
+        /// <returns>Tuple containing Day labels (e.g., "Monday") and corresponding total revenues.</returns>
         public (string[] Days, double[] TotalRevenue) GetTrendAnalysisData()
         {
             Console.WriteLine("[DataRepository] LINQ: Calculating Trend Analysis...");
+
+            if (_filteredSales == null || !_filteredSales.Any())
+                return (Array.Empty<string>(), Array.Empty<double>());
 
             var trendGroups = _filteredSales
                 .GroupBy(s => s.Date_Time.Date)
                 .OrderBy(g => g.Key)
                 .Select(g => new {
-                    DayLabel = g.Key.ToString("MMM dd"), // Format date for UI representation (e.g., "Jun 09")
-                    DailyTotal = g.Sum(s => s.Net_Revenue)
+                    DayLabel = g.Key.ToString("dddd"), // Formats output to full day name (e.g., "Monday")
+                    DailyTotal = (double)g.Sum(s => s.Net_Revenue) // Explicit cast required for LiveCharts integration
                 }).ToList();
 
-            var days = trendGroups.Select(x => x.DayLabel).ToArray();
-            var revenues = trendGroups.Select(x => x.DailyTotal).ToArray();
-
-            return (days, revenues);
+            return (trendGroups.Select(x => x.DayLabel).ToArray(),
+                    trendGroups.Select(x => x.DailyTotal).ToArray());
         }
 
         /// <summary>
-        /// Evaluates the profitability score for each distinct discount tier applied to sales.
+        /// Evaluates overall profitability grouped by the allowed discount tiers.
+        /// Used to determine which discount strategies yield the highest net return.
         /// </summary>
-        /// <returns>A tuple containing arrays of formatted discount labels and their profitability scores.</returns>
+        /// <returns>Tuple containing Discount Labels and Profitability Scores.</returns>
         public (string[] Labels, double[] Scores) GetDiscountEffectivenessData()
         {
             Console.WriteLine("[DataRepository] LINQ: Calculating Discount Effectiveness...");
+
+            if (_filteredSales == null || !_filteredSales.Any())
+                return (Array.Empty<string>(), Array.Empty<double>());
 
             var discountGroups = _filteredSales
                 .GroupBy(s => s.Allowed_Discount)
@@ -137,10 +166,8 @@ namespace NexGenSales.Core
                     ProfitScore = g.Sum(s => s.Net_Revenue - (s.Quantity_Sold * s.Unit_Purchase_Cost))
                 }).ToList();
 
-            var labels = discountGroups.Select(x => x.DiscountLabel).ToArray();
-            var scores = discountGroups.Select(x => x.ProfitScore).ToArray();
-
-            return (labels, scores);
+            return (discountGroups.Select(x => x.DiscountLabel).ToArray(),
+                    discountGroups.Select(x => x.ProfitScore).ToArray());
         }
     }
 }
