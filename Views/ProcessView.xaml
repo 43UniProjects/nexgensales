@@ -223,11 +223,11 @@
 
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                             <!-- Predictions Button -->
-                            <Button Content="Predictions" Click="BtnPrediction_Click" Width="130" Height="40" FontSize="13" Foreground="#FFFFFF" Cursor="Hand" Margin="0,0,15,0">
+                            <Button Click="BtnPrediction_Click" Width="140" Height="40" Cursor="Hand" Margin="0,0,15,0">
                                 <Button.Style>
                                     <Style TargetType="Button">
                                         <Setter Property="Background" Value="#0078D7"/>
-                                        <Setter Property="FontWeight" Value="Bold"/>
+                                        <Setter Property="Foreground" Value="#FFFFFF"/>
                                         <Setter Property="Template">
                                             <Setter.Value>
                                                 <ControlTemplate TargetType="Button">
@@ -244,6 +244,12 @@
                                         </Style.Triggers>
                                     </Style>
                                 </Button.Style>
+                                <Button.Content>
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock Text="Predictions" FontSize="13" FontWeight="Bold" VerticalAlignment="Center"/>
+                                        <TextBlock Text="📈" FontFamily="Segoe UI Emoji" FontSize="16" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button.Content>
                             </Button>
 
                             <!-- Navigate Forward to Exports -->
