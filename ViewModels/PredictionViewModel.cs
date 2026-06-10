@@ -17,6 +17,7 @@ namespace NexGenSales.ViewModels
     {
         private string _targetBudget = "";
         private string _statusText = "Enter budget to predict";
+        private string _statusDetails = "";
         private Brush _statusColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#788896"));
         private SeriesCollection _predictionSeries;
         private string[] _predictionLabels;
@@ -33,6 +34,12 @@ namespace NexGenSales.ViewModels
         {
             get => _statusText;
             set { _statusText = value; OnPropertyChanged(); }
+        }
+
+        public string StatusDetails
+        {
+            get => _statusDetails;
+            set { _statusDetails = value; OnPropertyChanged(); }
         }
 
         public Brush StatusColor
@@ -58,6 +65,7 @@ namespace NexGenSales.ViewModels
             if (!double.TryParse(TargetBudget, out double budget))
             {
                 StatusText = "Invalid budget amount.";
+                StatusDetails = "";
                 StatusColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E81123"));
                 return;
             }
@@ -71,6 +79,7 @@ namespace NexGenSales.ViewModels
                 if (allSales == null || !allSales.Any())
                 {
                     StatusText = "No sales data available.";
+                    StatusDetails = "";
                     StatusColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F8C400"));
                     return;
                 }
@@ -105,12 +114,14 @@ namespace NexGenSales.ViewModels
 
                 if (totalExpected >= budget)
                 {
-                    StatusText = $"On Track (Expected: Rs. {totalExpected:N0} | Current: Rs. {currentMonthRevenue:N0})";
+                    StatusText = "On Track";
+                    StatusDetails = $"Expected: Rs. {totalExpected:N0} | Current: Rs. {currentMonthRevenue:N0}";
                     StatusColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#00C896")); // Success Green
                 }
                 else
                 {
-                    StatusText = $"Vulnerable (Expected: Rs. {totalExpected:N0} | Current: Rs. {currentMonthRevenue:N0})";
+                    StatusText = "Vulnerable";
+                    StatusDetails = $"Expected: Rs. {totalExpected:N0} | Current: Rs. {currentMonthRevenue:N0}";
                     StatusColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F8C400")); // Warning Yellow
                 }
 
@@ -129,6 +140,7 @@ namespace NexGenSales.ViewModels
             catch (Exception ex)
             {
                 StatusText = $"Error: {ex.Message}";
+                StatusDetails = "";
                 StatusColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E81123"));
             }
         }

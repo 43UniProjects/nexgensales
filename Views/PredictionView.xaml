@@ -63,7 +63,7 @@
 
                 <!-- Input Section -->
                 <StackPanel Grid.Row="0" Margin="0,0,0,20">
-                    <TextBlock Text="End of Month Target Budget" FontSize="18" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,10"/>
+                    <TextBlock Text="Enter End of Month Target Budget" FontSize="18" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,10"/>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Rs." FontSize="16" Foreground="#788896" VerticalAlignment="Center" Margin="0,0,10,0"/>
                         <TextBox Text="{Binding TargetBudget, UpdateSourceTrigger=PropertyChanged}" Width="250" Height="40" FontSize="16" Background="#1C2127" Foreground="#D3D9E0" BorderBrush="#2D3A46" BorderThickness="1" Padding="10,0" VerticalContentAlignment="Center"/>
@@ -113,7 +113,20 @@
 
                 <!-- Status Text -->
                 <Border Grid.Row="2" Background="#141A21" CornerRadius="12" BorderBrush="#1E262E" BorderThickness="1" Padding="15" Margin="0,20,0,0">
-                    <TextBlock Text="{Binding StatusText}" Foreground="{Binding StatusColor}" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <StackPanel HorizontalAlignment="Center">
+                        <TextBlock Text="{Binding StatusText}" Foreground="{Binding StatusColor}" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,5"/>
+                        <TextBlock Text="{Binding StatusDetails}" Foreground="#788896" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Center">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding StatusDetails}" Value="">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
                 </Border>
             </Grid>
         </Grid>
