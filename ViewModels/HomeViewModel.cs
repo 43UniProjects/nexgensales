@@ -65,25 +65,27 @@ namespace NexGenSales.ViewModels
 
         private void ExecuteImportRecord(object parameter)
         {
-            var fileOpener = new CustomFileOpener(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
-
-            // Only set owner if main window exists and is not the file opener itself
-            if (Application.Current.MainWindow != null && Application.Current.MainWindow != fileOpener)
+            OpenFileDialog openFileDialog = new OpenFileDialog
             {
-                fileOpener.Owner = Application.Current.MainWindow;
-            }
+                Filter = "Excel Files (*.xlsx)|*.xlsx|CSV Files (*.csv)|*.csv",
+                Title = "Select Record Files to Import",
+                Multiselect = true
+            };
 
-            if (fileOpener.ShowDialog() == true && !string.IsNullOrEmpty(fileOpener.SelectedFilePath))
+            if (openFileDialog.ShowDialog() == true)
             {
                 // Create a temporary list to hold the structured file data
                 var tempFilesList = new List<ImportedFileSummary>();
 
-                // Add the selected file with the currently selected Record Type
-                tempFilesList.Add(new ImportedFileSummary
+                // Map each selected file path with the currently selected Record Type
+                foreach (string path in openFileDialog.FileNames)
                 {
-                    FilePath = fileOpener.SelectedFilePath,
-                    RecordType = SelectedRecordType
-                });
+                    tempFilesList.Add(new ImportedFileSummary
+                    {
+                        FilePath = path,
+                        RecordType = SelectedRecordType
+                    });
+                }
 
                 // Assign the structured list to the main array property
                 ImportedFilesArray = tempFilesList;
