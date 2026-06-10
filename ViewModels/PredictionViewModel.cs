@@ -114,14 +114,18 @@ namespace NexGenSales.ViewModels
 
                 if (totalExpected >= budget)
                 {
-                    StatusText = "On Track";
-                    StatusDetails = $"Expected: Rs. {totalExpected:N0} | Current: Rs. {currentMonthRevenue:N0}";
+                    StatusText = "Sales Performance is On Track";
+                    double surplus = totalExpected - budget;
+                    StatusDetails = $"Target Revenue: Rs. {budget:N0}   |   Current Revenue: Rs. {currentMonthRevenue:N0}   |   Projected Revenue: Rs. {totalExpected:N0}\n\n" +
+                                    $"Estimated Profit: Rs. {surplus:N0}";
                     StatusColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#00C896")); // Success Green
                 }
                 else
                 {
-                    StatusText = "Vulnerable";
-                    StatusDetails = $"Expected: Rs. {totalExpected:N0} | Current: Rs. {currentMonthRevenue:N0}";
+                    StatusText = "Sales Performance is Vulnerable";
+                    double deficit = budget - totalExpected;
+                    StatusDetails = $"Target Revenue: Rs. {budget:N0}   |   Current Revenue: Rs. {currentMonthRevenue:N0}   |   Projected Revenue: Rs. {totalExpected:N0}\n\n" +
+                                    $"Estimated Loss: Rs. {deficit:N0}";
                     StatusColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F8C400")); // Warning Yellow
                 }
 
