@@ -1,4 +1,4 @@
-﻿<Window x:Class="nexgensales.Views.ProcessView"
+<Window x:Class="NexGenSales.Views.ProcessView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="NexGenSales - Process" Height="750" Width="1100"
@@ -335,12 +335,12 @@
                             <!-- Analysis Section Heading -->
                             <TextBlock Grid.Column="0" Text="Analyse Records" FontSize="18" FontWeight="Bold" Foreground="#FFFFFF" VerticalAlignment="Center" Margin="0,0,25,0"/>
 
-                            <!-- Multiple Filter Selections Container -->
+                            <!-- Date Range Filter -->
                             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
 
                                 <!-- Filter 1: Report Type Selection -->
                                 <TextBlock Text="Report Type" FontSize="13" FontWeight="SemiBold" Foreground="#788896" VerticalAlignment="Center" Margin="5,0,10,0"/>
-                                <ComboBox Width="170" SelectedIndex="0">
+                                <ComboBox Width="170" SelectedIndex="0" x:Name="CmbReportType">
                                     <ComboBoxItem Content="Sales Data"/>
                                     <ComboBoxItem Content="Expense Data"/>
                                     <ComboBoxItem Content="Profit Margin"/>
@@ -348,7 +348,7 @@
 
                                 <!-- Filter 2: Date Range Selection -->
                                 <TextBlock Text="Date Range" FontSize="13" FontWeight="SemiBold" Foreground="#788896" VerticalAlignment="Center" Margin="28,0,10,0"/>
-                                <ComboBox Width="170" SelectedIndex="0">
+                                <ComboBox Width="170" SelectedIndex="0" x:Name="CmbDateRange">
                                     <ComboBoxItem Content="1 Week"/>
                                     <ComboBoxItem Content="1 Month"/>
                                     <ComboBoxItem Content="3 Months"/>
@@ -361,7 +361,7 @@
                             </StackPanel>
 
                             <!-- Primary Execute Analysis Button -->
-                            <Button Grid.Column="2" Content="Run Analysis" Width="180" Height="45" FontSize="14" FontWeight="Bold" Foreground="#0B0F13" Cursor="Hand">
+                            <Button Grid.Column="2" Content="Run Analysis" Width="180" Height="45" FontSize="14" FontWeight="Bold" Foreground="#0B0F13" Cursor="Hand" Click="BtnRunAnalysis_Click">
                                 <Button.Style>
                                     <Style TargetType="Button">
                                         <Setter Property="Background" Value="#00C896"/>

@@ -4,12 +4,14 @@ using System.Linq;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 
-using NexGenSales.Models;
-using NexGenSales.Core;
-using NexGenSales.Services.Data.Repository;
-using NexGenSales.core;
 
-namespace NexGenSales.ViewModels
+using NextGenSales.Models;
+using NextGenSales.Core;
+using NexGenSales.Services.Data.Repository.ExpensesRecordRepository;
+using NexGenSales.Services.Data.Repository.SalesRecordRepository;
+using NextGenSales.core;
+
+namespace NextGenSales.ViewModels
 {
     public partial class AnalyticsDashboardViewModle
     {

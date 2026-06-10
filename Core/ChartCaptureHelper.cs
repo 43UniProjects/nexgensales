@@ -5,38 +5,38 @@ using System.Windows.Media.Imaging;
 
 namespace NexGenSales.Core
 {
+    /// <summary>
+    /// Captures a WPF FrameworkElement as a PNG byte array suitable for embedding in a PDF report.
+    /// Extracted into Core so it can be reused by any reporting pipeline.
+    /// </summary>
     public static class ChartCaptureHelper
     {
         /// <summary>
-        /// Captures a visible WPF UI Element (like a LiveCharts2 graph) and converts it to a PNG byte array.
+        /// Renders the given visual element to an in-memory PNG image.
+        /// Returns null if the element has zero dimensions (not yet laid out).
         /// </summary>
-        public static byte[] CaptureToPng(UIElement targetControl)
+        public static byte[]? CaptureToImage(FrameworkElement visual)
         {
-            if (targetControl == null) return null;
+            if (visual == null) return null;
 
-            // Get the actual rendered size of the chart on the screen
-            int width = (int)targetControl.RenderSize.Width;
-            int height = (int)targetControl.RenderSize.Height;
+            // Ensure WPF has calculated final dimensions
+            visual.UpdateLayout();
 
-            if (width == 0 || height == 0)
-                throw new System.InvalidOperationException("Control must be visible and rendered to capture.");
+            int width = (int)visual.ActualWidth;
+            int height = (int)visual.ActualHeight;
 
-            // Create a bitmap canvas
-            RenderTargetBitmap renderTarget = new RenderTargetBitmap(
-                width, height, 96, 96, PixelFormats.Pbgra32);
+            if (width == 0 || height == 0) return null;
 
-            // Draw the WPF control onto the canvas
-            renderTarget.Render(targetControl);
+            var rtb = new RenderTargetBitmap(width, height, 96, 96, PixelFormats.Pbgra32);
+            rtb.Render(visual);
 
-            // Encode the canvas to a PNG
-            PngBitmapEncoder encoder = new PngBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(renderTarget));
+            var encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(rtb));
 
-            using (MemoryStream stream = new MemoryStream())
-            {
-                encoder.Save(stream);
-                return stream.ToArray();
-            }
+            using var stream = new MemoryStream();
+            encoder.Save(stream);
+
+            return stream.ToArray();
         }
     }
 }

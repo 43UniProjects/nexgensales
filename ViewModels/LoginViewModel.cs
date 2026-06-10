@@ -1,12 +1,12 @@
-﻿using NexGenSales.Services;
-using NextGenSales.Views; // Required to navigate to HomeView
+using NexGenSales.Services;
+using NexGenSales.Views;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 
-namespace nexgensales.ViewModels
+namespace NexGenSales.ViewModels
 {
     // Handles data binding and logic for the LoginView
     public class LoginViewModel : INotifyPropertyChanged
@@ -40,13 +40,13 @@ namespace nexgensales.ViewModels
         public ICommand LoginCommand { get; }
 
         // Command to navigate to the registration window
-        public ICommand NavigateRegisterCommand { get; }
+        public ICommand RequestAccountCommand { get; }
 
         // Constructor: Initializes commands
         public LoginViewModel()
         {
             LoginCommand = new RelayCommand(ExecuteLogin, CanExecuteLogin);
-            NavigateRegisterCommand = new RelayCommand(ExecuteNavigateRegister);
+            RequestAccountCommand = new RelayCommand(ExecuteRequestAccountCommand);
         }
 
         // Checks if the login button should be enabled (both fields must have text)
@@ -72,6 +72,8 @@ namespace nexgensales.ViewModels
                     homeWindow.Left = loginWindow.Left;
                     homeWindow.Top = loginWindow.Top;
 
+                    homeWindow.WindowState = loginWindow.WindowState;
+
                     homeWindow.Show();
                     loginWindow.Close();
                 }
@@ -85,20 +87,21 @@ namespace nexgensales.ViewModels
             else
             {
                 // Display an error prompt if the provided credentials are invalid
-                MessageBox.Show(
+                CustomMessageBoxView.Show(
                     "Invalid Username or Password. Please try again.",
                     "Authentication Failed",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error
+                    CustomMessageType.Error
                 );
             }
         }
 
         // Handles navigation to the RegisterView
-        private void ExecuteNavigateRegister(object parameter)
+        private void ExecuteRequestAccountCommand(object parameter)
         {
-            // TODO: Add logic to open RegisterView and close LoginView
-            MessageBox.Show("Navigating to Register Window...", "Navigation", MessageBoxButton.OK, MessageBoxImage.Information);
+            CustomMessageBoxView.Show(
+    "NexGenSales is an enterprise application with restricted access.\n\nTo obtain a licensed account for your business, please contact our support team at:\n📞 +94 71 111 1111\n✉️ sales@nexgensales.com",
+    "Access Restricted",
+    CustomMessageType.Info);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

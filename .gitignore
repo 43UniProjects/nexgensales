@@ -6,6 +6,9 @@
 # dotenv files
 .env
 
+# pdf files
+*.pdf
+
 # User-specific files
 *.rsuser
 *.suo
@@ -273,6 +276,8 @@ ServiceFabricBackup/
 *.mdf
 *.ldf
 *.ndf
+*.db
+*.sqlite
 
 # Business Intelligence projects
 *.rdl.data
@@ -482,3 +487,7 @@ $RECYCLE.BIN/
 *.swp
 
 Database/
+
+nexgensales.sln
+*.xlsx#
+.csv
