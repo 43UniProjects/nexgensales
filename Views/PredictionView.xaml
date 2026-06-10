@@ -63,11 +63,19 @@
 
                 <!-- Input Section -->
                 <StackPanel Grid.Row="0" Margin="0,0,0,20">
-                    <TextBlock Text="Enter End of Month Target Budget" FontSize="18" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,10"/>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Rs." FontSize="16" Foreground="#788896" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                        <TextBox Text="{Binding TargetBudget, UpdateSourceTrigger=PropertyChanged}" Width="250" Height="40" FontSize="16" Background="#1C2127" Foreground="#D3D9E0" BorderBrush="#2D3A46" BorderThickness="1" Padding="10,0" VerticalContentAlignment="Center"/>
-                        <Button Content="Predict" Click="BtnPredict_Click" Width="120" Height="40" FontSize="14" FontWeight="Bold" Foreground="#0B0F13" Margin="20,0,0,0" Cursor="Hand">
+                    <TextBlock Text="Enter end of month target budget" FontSize="18" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,12"/>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="Rs." FontSize="16" Foreground="#788896" VerticalAlignment="Center" Margin="0,0,12,0" Padding="0,0,0,2"/>
+                        <TextBox Text="{Binding TargetBudget, UpdateSourceTrigger=PropertyChanged}" Width="250" Height="40" FontSize="16" Foreground="#D3D9E0" CaretBrush="#D3D9E0" Padding="10,0" VerticalContentAlignment="Center">
+                            <TextBox.Template>
+                                <ControlTemplate TargetType="TextBox">
+                                    <Border Background="#1C2127" BorderBrush="#2D3A46" BorderThickness="1" CornerRadius="6">
+                                        <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="{TemplateBinding Padding}" />
+                                    </Border>
+                                </ControlTemplate>
+                            </TextBox.Template>
+                        </TextBox>
+                        <Button Content="Predict" Click="BtnPredict_Click" Width="120" Height="40" FontSize="14" FontWeight="Bold" Foreground="#0B0F13" Margin="20,0,0,0" Cursor="Hand" VerticalAlignment="Center">
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <Setter Property="Background" Value="#00C896"/>
@@ -102,7 +110,7 @@
                             </lvc:Axis>
                         </lvc:CartesianChart.AxisX>
                         <lvc:CartesianChart.AxisY>
-                            <lvc:Axis Title="Revenue (Rs)" Foreground="#788896">
+                            <lvc:Axis Title="Revenue (Rs)" Foreground="#788896" LabelFormatter="{Binding YFormatter}">
                                 <lvc:Axis.Separator>
                                     <lvc:Separator Stroke="#2D3A46" StrokeDashArray="2"/>
                                 </lvc:Axis.Separator>
@@ -113,9 +121,9 @@
 
                 <!-- Status Text -->
                 <Border Grid.Row="2" Background="#141A21" CornerRadius="12" BorderBrush="#1E262E" BorderThickness="1" Padding="15" Margin="0,20,0,0">
-                    <StackPanel HorizontalAlignment="Center">
-                        <TextBlock Text="{Binding StatusText}" Foreground="{Binding StatusColor}" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center" TextAlignment="Center" Margin="0,0,0,5"/>
-                        <TextBlock Text="{Binding StatusDetails}" Foreground="#788896" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Center" TextAlignment="Center">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding StatusText}" Foreground="{Binding StatusColor}" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center" TextAlignment="Center"/>
+                        <TextBlock Text="{Binding StatusDetails}" Foreground="#788896" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Center" TextAlignment="Center" Margin="0,20,0,0">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
                                     <Style.Triggers>

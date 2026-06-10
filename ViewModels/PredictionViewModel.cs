@@ -22,6 +22,8 @@ namespace NexGenSales.ViewModels
         private SeriesCollection _predictionSeries;
         private string[] _predictionLabels;
 
+        public Func<double, string> YFormatter { get; set; } = value => "Rs. " + value.ToString("N0");
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public string TargetBudget
