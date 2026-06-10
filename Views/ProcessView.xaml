@@ -250,7 +250,7 @@
                     <TextBlock Grid.Row="1" Text="Record Log Details" FontSize="22" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,15"/>
 
                     <!-- DATAGRID COMPONENT: Displays the processed records in a tabular format -->
-                    <DataGrid Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True" 
+                    <DataGrid x:Name="DgRecordLogs" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True" 
                               Background="#141A21" RowBackground="#1E262E" AlternatingRowBackground="#141A21"
                               Foreground="White" BorderBrush="#2D3A46" BorderThickness="1"
                               GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#2D3A46" VerticalGridLinesBrush="Transparent"
@@ -315,11 +315,11 @@
 
                         <!-- Column Data Binding Definitions (Dynamically sized using star ratios) -->
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Record ID" Binding="{Binding RecordID}" Width="1*"/>
-                            <DataGridTextColumn Header="Record Date" Binding="{Binding RecordDate}" Width="1.5*"/>
-                            <DataGridTextColumn Header="Upload Date" Binding="{Binding UploadDate}" Width="1.5*"/>
-                            <DataGridTextColumn Header="Process State" Binding="{Binding ProcessState}" Width="1.5*"/>
-                            <DataGridTextColumn Header="Record Type" Binding="{Binding RecordType}" Width="2*"/>
+                            <DataGridTextColumn Header="Record ID" Binding="{Binding Record_ID}" Width="1*"/>
+                            <DataGridTextColumn Header="Record Date" Binding="{Binding Record_Date, StringFormat=\{0:yyyy-MM-dd HH:mm\}}" Width="1.5*"/>
+                            <DataGridTextColumn Header="Upload Date" Binding="{Binding Upload_Date, StringFormat=\{0:yyyy-MM-dd HH:mm\}}" Width="1.5*"/>
+                            <DataGridTextColumn Header="Process State" Binding="{Binding Process_State}" Width="1.5*"/>
+                            <DataGridTextColumn Header="Record Type" Binding="{Binding Record_Type}" Width="2*"/>
                         </DataGrid.Columns>
                     </DataGrid>
 
