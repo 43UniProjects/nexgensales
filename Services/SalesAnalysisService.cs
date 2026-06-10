@@ -42,7 +42,7 @@ namespace NexGenSales.Services
         /// </summary>
         public AnalyticsChartData GetAllChartData()
         {
-            var (suppliers, ratios) = _repository.GetSupplierProfitabilityData();
+            var (suppliers, ratios, flagged) = _repository.GetSupplierProfitabilityData();
             var (items,     quantities)      = _repository.GetItemVelocityData();
             var (revItems,  avgRevenues)     = _repository.GetRevenueContributionData();
             var (days,      revenues)        = _repository.GetTrendAnalysisData();

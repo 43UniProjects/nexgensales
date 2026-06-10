@@ -6,7 +6,7 @@
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
-    <NoWarn>$(NoWarn);NU1510;NU1701</NoWarn>
+    <NoWarn>$(NoWarn);NU1510;NU1701;CS8632</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
