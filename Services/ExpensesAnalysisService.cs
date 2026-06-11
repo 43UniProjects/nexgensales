@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NexGenSales.Models;
@@ -36,23 +37,46 @@ namespace NexGenSales.Services
                 .Take(5)
                 .ToDictionary(g => g.Key, g => g.Sum(e => e.Amount));
 
-            // Calculate the average expense amount for each category
-            var categoryAverages = expenses
+
+            // ANOMALY DETECTION LOGIC (Category-Based Standard Deviation)
+
+            // Devides the expenses into groups based on their categories
+            var groupedByCategory = expenses
                 .Where(e => !string.IsNullOrEmpty(e.Expense_Category))
-                .GroupBy(e => e.Expense_Category)
-                .ToDictionary(g => g.Key, g => g.Average(e => e.Amount));
+                .GroupBy(e => e.Expense_Category);
 
-            foreach (var expense in expenses)
+            var tempAnomalies = new List<ExpensesRecord>();
+
+            foreach (var group in groupedByCategory)
             {
-                if (string.IsNullOrEmpty(expense.Expense_Category)) continue;
+                var categoryExpenses = group.ToList();
 
-                double avg = categoryAverages[expense.Expense_Category];
+                if (categoryExpenses.Count < 2) continue;
 
-                // Identify expenses that are significantly higher than the category average
-                if (expense.Amount > (avg * 1.5) && expense.Amount > 1000)
+                // 1. Average 
+                double averageAmount = categoryExpenses.Average(e => e.Amount);
+
+                // 2. Standard Deviation 
+                double sumOfSquares = categoryExpenses.Select(val => Math.Pow(val.Amount - averageAmount, 2)).Sum();
+                double standardDeviation = Math.Sqrt(sumOfSquares / categoryExpenses.Count);
+
+                // 3. Threshold 
+                double anomalyThreshold = averageAmount + (1.5 * standardDeviation);
+
+                // 4. Grater than 5000
+                foreach (var expense in categoryExpenses)
                 {
-                    result.Anomalies.Add(expense);
+                    if (expense.Amount > anomalyThreshold && expense.Amount > 5000)
+                    {
+                        tempAnomalies.Add(expense);
+                    }
                 }
+            }
+
+            // Sort anomalies by date recorded in descending order and add to result
+            foreach (var anomaly in tempAnomalies.OrderByDescending(a => a.Date_Recorded))
+            {
+                result.Anomalies.Add(anomaly);
             }
 
             return result;

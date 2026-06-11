@@ -80,7 +80,6 @@ namespace NexGenSales.ViewModels
             DashboardSubtitle = "Expenses simulation data — 5 analysis modules";
 
             TotalExpensesDisplay = CurrencyFormatter(expenseData.TotalExpenses);
-            AnomaliesList = expenseData.Anomalies;
 
             ExpenseCategorySeries = new SeriesCollection();
             foreach (var kvp in expenseData.CategoryBreakdown)
@@ -125,6 +124,9 @@ namespace NexGenSales.ViewModels
             foreach (var kvp in expenseData.AssetMaintenanceCosts) { labels.Add(kvp.Key); values.Add(kvp.Value); }
             AssetMaintenanceSeries.Add(new ColumnSeries { Title = "Maintenance Cost", Values = values, DataLabels = true, LabelPoint = cp => CurrencyFormatter(cp.Y), Foreground = System.Windows.Media.Brushes.White });
             AssetLabels = labels.ToArray();
+
+            AnomaliesList = expenseData.Anomalies;
+    
         }
 
         public void SetPrintMode(bool isPrintMode)

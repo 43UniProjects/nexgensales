@@ -429,7 +429,7 @@
                                     <StackPanel>
                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
                                             <TextBlock Text="02" Style="{StaticResource SectionIndex}"/>
-                                            <TextBlock Text="Daily Expense Trend" Style="{StaticResource ChartTitle}"/>
+                                            <TextBlock Text="Monthly Expense Trend" Style="{StaticResource ChartTitle}"/>
                                         </StackPanel>
                                         <!-- Applied Colors & Inline Default Tooltip (100% Bug Free) -->
                                         <lvc:CartesianChart Series="{Binding ExpenseTrendSeries}" SeriesColors="{StaticResource ThemeColors}" Height="320" LegendLocation="None" Foreground="White">
@@ -512,7 +512,37 @@
                                                 <RowDefinition Height="Auto"/>
                                                 <RowDefinition Height="*"/>
                                             </Grid.RowDefinitions>
+
+                                            <!-- NEW: EMPTY STATE MESSAGE (Shows when there are NO Anomalies) -->
+                                            <StackPanel Grid.Row="0" Grid.RowSpan="2" HorizontalAlignment="Center" Margin="0,35,0,30">
+                                                <StackPanel.Style>
+                                                    <Style TargetType="StackPanel">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding AnomaliesList.Count}" Value="0">
+                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </StackPanel.Style>
+
+                                                <TextBlock Text="✅" FontSize="36" HorizontalAlignment="Center" Margin="0,0,0,12" Foreground="#788896"/>
+                                                <TextBlock Text="All Good!" Foreground="#00C896" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,4"/>
+                                                <TextBlock Text="No unusual cost spikes detected for this period." Foreground="#788896" FontSize="14" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+
+                                            <!-- ANOMALIES TABLE HEADER (Hidden when there are NO Anomalies) -->                  
                                             <Grid Grid.Row="0" Margin="0,0,0,15">
+                                                <Grid.Style>
+                                                    <Style TargetType="Grid">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding AnomaliesList.Count}" Value="0">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Grid.Style>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="1.5*"/>
                                                     <ColumnDefinition Width="2*"/>
@@ -540,7 +570,6 @@
                                                                 <TextBlock Grid.Column="0" Text="{Binding Date_Recorded, StringFormat={}{0:yyyy-MM-dd}}" Foreground="White"/>
                                                                 <TextBlock Grid.Column="1" Text="{Binding Expense_Category}" Foreground="White"/>
                                                                 <TextBlock Grid.Column="2" Text="{Binding Specific_Type}" Foreground="White"/>
-                                                                <!-- Here is the N2 change for Anomaly List -->
                                                                 <TextBlock Grid.Column="3" Text="{Binding Amount, StringFormat='{}Rs. {0:N2}'}" Foreground="#E81123" FontWeight="Bold" HorizontalAlignment="Right"/>
                                                             </Grid>
                                                         </Border>
