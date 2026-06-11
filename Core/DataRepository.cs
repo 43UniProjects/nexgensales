@@ -34,6 +34,11 @@ namespace NexGenSales.Core
         }
 
         /// <summary>
+        /// Checks if there are any sales records available for the selected date range.
+        /// </summary>
+        public bool HasData => _filteredSales != null && _filteredSales.Any();
+
+        /// <summary>
         /// Calculates the profit margin ratio for each supplier and identifies those 
         /// falling below the acceptable 20% threshold.
         /// </summary>
