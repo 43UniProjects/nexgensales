@@ -13,6 +13,11 @@
         FontFamily="Segoe UI">
 
     <Window.Resources>
+
+        <lvc:ColorsCollection x:Key="ThemeColors">
+            <Color>#00C896</Color>
+        </lvc:ColorsCollection>
+
         <Style x:Key="ChartCard" TargetType="Border">
             <Setter Property="Background"      Value="#141A21"/>
             <Setter Property="CornerRadius"    Value="12"/>
@@ -352,7 +357,8 @@
                                             <TextBlock Text="02" Style="{StaticResource SectionIndex}"/>
                                             <TextBlock Text="Daily Expense Trend" Style="{StaticResource ChartTitle}"/>
                                         </StackPanel>
-                                        <lvc:CartesianChart Series="{Binding ExpenseTrendSeries}" Height="320" LegendLocation="None" Foreground="White">
+
+                                        <lvc:CartesianChart Series="{Binding ExpenseTrendSeries}" SeriesColors="{StaticResource ThemeColors}" Height="320" LegendLocation="None" Foreground="White">
                                             <lvc:CartesianChart.AxisX>
                                                 <lvc:Axis Labels="{Binding ExpenseTrendLabels}" Title="Date" Foreground="#788896"/>
                                             </lvc:CartesianChart.AxisX>
@@ -369,7 +375,8 @@
                                             <TextBlock Text="03" Style="{StaticResource SectionIndex}"/>
                                             <TextBlock Text="Highest Specific Expenses" Style="{StaticResource ChartTitle}"/>
                                         </StackPanel>
-                                        <lvc:CartesianChart Series="{Binding SpecificTypeSeries}" Height="320" LegendLocation="None" Foreground="White">
+
+                                        <lvc:CartesianChart Series="{Binding SpecificTypeSeries}" SeriesColors="{StaticResource ThemeColors}" Height="320" LegendLocation="None" Foreground="White">
                                             <lvc:CartesianChart.AxisX>
                                                 <lvc:Axis Labels="{Binding SpecificTypeLabels}" Title="Expense Type" Foreground="#788896"/>
                                             </lvc:CartesianChart.AxisX>
@@ -386,7 +393,8 @@
                                             <TextBlock Text="04" Style="{StaticResource SectionIndex}"/>
                                             <TextBlock Text="Asset Depreciation &amp; Maintenance Costs" Style="{StaticResource ChartTitle}"/>
                                         </StackPanel>
-                                        <lvc:CartesianChart Series="{Binding AssetMaintenanceSeries}" Height="320" LegendLocation="None" Foreground="White">
+
+                                        <lvc:CartesianChart Series="{Binding AssetMaintenanceSeries}" SeriesColors="{StaticResource ThemeColors}" Height="320" LegendLocation="None" Foreground="White">
                                             <lvc:CartesianChart.AxisX>
                                                 <lvc:Axis Labels="{Binding AssetLabels}" Title="Asset ID" Foreground="#788896"/>
                                             </lvc:CartesianChart.AxisX>
