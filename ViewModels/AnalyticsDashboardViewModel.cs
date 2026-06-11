@@ -109,21 +109,21 @@ namespace NexGenSales.ViewModels
             var trendLabels = new List<string>();
             var trendValues = new ChartValues<double>();
             foreach (var kvp in expenseData.DailyTrend) { trendLabels.Add(kvp.Key); trendValues.Add(kvp.Value); }
-            ExpenseTrendSeries.Add(new LineSeries { Title = "Daily Expense", Values = trendValues, DataLabels = true, LabelPoint = cp => CurrencyFormatter(cp.Y) });
+            ExpenseTrendSeries.Add(new LineSeries { Title = "Daily Expense", Values = trendValues, DataLabels = true, LabelPoint = cp => CurrencyFormatter(cp.Y), Foreground = System.Windows.Media.Brushes.White });
             ExpenseTrendLabels = trendLabels.ToArray();
 
             SpecificTypeSeries = new SeriesCollection();
             var typeLabels = new List<string>();
             var typeValues = new ChartValues<double>();
             foreach (var kvp in expenseData.TopSpecificExpenses) { typeLabels.Add(kvp.Key); typeValues.Add(kvp.Value); }
-            SpecificTypeSeries.Add(new ColumnSeries { Title = "Amount", Values = typeValues, DataLabels = true, LabelPoint = cp => CurrencyFormatter(cp.Y) });
+            SpecificTypeSeries.Add(new ColumnSeries { Title = "Amount", Values = typeValues, DataLabels = true, LabelPoint = cp => CurrencyFormatter(cp.Y), Foreground = System.Windows.Media.Brushes.White });
             SpecificTypeLabels = typeLabels.ToArray();
 
             AssetMaintenanceSeries = new SeriesCollection();
             var labels = new List<string>();
             var values = new ChartValues<double>();
             foreach (var kvp in expenseData.AssetMaintenanceCosts) { labels.Add(kvp.Key); values.Add(kvp.Value); }
-            AssetMaintenanceSeries.Add(new ColumnSeries { Title = "Maintenance Cost", Values = values, DataLabels = true, LabelPoint = cp => CurrencyFormatter(cp.Y) });
+            AssetMaintenanceSeries.Add(new ColumnSeries { Title = "Maintenance Cost", Values = values, DataLabels = true, LabelPoint = cp => CurrencyFormatter(cp.Y), Foreground = System.Windows.Media.Brushes.White });
             AssetLabels = labels.ToArray();
         }
 
