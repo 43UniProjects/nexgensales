@@ -331,7 +331,7 @@
                                                                                 </StackPanel>
                                                                                 <StackPanel Orientation="Horizontal" Margin="0,3">
                                                                                     <TextBlock Text="Total Amount : " Foreground="#788896" FontSize="13" Width="95"/>
-                                                                                    <TextBlock Text="{Binding ChartPoint.Y, StringFormat='Rs. {0:N0}'}" Foreground="#00C896" FontSize="14" FontWeight="Bold"/>
+                                                                                    <TextBlock Text="{Binding ChartPoint.Y, StringFormat='{}Rs. {0:N2}'}" Foreground="#00C896" FontSize="14" FontWeight="Bold"/>
                                                                                 </StackPanel>
                                                                                 <StackPanel Orientation="Horizontal" Margin="0,3">
                                                                                     <TextBlock Text="Cost Share : " Foreground="#788896" FontSize="13" Width="95"/>
@@ -378,7 +378,11 @@
 
                                         <lvc:CartesianChart Series="{Binding SpecificTypeSeries}" SeriesColors="{StaticResource ThemeColors}" Height="320" LegendLocation="None" Foreground="White">
                                             <lvc:CartesianChart.AxisX>
-                                                <lvc:Axis Labels="{Binding SpecificTypeLabels}" Title="Expense Type" Foreground="#788896"/>
+                                                <lvc:Axis Labels="{Binding SpecificTypeLabels}" Title="Expense Type" Foreground="#788896">
+                                                    <lvc:Axis.Separator>
+                                                        <lvc:Separator IsEnabled="False"/>
+                                                    </lvc:Axis.Separator>
+                                                </lvc:Axis>
                                             </lvc:CartesianChart.AxisX>
                                             <lvc:CartesianChart.AxisY>
                                                 <lvc:Axis Title="Amount" LabelFormatter="{Binding CurrencyFormatter}" Foreground="#788896"/>
@@ -396,7 +400,11 @@
 
                                         <lvc:CartesianChart Series="{Binding AssetMaintenanceSeries}" SeriesColors="{StaticResource ThemeColors}" Height="320" LegendLocation="None" Foreground="White">
                                             <lvc:CartesianChart.AxisX>
-                                                <lvc:Axis Labels="{Binding AssetLabels}" Title="Asset ID" Foreground="#788896"/>
+                                                <lvc:Axis Labels="{Binding AssetLabels}" Title="Asset ID" Foreground="#788896">
+                                                    <lvc:Axis.Separator>
+                                                        <lvc:Separator IsEnabled="False"/>
+                                                    </lvc:Axis.Separator>
+                                                </lvc:Axis>
                                             </lvc:CartesianChart.AxisX>
                                             <lvc:CartesianChart.AxisY>
                                                 <lvc:Axis Title="Maintenance Cost" LabelFormatter="{Binding CurrencyFormatter}" Foreground="#788896"/>

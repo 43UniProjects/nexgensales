@@ -45,7 +45,7 @@ namespace NexGenSales.ViewModels
         public SeriesCollection SpecificTypeSeries { get; }
         public string[] SpecificTypeLabels { get; }
 
-        public Func<double, string> CurrencyFormatter { get; } = v => "Rs. " + v.ToString("N0");
+        public Func<double, string> CurrencyFormatter { get; } = v => "Rs. " + v.ToString("N2");
         public Func<double, string> PercentFormatter { get; } = v => v.ToString("P0");
         public Func<double, string> ScoreFormatter { get; } = v => v.ToString("F1");
 
