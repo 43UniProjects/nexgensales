@@ -1,4 +1,6 @@
 using NexGenSales.Views;
+using NexGenSales.UserComponents;
+
 using NexGenSales.ViewModels; // Required to access the HomeViewModel
 using System.Windows;
 using System.Windows.Input;

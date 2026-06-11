@@ -137,7 +137,7 @@ namespace NexGenSales.Views
             // Map UI ComboBox text to your exact DB Record_Type strings
             string dbRecordType = reportType == "Expense Data" ? "Expenses Record" : "Sales Record";
 
-            if (reportType == "Expense Data")
+            if (reportType == "Expense Data" )
             {
                 try
                 {

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 using NexGenSales.ViewModels;
+using NexGenSales.UserComponents;
+
 
 namespace NexGenSales.Views
 {

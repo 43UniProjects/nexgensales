@@ -6,6 +6,7 @@ using NexGenSales.Services;
 using NexGenSales.Services.Data.Mapper;
 using NexGenSales.Services.Data.Repository;
 using NexGenSales.Views;
+using NexGenSales.UserComponents;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
