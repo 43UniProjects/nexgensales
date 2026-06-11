@@ -85,7 +85,24 @@ namespace NexGenSales.ViewModels
             ExpenseCategorySeries = new SeriesCollection();
             foreach (var kvp in expenseData.CategoryBreakdown)
             {
-                ExpenseCategorySeries.Add(new PieSeries { Title = kvp.Key, Values = new ChartValues<double> { kvp.Value }, DataLabels = true, LabelPoint = cp => string.Format("{0} ({1:P})", CurrencyFormatter(cp.Y), cp.Participation) });
+                ExpenseCategorySeries.Add(new PieSeries
+                {
+                    Title = kvp.Key,
+                    Values = new ChartValues<double> { kvp.Value },
+                    DataLabels = true,
+
+                    // Display only the percentage on the slice (Ex: 36.95%)
+                    LabelPoint = cp => cp.Participation.ToString("P2"),
+
+                    // Keep the label inside the slice for a cleaner look since the text is shorter
+                    LabelPosition = PieLabelPosition.InsideSlice,
+                    Foreground = System.Windows.Media.Brushes.White,
+                    FontSize = 13,
+
+                    // Add a small gap between slices for a cleaner look
+                    Stroke = new System.Windows.Media.SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#0B0F13")),
+                    StrokeThickness = 2
+                });
             }
 
             ExpenseTrendSeries = new SeriesCollection();
