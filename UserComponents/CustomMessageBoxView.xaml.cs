@@ -3,7 +3,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Linq;
 
-namespace NexGenSales.Views
+namespace NexGenSales.UserComponents
 {
     public enum CustomMessageType
     {

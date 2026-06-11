@@ -6,6 +6,8 @@ using NexGenSales.Core;
 using NexGenSales.Services;
 using NexGenSales.Services.Data.Repository;
 using NexGenSales.ViewModels;
+using NexGenSales.UserComponents;
+
 
 namespace NexGenSales.Views
 {
@@ -39,7 +41,7 @@ namespace NexGenSales.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Failed to load record logs:\n{ex.Message}", "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                CustomMessageBoxView.Show($"Failed to load record logs:\n{ex.Message}", "Database Error", CustomMessageType.Error);
             }
         }
 
@@ -134,10 +136,10 @@ namespace NexGenSales.Views
                 default: startDate = startDate.AddMonths(-1); break;
             }
 
-            // Map UI ComboBox text to your exact DB Record_Type strings
+            // Map UI ComboBox text to exact DB Record_Type strings
             string dbRecordType = reportType == "Expense Data" ? "Expenses Record" : "Sales Record";
 
-            if (reportType == "Expense Data")
+            if (reportType == "Expense Data" )
             {
                 try
                 {
@@ -148,7 +150,7 @@ namespace NexGenSales.Views
 
                     if (expensesData == null || expensesData.Count == 0)
                     {
-                        MessageBox.Show("No Expenses data found in the database for the selected date range. Please select a different Date Range.", "No Data", MessageBoxButton.OK, MessageBoxImage.Information);
+                        CustomMessageBoxView.Show("No Expenses data found in the database for the selected date range. Please select a different Date Range.", "No Data", CustomMessageType.Info);
                         return;
                     }
 
@@ -172,7 +174,7 @@ namespace NexGenSales.Views
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"An error occurred while running the Expenses Analysis:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    CustomMessageBoxView.Show($"An error occurred while running the Expenses Analysis:\n{ex.Message}", "Error", CustomMessageType.Error);
                 }
             }
             else
@@ -199,7 +201,7 @@ namespace NexGenSales.Views
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"An error occurred while running the Sales Analysis:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    CustomMessageBoxView.Show($"An error occurred while running the Sales Analysis:\n{ex.Message}", "Error", CustomMessageType.Error);
                 }
             }
         }
