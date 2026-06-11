@@ -181,11 +181,21 @@ namespace NexGenSales.Views
             {
                 try
                 {
-                    // 1. Execute the existing sales analysis logic
+                    // 1. Initialize the data repository with the specified start date
                     var dataRepo = new DataRepository(startDate);
+
+                    // Validate the existence of sales records for the selected date range.
+                    // Abort the analysis and notify the user if the dataset is empty.
+                    if (!dataRepo.HasData)
+                    {
+                        CustomMessageBoxView.Show("No Sales data found in the database for the selected date range. Please select a different Date Range.", "No Data", CustomMessageType.Info);
+                        return;
+                    }
+
+                    // Instantiate the analysis service with the populated repository
                     var service = new SalesAnalysisService(dataRepo);
 
-                    // 2. Create the dashboard ViewModel for sales and open the dashboard window
+                    // 2. Create the dashboard view model for sales and display it as a modal dialog
                     var vm = new AnalyticsDashboardViewModel(service, "Sales");
                     var dashboard = new AnalyticsDashboardView
                     {
@@ -195,12 +205,13 @@ namespace NexGenSales.Views
 
                     dashboard.ShowDialog();
 
-                    // 3. Update states in database to ANALYZED and refresh grid
+                    // 3. Update the process state in the database to 'ANALYZED' and refresh the UI grid
                     await _metadataRepo.UpdateRecordStateAsync(dbRecordType, startDate, endDate);
                     await LoadTableDataAsync();
                 }
                 catch (Exception ex)
                 {
+                    // Handle and display any runtime exceptions encountered during the sales analysis
                     CustomMessageBoxView.Show($"An error occurred while running the Sales Analysis:\n{ex.Message}", "Error", CustomMessageType.Error);
                 }
             }
