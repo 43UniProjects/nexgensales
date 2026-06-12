@@ -18,7 +18,13 @@ namespace NexGenSales.Core
             QuestPDF.Settings.License = LicenseType.Community;
         }
 
-        public void GenerateReport(List<(string Title, byte[] Image)> charts, string filePath)
+        /// <summary>
+        /// Generates a structured PDF report document containing the provided chart images.
+        /// </summary>
+        /// <param name="reportType">The specific analytical context (e.g., "Sales", "Expenses") to dynamically update the document title.</param>
+        /// <param name="charts">A collection of captured chart images with their corresponding section titles.</param>
+        /// <param name="filePath">The designated output path for the finalized PDF.</param>
+        public void GenerateReport(string reportType, List<(string Title, byte[] Image)> charts, string filePath)
         {
             Document.Create(container =>
             {
@@ -31,8 +37,9 @@ namespace NexGenSales.Core
                     // ── Header ──────────────────────────────────────────────────
                     page.Header().Column(header =>
                     {
+                        // Dynamically inject the report type into the document title
                         header.Item()
-                              .Text("NexGenSales — Sales Analysis Report")
+                              .Text($"NexGenSales — {reportType} Analysis Report")
                               .SemiBold().FontSize(20).FontColor(PdfColors.Blue.Darken2);
 
                         header.Item().PaddingTop(4)
