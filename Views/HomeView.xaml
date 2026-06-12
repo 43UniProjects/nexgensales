@@ -422,18 +422,21 @@
                         <StackPanel>
 
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20">
-                                <TextBlock Text="Select Record Type" Foreground="#788896" FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,20,0"/>
+                                <TextBlock Text="Select Type" Foreground="#788896" FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,20,0"/>
 
                                 <ComboBox Width="260" SelectedValue="{Binding SelectedRecordType, Mode=TwoWay}" SelectedValuePath="Content">
                                     <ComboBoxItem Content="Sales Record"/>
                                     <ComboBoxItem Content="Expenses Record"/>
+                                    <ComboBoxItem Content="Restore Database"/>
                                 </ComboBox>
                             </StackPanel>
 
-                            <Button Content="Import Record" Command="{Binding ImportRecordCommand}" Height="48" FontSize="14" FontWeight="Bold" Foreground="#0B0F13" Cursor="Hand" HorizontalAlignment="Stretch">
+                            <Button Command="{Binding ImportRecordCommand}" Height="48" FontSize="14" FontWeight="Bold" Cursor="Hand" HorizontalAlignment="Stretch">
                                 <Button.Style>
                                     <Style TargetType="Button">
                                         <Setter Property="Background" Value="#00C896"/>
+                                        <Setter Property="Foreground" Value="#0B0F13"/>
+                                        <Setter Property="Content" Value="Import Record"/>
                                         <Setter Property="Template">
                                             <Setter.Value>
                                                 <ControlTemplate TargetType="Button">
@@ -447,6 +450,20 @@
                                             <Trigger Property="IsMouseOver" Value="True">
                                                 <Setter Property="Background" Value="#00A87D"/>
                                             </Trigger>
+
+                                            <DataTrigger Binding="{Binding SelectedRecordType}" Value="Restore Database">
+                                                <Setter Property="Content" Value="Restore Selected Database"/>
+                                                <Setter Property="Background" Value="#E81123"/>
+                                                <Setter Property="Foreground" Value="White"/>
+                                            </DataTrigger>
+
+                                            <MultiDataTrigger>
+                                                <MultiDataTrigger.Conditions>
+                                                    <Condition Binding="{Binding SelectedRecordType}" Value="Restore Database"/>
+                                                    <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="True"/>
+                                                </MultiDataTrigger.Conditions>
+                                                <Setter Property="Background" Value="#C20E1C"/>
+                                            </MultiDataTrigger>
                                         </Style.Triggers>
                                     </Style>
                                 </Button.Style>

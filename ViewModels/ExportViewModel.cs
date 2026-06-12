@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using Microsoft.Win32;
@@ -11,12 +13,74 @@ namespace NexGenSales.ViewModels
 {
     public class ExportViewModel : INotifyPropertyChanged
     {
+        // Commands for executing UI actions
         public ICommand BackupDatabaseCommand { get; }
+        public ICommand ExportReportCommand { get; }
+
+        // Collection to hold the names of generated reports for the ComboBox
+        private ObservableCollection<string> _availableReports;
+        public ObservableCollection<string> AvailableReports
+        {
+            get { return _availableReports; }
+            set { _availableReports = value; OnPropertyChanged(); }
+        }
+
+        // Bound to the user's current selection in the Report ComboBox
+        private string _selectedReport;
+        public string SelectedReport
+        {
+            get { return _selectedReport; }
+            set { _selectedReport = value; OnPropertyChanged(); }
+        }
 
         public ExportViewModel()
         {
-            // Bind the command to the backup execution logic
+            AvailableReports = new ObservableCollection<string>();
+
+            // Initialize commands
             BackupDatabaseCommand = new RelayCommand(ExecuteBackupDatabase);
+            ExportReportCommand = new RelayCommand(ExecuteExportReport);
+
+            // Load existing reports from the system directory
+            LoadAvailableReports();
+        }
+
+        /// <summary>
+        /// Scans the local 'Reports' directory for generated PDF files and populates the UI dropdown.
+        /// </summary>
+        private void LoadAvailableReports()
+        {
+            AvailableReports.Clear();
+            string reportsDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Reports");
+
+            if (Directory.Exists(reportsDirectory))
+            {
+                // Fetch only PDF files and extract just their file names
+                var pdfFiles = Directory.GetFiles(reportsDirectory, "*.pdf")
+                                        .Select(Path.GetFileName)
+                                        .OrderByDescending(name => name) // Show newest first
+                                        .ToList();
+
+                if (pdfFiles.Any())
+                {
+                    foreach (var file in pdfFiles)
+                    {
+                        AvailableReports.Add(file);
+                    }
+                    SelectedReport = AvailableReports.FirstOrDefault();
+                }
+                else
+                {
+                    AvailableReports.Add("-- No Reports Found --");
+                    SelectedReport = AvailableReports.FirstOrDefault();
+                }
+            }
+            else
+            {
+                // Handle case where the Reports directory hasn't been created yet
+                AvailableReports.Add("-- No Reports Found --");
+                SelectedReport = AvailableReports.FirstOrDefault();
+            }
         }
 
         /// <summary>
@@ -26,17 +90,14 @@ namespace NexGenSales.ViewModels
         {
             try
             {
-                // Define the relative path to the source database file
                 string sourceDbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Database", "app.db");
 
-                // Prevent execution if the database file is missing
                 if (!File.Exists(sourceDbPath))
                 {
                     CustomMessageBoxView.Show("The source database file (app.db) could not be found.", "File Not Found", CustomMessageType.Error);
                     return;
                 }
 
-                // Initialize the SaveFileDialog for the backup file
                 SaveFileDialog saveFileDialog = new SaveFileDialog
                 {
                     Title = "Save Database Backup",
@@ -44,16 +105,61 @@ namespace NexGenSales.ViewModels
                     Filter = "SQLite Database (*.db)|*.db|All Files (*.*)|*.*"
                 };
 
-                // Execute file copy if user confirms the save dialog
                 if (saveFileDialog.ShowDialog() == true)
                 {
                     File.Copy(sourceDbPath, saveFileDialog.FileName, overwrite: true);
+
+                    // Explicitly update timestamps to reflect the exact moment of backup
+                    File.SetCreationTime(saveFileDialog.FileName, DateTime.Now);
+                    File.SetLastWriteTime(saveFileDialog.FileName, DateTime.Now);
+
                     CustomMessageBoxView.Show("Database backup created successfully!", "Backup Success", CustomMessageType.Success);
                 }
             }
             catch (Exception ex)
             {
                 CustomMessageBoxView.Show($"An error occurred while backing up the database:\n{ex.Message}", "Backup Failed", CustomMessageType.Error);
+            }
+        }
+
+        /// <summary>
+        /// Prompts the user for a destination path and exports the selected PDF report.
+        /// </summary>
+        private void ExecuteExportReport(object parameter)
+        {
+            // Validate selection
+            if (string.IsNullOrEmpty(SelectedReport) || SelectedReport == "-- No Reports Found --")
+            {
+                CustomMessageBoxView.Show("Please select a valid report to export.", "Invalid Selection", CustomMessageType.Warning);
+                return;
+            }
+
+            try
+            {
+                string sourceReportPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Reports", SelectedReport);
+
+                if (!File.Exists(sourceReportPath))
+                {
+                    CustomMessageBoxView.Show("The selected report file could not be found on the disk. It may have been deleted.", "File Not Found", CustomMessageType.Error);
+                    return;
+                }
+
+                SaveFileDialog saveFileDialog = new SaveFileDialog
+                {
+                    Title = "Export Analytics Report",
+                    FileName = SelectedReport, // Default to the original file name
+                    Filter = "PDF Document (*.pdf)|*.pdf|All Files (*.*)|*.*"
+                };
+
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    File.Copy(sourceReportPath, saveFileDialog.FileName, overwrite: true);
+                    CustomMessageBoxView.Show("Report exported successfully!", "Export Success", CustomMessageType.Success);
+                }
+            }
+            catch (Exception ex)
+            {
+                CustomMessageBoxView.Show($"An error occurred while exporting the report:\n{ex.Message}", "Export Failed", CustomMessageType.Error);
             }
         }
 
