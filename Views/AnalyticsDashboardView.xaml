@@ -401,7 +401,7 @@
                                             <TextBlock Text="Expense Category Breakdown" Style="{StaticResource ChartTitle}"/>
                                         </StackPanel>
 
-                                        <lvc:PieChart Series="{Binding ExpenseCategorySeries}" Height="350" LegendLocation="Right" InnerRadius="70" Foreground="White" Margin="10,20,10,10">
+                                        <lvc:PieChart x:Name="ExpenseCategoryChart" Series="{Binding ExpenseCategorySeries}" Height="350" LegendLocation="Right" InnerRadius="70" Foreground="White" Margin="10,20,10,10">
                                             <lvc:PieChart.DataTooltip>
                                                 <lvc:DefaultTooltip SelectionMode="OnlySender">
                                                     <lvc:DefaultTooltip.Template>
@@ -448,7 +448,7 @@
                                             <TextBlock Text="Monthly Expense Trend" Style="{StaticResource ChartTitle}"/>
                                         </StackPanel>
                                         <!-- Applied Colors & Inline Default Tooltip (100% Bug Free) -->
-                                        <lvc:CartesianChart Series="{Binding ExpenseTrendSeries}" SeriesColors="{StaticResource ThemeColors}" Height="320" LegendLocation="None" Foreground="White">
+                                        <lvc:CartesianChart x:Name="ExpenseTrendChart" Series="{Binding ExpenseTrendSeries}" SeriesColors="{StaticResource ThemeColors}" Height="320" LegendLocation="None" Foreground="White">
                                             <lvc:CartesianChart.DataTooltip>
                                                 <lvc:DefaultTooltip Background="#141A21" BorderBrush="#2D3A46" BorderThickness="1" Foreground="#FFFFFF" SelectionMode="OnlySender"/>
                                             </lvc:CartesianChart.DataTooltip>
@@ -470,7 +470,7 @@
                                             <TextBlock Text="Highest Specific Expenses" Style="{StaticResource ChartTitle}"/>
                                         </StackPanel>
                                         <!-- Applied Colors, Tooltip & Removed Grid Lines -->
-                                        <lvc:CartesianChart Series="{Binding SpecificTypeSeries}" SeriesColors="{StaticResource ThemeColors}" Height="320" LegendLocation="None" Foreground="White">
+                                        <lvc:CartesianChart x:Name="ExpenseSpecificChart" Series="{Binding SpecificTypeSeries}" SeriesColors="{StaticResource ThemeColors}" Height="320" LegendLocation="None" Foreground="White">
                                             <lvc:CartesianChart.DataTooltip>
                                                 <lvc:DefaultTooltip Background="#141A21" BorderBrush="#2D3A46" BorderThickness="1" Foreground="#FFFFFF" SelectionMode="OnlySender"/>
                                             </lvc:CartesianChart.DataTooltip>
@@ -496,7 +496,7 @@
                                             <TextBlock Text="Asset Depreciation &amp; Maintenance Costs" Style="{StaticResource ChartTitle}"/>
                                         </StackPanel>
                                         <!-- Applied Colors, Tooltip & Removed Grid Lines -->
-                                        <lvc:CartesianChart Series="{Binding AssetMaintenanceSeries}" SeriesColors="{StaticResource ThemeColors}" Height="320" LegendLocation="None" Foreground="White">
+                                        <lvc:CartesianChart x:Name="AssetMaintenanceChart" Series="{Binding AssetMaintenanceSeries}" SeriesColors="{StaticResource ThemeColors}" Height="320" LegendLocation="None" Foreground="White">
                                             <lvc:CartesianChart.DataTooltip>
                                                 <lvc:DefaultTooltip Background="#141A21" BorderBrush="#2D3A46" BorderThickness="1" Foreground="#FFFFFF" SelectionMode="OnlySender"/>
                                             </lvc:CartesianChart.DataTooltip>
