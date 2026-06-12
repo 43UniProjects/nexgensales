@@ -224,37 +224,30 @@
                         </Button>
                     </Grid>
 
-                    <!-- SIDE-BY-SIDE CARD LAYOUT: For Export Data and Analytics -->
                     <Grid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="400"/> <!-- Card 1 Width -->
-                            <ColumnDefinition Width="60"/> <!-- Center Spacing -->
-                            <ColumnDefinition Width="400"/> <!-- Card 2 Width -->
+                            <ColumnDefinition Width="400"/>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="400"/>
                         </Grid.ColumnDefinitions>
 
-                        <!-- CARD 1: EXPORT PARSED DATA -->
                         <Border Grid.Column="0" Background="#141A21" CornerRadius="12" Padding="40" BorderBrush="#1E262E" BorderThickness="1">
                             <Border.Effect>
                                 <DropShadowEffect BlurRadius="30" Color="Black" Opacity="0.4" ShadowDepth="10"/>
                             </Border.Effect>
-                            <StackPanel>
-                                <TextBlock Text="Export Parsed Data" Foreground="White" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,30"/>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
 
-                                <TextBlock Text="Select Date Range" Foreground="#788896" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                                <TextBlock Grid.Row="0" Text="Backup Database" Foreground="White" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
 
-                                <ComboBox Height="45" Margin="0,0,0,15" SelectedIndex="0">
-                                    <ComboBoxItem Content="Start Date" />
-                                    <ComboBoxItem Content="2026-05-01" />
-                                    <ComboBoxItem Content="2026-06-01" />
-                                </ComboBox>
+                                <TextBlock Grid.Row="1" Text="Create a complete offline backup of the NexGenSales SQLite database. This file can be used for recovery or manual data analysis." 
+                                           Foreground="#788896" FontSize="13" TextWrapping="Wrap" TextAlignment="Center" LineHeight="20" VerticalAlignment="Center" Margin="0,0,0,20"/>
 
-                                <ComboBox Height="45" Margin="0,0,0,40" SelectedIndex="0">
-                                    <ComboBoxItem Content="End Date" />
-                                    <ComboBoxItem Content="2026-05-31" />
-                                    <ComboBoxItem Content="2026-06-30" />
-                                </ComboBox>
-
-                                <Button Content="Export Data" Height="48" FontSize="14" FontWeight="Bold" Foreground="#0B0F13" Cursor="Hand" HorizontalAlignment="Stretch">
+                                <Button Grid.Row="2" Content="Backup Database" Command="{Binding BackupDatabaseCommand}" Height="48" FontSize="14" FontWeight="Bold" Foreground="#0B0F13" Cursor="Hand" HorizontalAlignment="Stretch">
                                     <Button.Style>
                                         <Style TargetType="Button">
                                             <Setter Property="Background" Value="#00C896"/>
@@ -275,27 +268,32 @@
                                         </Style>
                                     </Button.Style>
                                 </Button>
-                            </StackPanel>
+                            </Grid>
                         </Border>
 
-                        <!-- CARD 2: EXPORT ANALYTICS -->
                         <Border Grid.Column="2" Background="#141A21" CornerRadius="12" Padding="40" BorderBrush="#1E262E" BorderThickness="1">
                             <Border.Effect>
                                 <DropShadowEffect BlurRadius="30" Color="Black" Opacity="0.4" ShadowDepth="10"/>
                             </Border.Effect>
-                            <StackPanel>
-                                <TextBlock Text="Export Analytics" Foreground="White" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,30"/>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
 
-                                <TextBlock Text="Select Report Title" Foreground="#788896" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                                <TextBlock Grid.Row="0" Text="Export Analytics" Foreground="White" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
 
-                                <!-- Margin bottom aligns this button with the one in Card 1 -->
-                                <ComboBox Height="45" Margin="0,0,0,100" SelectedIndex="0">
-                                    <ComboBoxItem Content="&lt;TITLE 01&gt;" />
-                                    <ComboBoxItem Content="Monthly Sales" />
-                                    <ComboBoxItem Content="Annual Revenue" />
-                                </ComboBox>
+                                <StackPanel Grid.Row="1" VerticalAlignment="Center" Margin="0,0,0,20">
+                                    <TextBlock Text="Select Report Title" Foreground="#788896" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                                    <ComboBox Height="45" SelectedIndex="0">
+                                        <ComboBoxItem Content="&lt;TITLE 01&gt;" />
+                                        <ComboBoxItem Content="Monthly Sales" />
+                                        <ComboBoxItem Content="Annual Revenue" />
+                                    </ComboBox>
+                                </StackPanel>
 
-                                <Button Content="Export Report" Height="48" FontSize="14" FontWeight="Bold" Foreground="#0B0F13" Cursor="Hand" HorizontalAlignment="Stretch">
+                                <Button Grid.Row="2" Content="Export Report" Height="48" FontSize="14" FontWeight="Bold" Foreground="#0B0F13" Cursor="Hand" HorizontalAlignment="Stretch">
                                     <Button.Style>
                                         <Style TargetType="Button">
                                             <Setter Property="Background" Value="#00C896"/>
@@ -316,7 +314,7 @@
                                         </Style>
                                     </Button.Style>
                                 </Button>
-                            </StackPanel>
+                            </Grid>
                         </Border>
                     </Grid>
 

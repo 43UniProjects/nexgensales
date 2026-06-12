@@ -9,6 +9,9 @@ namespace NexGenSales.Views
         public ExportView()
         {
             InitializeComponent();
+
+            // Link the view to the new ViewModel
+            DataContext = new ViewModels.ExportViewModel();
         }
 
         // Handles window dragging via the custom title bar
