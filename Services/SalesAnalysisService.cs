@@ -77,7 +77,11 @@ namespace NexGenSales.Services
                     chartImages.Add((title, image));
             }
 
-            _reportBuilder.GenerateReport(chartImages, filePath);
+            var reportBuilder = new NexGenSales.Core.ReportBuilder();
+
+            // Pass "Sales" as the designated report type to render the correct PDF title
+            reportBuilder.GenerateReport("Sales", chartImages, filePath);
+
             return Path.GetFullPath(filePath);
         }
     }

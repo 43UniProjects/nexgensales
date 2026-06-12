@@ -11,7 +11,7 @@ namespace NexGenSales.Services
         {
             var result = new ExpenseAnalyticsResult();
             if (expenses == null || !expenses.Any()) return result;
-
+        
             result.TotalExpenses = expenses.Sum(e => e.Amount);
 
             result.CategoryBreakdown = expenses
@@ -80,6 +80,47 @@ namespace NexGenSales.Services
             }
 
             return result;
+
+        
         }
+        /// <summary>
+        /// Converts UI chart elements into images and constructs the paginated Expenses PDF report,
+        /// including the total expenses summary and detected anomalies.
+        /// </summary>
+        public string GenerateReport(
+            System.Collections.Generic.List<(string Title, System.Windows.FrameworkElement Chart)> uiCharts,
+            string totalExpenses,
+            System.Collections.Generic.List<NexGenSales.Models.ExpensesRecord> anomalies,
+            string filePath)
+        {
+            var processedCharts = new System.Collections.Generic.List<(string Title, byte[] Image)>();
+
+            foreach (var item in uiCharts)
+            {
+                byte[] imageBytes = NexGenSales.Core.ChartCaptureHelper.CaptureToImage(item.Chart);
+                if (imageBytes != null) processedCharts.Add((item.Title, imageBytes));
+            }
+
+            // Format anomaly records into readable strings for the PDF
+            var formattedAnomalies = new System.Collections.Generic.List<string>();
+            foreach (var anomaly in anomalies)
+            {
+                formattedAnomalies.Add($"{anomaly.Date_Recorded:yyyy-MM-dd} | {anomaly.Expense_Category} ({anomaly.Specific_Type}) - Rs. {anomaly.Amount:N2}");
+            }
+
+            var reportBuilder = new NexGenSales.Core.ReportBuilder();
+
+            // Invoke the builder with the newly added contextual data parameters
+            reportBuilder.GenerateReport(
+                "Expenses",
+                processedCharts,
+                filePath,
+                "Total Expenses For Period:",
+                totalExpenses,
+                formattedAnomalies);
+
+            return filePath;
+        }
+
     }
 }

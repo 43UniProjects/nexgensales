@@ -145,6 +145,10 @@ namespace NexGenSales.ViewModels
                         lvcSeries.Foreground = brush;
                         lvcSeries.Effect = effect;
 
+                        // Skip toggling DataLabels for PieSeries to prevent radius miscalculation and edge clipping
+                        if (series is LiveCharts.Wpf.PieSeries)
+                            continue;
+
                         bool hadLabels = lvcSeries.DataLabels;
                         lvcSeries.DataLabels = false;
                         lvcSeries.DataLabels = hadLabels;
@@ -163,12 +167,30 @@ namespace NexGenSales.ViewModels
             apply(SpecificTypeSeries);
         }
 
-        // Generate the report based on the selected report type
+        /// <summary>
+        /// Routes the report generation request to the appropriate application service 
+        /// based on the active dashboard context (Sales vs. Expenses).
+        /// </summary>
+        /// <param name="charts">A collection of named UI chart elements to be embedded in the PDF.</param>
+        /// <returns>The absolute file path of the successfully generated PDF document.</returns>
         public string GenerateReport(List<(string Title, FrameworkElement Chart)> charts)
         {
+            // Generate a standardized file name with a timestamp
             string filePath = ReportFileNameHelper.Generate(_reportType);
-            if (_reportType == "Sales") return _salesService.GenerateReport(charts, filePath);
-            else return string.Empty;
+
+            if (_reportType == "Sales")
+            {
+                // Delegate rendering to the Sales logic layer
+                return _salesService.GenerateReport(charts, filePath);
+            }
+            else if (_reportType == "Expenses")
+            {
+                // Delegate rendering to the Expenses logic layer
+                return _expensesService.GenerateReport(charts, TotalExpensesDisplay, AnomaliesList, filePath);
+            }
+
+            // Fallback for unsupported report types to prevent application crashes
+            return string.Empty;
         }
     }
 }
