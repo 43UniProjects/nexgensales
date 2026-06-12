@@ -19,39 +19,15 @@ namespace NexGenSales.Views
         {
             InitializeComponent();
 
-            // Initialize the repository for the table
-            var sqliteService = new SqliteService();
-            _metadataRepo = new RecordMetadataRepository(sqliteService);
-
-            // Add the Loaded event handler
-            this.Loaded += Window_Loaded;
+            DataContext = new ProcessViewModel();
         }
 
-        private async void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            await LoadTableDataAsync();
-        }
 
-        private async Task LoadTableDataAsync()
-        {
-            try
-            {
-                var logs = await _metadataRepo.GetAll();
-                DgRecordLogs.ItemsSource = logs;
-            }
-            catch (Exception ex)
-            {
-                CustomMessageBoxView.Show($"Failed to load record logs:\n{ex.Message}", "Database Error", CustomMessageType.Error);
-            }
-        }
 
         // Enable dragging the window by holding the left mouse button
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == MouseButton.Left)
-            {
-                this.DragMove();
-            }
+            if (e.ChangedButton == MouseButton.Left) DragMove();
         }
 
         // Minimize Button Logic
@@ -113,152 +89,6 @@ namespace NexGenSales.Views
         {
             this.Close();
         }
-
-        /// <summary>
-        /// Opens the Analytics Dashboard as a modal dialog.
-        /// Handles both Sales and Expenses based on the selected report type.
-        /// </summary>
-        private async void BtnRunAnalysis_Click(object sender, RoutedEventArgs e)
-        {
-            string reportType = (CmbReportType.SelectedItem as System.Windows.Controls.ComboBoxItem)?.Content?.ToString() ?? "Sales Data";
-            string dateRangeStr = (CmbDateRange.SelectedItem as System.Windows.Controls.ComboBoxItem)?.Content?.ToString() ?? "1 Month";
-
-            DateTime endDate = DateTime.Now;
-            DateTime startDate = endDate;
-
-            switch (dateRangeStr)
-            {
-                case "1 Week": startDate = startDate.AddDays(-7); break;
-                case "1 Month": startDate = startDate.AddMonths(-1); break;
-                case "3 Months": startDate = startDate.AddMonths(-3); break;
-                case "6 Months": startDate = startDate.AddMonths(-6); break;
-                case "1 Year": startDate = startDate.AddYears(-1); break;
-                default: startDate = startDate.AddMonths(-1); break;
-            }
-
-            // Map UI ComboBox text to exact DB Record_Type strings
-            string dbRecordType = reportType == "Expense Data" ? "Expenses Record" : "Sales Record";
-
-            if (reportType == "Expense Data" )
-            {
-                try
-                {
-                    // 1. Retrieve expense data from the database for the selected date range
-                    var sqliteService = new SqliteService();
-                    var expenseRepo = new NexGenSales.Services.Data.Repository.ExpensesRecordRepository(sqliteService);
-                    var expensesData = await expenseRepo.GetExpensesByDateRangeAsync(startDate, endDate);
-
-                    if (expensesData == null || expensesData.Count == 0)
-                    {
-                        CustomMessageBoxView.Show("No Expenses data found in the database for the selected date range. Please select a different Date Range.", "No Data", CustomMessageType.Info);
-                        return;
-                    }
-
-                    // 2. Analyze the retrieved expense data
-                    var service = new ExpensesAnalysisService();
-                    var analysisResult = service.Analyze(expensesData);
-
-                    // 3. Create the dashboard ViewModel for expenses and open the dashboard window
-                    var vm = new AnalyticsDashboardViewModel(analysisResult, service, "Expenses");
-                    var dashboard = new AnalyticsDashboardView
-                    {
-                        DataContext = vm,
-                        Owner = this
-                    };
-
-                    dashboard.ShowDialog();
-
-                    // 4. Update states in database to ANALYZED and refresh grid
-                    await _metadataRepo.UpdateRecordStateAsync(dbRecordType, startDate, endDate);
-                    await LoadTableDataAsync();
-                }
-                catch (Exception ex)
-                {
-                    CustomMessageBoxView.Show($"An error occurred while running the Expenses Analysis:\n{ex.Message}", "Error", CustomMessageType.Error);
-                }
-            }
-            else
-            {
-                try
-                {
-                    // 1. Initialize the data repository with the specified start date
-                    var dataRepo = new DataRepository(startDate);
-
-                    // Validate the existence of sales records for the selected date range.
-                    // Abort the analysis and notify the user if the dataset is empty.
-                    if (!dataRepo.HasData)
-                    {
-                        CustomMessageBoxView.Show("No Sales data found in the database for the selected date range. Please select a different Date Range.", "No Data", CustomMessageType.Info);
-                        return;
-                    }
-
-                    // Instantiate the analysis service with the populated repository
-                    var service = new SalesAnalysisService(dataRepo);
-
-                    // 2. Create the dashboard view model for sales and display it as a modal dialog
-                    var vm = new AnalyticsDashboardViewModel(service, "Sales");
-                    var dashboard = new AnalyticsDashboardView
-                    {
-                        DataContext = vm,
-                        Owner = this
-                    };
-
-                    dashboard.ShowDialog();
-
-                    // 3. Update the process state in the database to 'ANALYZED' and refresh the UI grid
-                    await _metadataRepo.UpdateRecordStateAsync(dbRecordType, startDate, endDate);
-                    await LoadTableDataAsync();
-                }
-                catch (Exception ex)
-                {
-                    // Handle and display any runtime exceptions encountered during the sales analysis
-                    CustomMessageBoxView.Show($"An error occurred while running the Sales Analysis:\n{ex.Message}", "Error", CustomMessageType.Error);
-                }
-            }
-        }
-
-        //Dynamically update Date Range options based on selected Report Type
-        private void CmbReportType_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            try
-            {
-                // Prevent errors during the initial UI initialization
-                if (CmbDateRange == null || CmbReportType == null) return;
-
-                // Retrieve the currently selected Report Type
-                string reportType = (CmbReportType.SelectedItem as System.Windows.Controls.ComboBoxItem)?.Content?.ToString();
-
-                // Clear the existing items in the Date Range dropdown
-                CmbDateRange.Items.Clear();
-
-                if (reportType == "Expense Data")
-                {
-                    // Populate options without "1 Week" for Expense Data
-                    CmbDateRange.Items.Add(new System.Windows.Controls.ComboBoxItem { Content = "1 Month" });
-                    CmbDateRange.Items.Add(new System.Windows.Controls.ComboBoxItem { Content = "3 Months" });
-                    CmbDateRange.Items.Add(new System.Windows.Controls.ComboBoxItem { Content = "6 Months" });
-                    CmbDateRange.Items.Add(new System.Windows.Controls.ComboBoxItem { Content = "1 Year" });
-
-                    // Explicitly select the first item ("1 Month")
-                    CmbDateRange.SelectedIndex = 0;
-                }
-                else
-                {
-                    // Populate all options including "1 Week" for Sales Data
-                    CmbDateRange.Items.Add(new System.Windows.Controls.ComboBoxItem { Content = "1 Week" });
-                    CmbDateRange.Items.Add(new System.Windows.Controls.ComboBoxItem { Content = "1 Month" });
-                    CmbDateRange.Items.Add(new System.Windows.Controls.ComboBoxItem { Content = "3 Months" });
-                    CmbDateRange.Items.Add(new System.Windows.Controls.ComboBoxItem { Content = "6 Months" });
-                    CmbDateRange.Items.Add(new System.Windows.Controls.ComboBoxItem { Content = "1 Year" });
-
-                    // Explicitly select the first item ("1 Week")
-                    CmbDateRange.SelectedIndex = 0;
-                }
-            }
-            catch (Exception ex)
-            {
-                CustomMessageBoxView.Show($"An error occurred while running the Expences Analysis:\n{ex.Message}", "Error", CustomMessageType.Error);
-            }
-        }
+        
     }
 }
