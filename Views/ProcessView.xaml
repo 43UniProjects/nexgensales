@@ -282,7 +282,8 @@
                     <TextBlock Grid.Row="1" Text="Record Log Details" FontSize="22" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,15"/>
 
                     <!-- DATAGRID COMPONENT: Displays the processed records in a tabular format -->
-                    <DataGrid x:Name="DgRecordLogs" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True" 
+                    <DataGrid Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True" 
+                              ItemsSource="{Binding RecordLogs}"
                               Background="#141A21" RowBackground="#1E262E" AlternatingRowBackground="#141A21"
                               Foreground="White" BorderBrush="#2D3A46" BorderThickness="1"
                               GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#2D3A46" VerticalGridLinesBrush="Transparent"
@@ -290,7 +291,6 @@
                               SelectionMode="Single" SelectionUnit="FullRow"
                               HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
-                        <!-- DataGrid Column Header Styling -->
                         <DataGrid.ColumnHeaderStyle>
                             <Style TargetType="DataGridColumnHeader">
                                 <Setter Property="Background" Value="#0B0F13"/>
@@ -305,16 +305,13 @@
                             </Style>
                         </DataGrid.ColumnHeaderStyle>
 
-                        <!-- DataGrid Row Hover and Selection Styling -->
                         <DataGrid.RowStyle>
                             <Style TargetType="DataGridRow">
                                 <Setter Property="BorderThickness" Value="0"/>
                                 <Style.Triggers>
-                                    <!-- Hover state -->
                                     <Trigger Property="IsMouseOver" Value="True">
                                         <Setter Property="Background" Value="#2A3642"/>
                                     </Trigger>
-                                    <!-- Selected state -->
                                     <Trigger Property="IsSelected" Value="True">
                                         <Setter Property="Background" Value="#002A1F"/>
                                     </Trigger>
@@ -322,7 +319,6 @@
                             </Style>
                         </DataGrid.RowStyle>
 
-                        <!-- DataGrid Cell Styling (Removes dotted focus borders and changes selected text color) -->
                         <DataGrid.CellStyle>
                             <Style TargetType="DataGridCell">
                                 <Setter Property="Padding" Value="15,0"/>
@@ -345,7 +341,6 @@
                             </Style>
                         </DataGrid.CellStyle>
 
-                        <!-- Column Data Binding Definitions (Dynamically sized using star ratios) -->
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Record ID" Binding="{Binding Record_ID}" Width="1*"/>
                             <DataGridTextColumn Header="Record Date" Binding="{Binding Record_Date, StringFormat=\{0:yyyy-MM-dd HH:mm\}}" Width="1.5*"/>
@@ -355,45 +350,34 @@
                         </DataGrid.Columns>
                     </DataGrid>
 
-                    <!-- BOTTOM ANALYSIS CONTROLS: Filter parameters and execution button -->
                     <Border Grid.Row="3" Background="#141A21" BorderBrush="#1E262E" BorderThickness="1" CornerRadius="12" Padding="25">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/> <!-- Title column -->
-                                <ColumnDefinition Width="*"/> <!-- Spacer column -->
-                                <ColumnDefinition Width="Auto"/> <!-- Action column -->
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <!-- Analysis Section Heading -->
                             <TextBlock Grid.Column="0" Text="Analyse Records" FontSize="18" FontWeight="Bold" Foreground="#FFFFFF" VerticalAlignment="Center" Margin="0,0,25,0"/>
 
-                            <!-- Date Range Filter -->
                             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-
-                                <!-- Filter 1: Report Type Selection -->
                                 <TextBlock Text="Report Type" FontSize="13" FontWeight="SemiBold" Foreground="#788896" VerticalAlignment="Center" Margin="5,0,10,0"/>
-                                <ComboBox Width="170" SelectedIndex="0" x:Name="CmbReportType" SelectionChanged="CmbReportType_SelectionChanged">
+                                <ComboBox Width="170" SelectedIndex="{Binding SelectedReportTypeIndex, Mode=TwoWay}">
                                     <ComboBoxItem Content="Sales Data"/>
                                     <ComboBoxItem Content="Expense Data"/>
-                                    <ComboBoxItem Content="Profit Margin"/>
                                 </ComboBox>
 
-                                <!-- Filter 2: Date Range Selection -->
+                                <!-- Filter 2: Date Range Selection Binded to ViewModel -->
                                 <TextBlock Text="Date Range" FontSize="13" FontWeight="SemiBold" Foreground="#788896" VerticalAlignment="Center" Margin="28,0,10,0"/>
-                                <ComboBox Width="170" SelectedIndex="0" x:Name="CmbDateRange">
-                                    <ComboBoxItem Content="1 Week"/>
-                                    <ComboBoxItem Content="1 Month"/>
-                                    <ComboBoxItem Content="3 Months"/>
-                                    <ComboBoxItem Content="6 Months"/>
-                                    <ComboBoxItem Content="1 Year"/>
+
+                                <!-- ItemsSource and SelectedItem are fully managed by the ViewModel -->
+                                <ComboBox Width="170" 
+                                          ItemsSource="{Binding AvailableDateRanges}" 
+                                          SelectedItem="{Binding SelectedDateRange, Mode=TwoWay}">
                                 </ComboBox>
-
-
-
                             </StackPanel>
 
-                            <!-- Primary Execute Analysis Button -->
-                            <Button Grid.Column="2" Content="Run Analysis" Width="180" Height="45" FontSize="14" FontWeight="Bold" Foreground="#0B0F13" Cursor="Hand" Click="BtnRunAnalysis_Click">
+                            <Button Grid.Column="2" Content="Run Analysis" Width="180" Height="45" FontSize="14" FontWeight="Bold" Foreground="#0B0F13" Cursor="Hand" Command="{Binding RunAnalysisCommand}">
                                 <Button.Style>
                                     <Style TargetType="Button">
                                         <Setter Property="Background" Value="#00C896"/>
@@ -416,7 +400,6 @@
                             </Button>
                         </Grid>
                     </Border>
-
                 </Grid>
             </Grid>
         </Grid>
