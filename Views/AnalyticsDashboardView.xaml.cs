@@ -170,7 +170,7 @@ namespace NexGenSales.Views
             {
                 charts = new List<(string Title, FrameworkElement Chart)>
                 {
-                    ("Expense Category Breakdown",                  ExpenseCategoryChart),
+                    ("Expense Category Breakdown",                  ExpenseCategoryChartContainer),
                     ("Monthly Expense Trend",                       ExpenseTrendChart),
                     ("Highest Specific Expenses",                   ExpenseSpecificChart),
                     ("Asset Depreciation & Maintenance Costs",      AssetMaintenanceChart)

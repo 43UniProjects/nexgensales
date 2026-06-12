@@ -400,43 +400,44 @@
                                             <TextBlock Text="01" Style="{StaticResource SectionIndex}"/>
                                             <TextBlock Text="Expense Category Breakdown" Style="{StaticResource ChartTitle}"/>
                                         </StackPanel>
-
-                                        <lvc:PieChart x:Name="ExpenseCategoryChart" Series="{Binding ExpenseCategorySeries}" Height="350" LegendLocation="Right" InnerRadius="70" Foreground="White" Margin="10,20,10,10">
-                                            <lvc:PieChart.DataTooltip>
-                                                <lvc:DefaultTooltip SelectionMode="OnlySender">
-                                                    <lvc:DefaultTooltip.Template>
-                                                        <ControlTemplate>
-                                                            <Border Background="#141A21" BorderBrush="#2D3A46" BorderThickness="1" CornerRadius="8" Padding="15">
-                                                                <Border.Effect>
-                                                                    <DropShadowEffect BlurRadius="10" ShadowDepth="4" Color="#0B0F13" Opacity="0.5"/>
-                                                                </Border.Effect>
-                                                                <ItemsControl ItemsSource="{Binding Data.Points}">
-                                                                    <ItemsControl.ItemTemplate>
-                                                                        <DataTemplate>
-                                                                            <StackPanel Orientation="Vertical">
-                                                                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                                                                    <Ellipse Width="10" Height="10" Fill="{Binding Series.Fill}" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                                                                                    <TextBlock Text="{Binding Series.Title}" Foreground="#FFFFFF" FontWeight="Bold" FontSize="15" VerticalAlignment="Center"/>
+                                        <Border x:Name="ExpenseCategoryChartContainer" Background="Transparent" Padding="0,0,0,35">
+                                            <lvc:PieChart x:Name="ExpenseCategoryChart" Series="{Binding ExpenseCategorySeries}" Height="350" LegendLocation="Right" InnerRadius="70" Foreground="White" Margin="10,20,10,10" Padding="-60" HoverPushOut="0">
+                                                <lvc:PieChart.DataTooltip>
+                                                    <lvc:DefaultTooltip SelectionMode="OnlySender">
+                                                        <lvc:DefaultTooltip.Template>
+                                                            <ControlTemplate>
+                                                                <Border Background="#141A21" BorderBrush="#2D3A46" BorderThickness="1" CornerRadius="8" Padding="15">
+                                                                    <Border.Effect>
+                                                                        <DropShadowEffect BlurRadius="10" ShadowDepth="4" Color="#0B0F13" Opacity="0.5"/>
+                                                                    </Border.Effect>
+                                                                    <ItemsControl ItemsSource="{Binding Data.Points}">
+                                                                        <ItemsControl.ItemTemplate>
+                                                                            <DataTemplate>
+                                                                                <StackPanel Orientation="Vertical">
+                                                                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                                                                        <Ellipse Width="10" Height="10" Fill="{Binding Series.Fill}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                                                                        <TextBlock Text="{Binding Series.Title}" Foreground="#FFFFFF" FontWeight="Bold" FontSize="15" VerticalAlignment="Center"/>
+                                                                                    </StackPanel>
+                                                                                    <StackPanel Orientation="Horizontal" Margin="0,3">
+                                                                                        <TextBlock Text="Total Amount : " Foreground="#788896" FontSize="13" Width="95"/>
+                                                                                        <!-- Here is the N2 change for Pie Chart -->
+                                                                                        <TextBlock Text="{Binding ChartPoint.Y, StringFormat='{}Rs. {0:N2}'}" Foreground="#00C896" FontSize="14" FontWeight="Bold"/>
+                                                                                    </StackPanel>
+                                                                                    <StackPanel Orientation="Horizontal" Margin="0,3">
+                                                                                        <TextBlock Text="Cost Share : " Foreground="#788896" FontSize="13" Width="95"/>
+                                                                                        <TextBlock Text="{Binding ChartPoint.Participation, StringFormat='{}{0:P2}'}" Foreground="#D3D9E0" FontSize="14" FontWeight="SemiBold"/>
+                                                                                    </StackPanel>
                                                                                 </StackPanel>
-                                                                                <StackPanel Orientation="Horizontal" Margin="0,3">
-                                                                                    <TextBlock Text="Total Amount : " Foreground="#788896" FontSize="13" Width="95"/>
-                                                                                    <!-- Here is the N2 change for Pie Chart -->
-                                                                                    <TextBlock Text="{Binding ChartPoint.Y, StringFormat='{}Rs. {0:N2}'}" Foreground="#00C896" FontSize="14" FontWeight="Bold"/>
-                                                                                </StackPanel>
-                                                                                <StackPanel Orientation="Horizontal" Margin="0,3">
-                                                                                    <TextBlock Text="Cost Share : " Foreground="#788896" FontSize="13" Width="95"/>
-                                                                                    <TextBlock Text="{Binding ChartPoint.Participation, StringFormat='{}{0:P2}'}" Foreground="#D3D9E0" FontSize="14" FontWeight="SemiBold"/>
-                                                                                </StackPanel>
-                                                                            </StackPanel>
-                                                                        </DataTemplate>
-                                                                    </ItemsControl.ItemTemplate>
-                                                                </ItemsControl>
-                                                            </Border>
-                                                        </ControlTemplate>
-                                                    </lvc:DefaultTooltip.Template>
-                                                </lvc:DefaultTooltip>
-                                            </lvc:PieChart.DataTooltip>
-                                        </lvc:PieChart>
+                                                                            </DataTemplate>
+                                                                        </ItemsControl.ItemTemplate>
+                                                                    </ItemsControl>
+                                                                </Border>
+                                                            </ControlTemplate>
+                                                        </lvc:DefaultTooltip.Template>
+                                                    </lvc:DefaultTooltip>
+                                                </lvc:PieChart.DataTooltip>
+                                            </lvc:PieChart>
+                                        </Border>
                                     </StackPanel>
                                 </Border>
 
