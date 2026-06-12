@@ -83,34 +83,44 @@ namespace NexGenSales.Services
 
         
         }
-
         /// <summary>
-        /// Converts the provided UI chart elements into images and constructs the paginated Expenses PDF report.
+        /// Converts UI chart elements into images and constructs the paginated Expenses PDF report,
+        /// including the total expenses summary and detected anomalies.
         /// </summary>
-        /// <param name="uiCharts">A collection of named UI chart elements extracted from the View.</param>
-        /// <param name="filePath">The destination file path for the generated PDF.</param>
-        /// <returns>The absolute file path of the successfully generated PDF document.</returns>
-        public string GenerateReport(System.Collections.Generic.List<(string Title, System.Windows.FrameworkElement Chart)> uiCharts, string filePath)
+        public string GenerateReport(
+            System.Collections.Generic.List<(string Title, System.Windows.FrameworkElement Chart)> uiCharts,
+            string totalExpenses,
+            System.Collections.Generic.List<NexGenSales.Models.ExpensesRecord> anomalies,
+            string filePath)
         {
             var processedCharts = new System.Collections.Generic.List<(string Title, byte[] Image)>();
 
             foreach (var item in uiCharts)
             {
-                // Capture the WPF Chart rendering as a PNG byte array
                 byte[] imageBytes = NexGenSales.Core.ChartCaptureHelper.CaptureToImage(item.Chart);
+                if (imageBytes != null) processedCharts.Add((item.Title, imageBytes));
+            }
 
-                if (imageBytes != null)
-                {
-                    processedCharts.Add((item.Title, imageBytes));
-                }
+            // Format anomaly records into readable strings for the PDF
+            var formattedAnomalies = new System.Collections.Generic.List<string>();
+            foreach (var anomaly in anomalies)
+            {
+                formattedAnomalies.Add($"{anomaly.Date_Recorded:yyyy-MM-dd} | {anomaly.Expense_Category} ({anomaly.Specific_Type}) - Rs. {anomaly.Amount:N2}");
             }
 
             var reportBuilder = new NexGenSales.Core.ReportBuilder();
 
-            // Invoke the report builder with the specific "Expenses" context
-            reportBuilder.GenerateReport("Expenses", processedCharts, filePath);
+            // Invoke the builder with the newly added contextual data parameters
+            reportBuilder.GenerateReport(
+                "Expenses",
+                processedCharts,
+                filePath,
+                "Total Expenses For Period:",
+                totalExpenses,
+                formattedAnomalies);
 
             return filePath;
         }
+
     }
 }
