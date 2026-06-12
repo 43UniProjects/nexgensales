@@ -66,6 +66,12 @@ namespace NexGenSales.ViewModels
 
         private void ExecuteImportRecord(object parameter)
         {
+            if (SelectedRecordType == "Restore Database")
+            {
+                ExecuteRestoreDatabase();
+                return;
+            }
+
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
                 Filter = "Excel Files (*.xlsx)|*.xlsx|CSV Files (*.csv)|*.csv",
@@ -222,6 +228,95 @@ namespace NexGenSales.ViewModels
             }
 
             return recordMetadataList;
+        }
+
+        private void ExecuteRestoreDatabase()
+        {
+            // 1. Prompt user to select a valid SQLite database backup file
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "SQLite Database Files (*.db)|*.db",
+                Title = "Select Database Backup to Restore",
+                Multiselect = false
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string selectedBackupPath = openFileDialog.FileName;
+
+                // 2. Initial security confirmation to prevent accidental data loss
+                MessageBoxResult initialConfirm = MessageBox.Show(
+                    "Are you sure you want to restore the database?\nThis action will overwrite the current system data.",
+                    "Confirm Restore", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+                if (initialConfirm != MessageBoxResult.Yes) return;
+
+                string targetDbPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Database", "app.db");
+
+                // 3. Conflict Resolution: Check if an active database currently exists
+                if (System.IO.File.Exists(targetDbPath))
+                {
+                    // Utilize a Yes/No/Cancel dialog to provide branching choices for the user
+                    MessageBoxResult conflictAction = MessageBox.Show(
+                        "An active database (app.db) currently exists in the system.\n\n" +
+                        "Click 'Yes' to BACKUP the current database before restoring.\n" +
+                        "Click 'No' to FORCE RESTORE (overwrite and permanently lose current data).\n" +
+                        "Click 'Cancel' to safely abort this operation.",
+                        "Database Conflict Detected", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+
+                    if (conflictAction == MessageBoxResult.Cancel)
+                    {
+                        return; // Gracefully abort the process
+                    }
+                    else if (conflictAction == MessageBoxResult.Yes)
+                    {
+                        // Execute Pre-Restore Backup procedure
+                        SaveFileDialog saveFileDialog = new SaveFileDialog
+                        {
+                            Title = "Save Current Database Backup",
+                            FileName = $"NexGenSales_PreRestore_Backup_{DateTime.Now:yyyyMMdd_HHmmss}.db",
+                            Filter = "SQLite Database (*.db)|*.db"
+                        };
+
+                        if (saveFileDialog.ShowDialog() == true)
+                        {
+                            System.IO.File.Copy(targetDbPath, saveFileDialog.FileName, overwrite: true);
+                            System.IO.File.SetCreationTime(saveFileDialog.FileName, DateTime.Now);
+                            System.IO.File.SetLastWriteTime(saveFileDialog.FileName, DateTime.Now);
+                        }
+                        else
+                        {
+                            // Abort restoration if the user cancels the safety backup
+                            MessageBox.Show("Restore operation safely aborted. The pre-restore backup was cancelled.", "Operation Aborted", MessageBoxButton.OK, MessageBoxImage.Information);
+                            return;
+                        }
+                    }
+                    // If conflictAction == MessageBoxResult.No, it naturally falls through to Force Restore
+                }
+
+                // 4. Execute the core restore operation
+                try
+                {
+                    // Ensure the target directory structure exists prior to file operations
+                    string dbDirectory = System.IO.Path.GetDirectoryName(targetDbPath);
+                    if (!System.IO.Directory.Exists(dbDirectory))
+                    {
+                        System.IO.Directory.CreateDirectory(dbDirectory);
+                    }
+
+                    // Copy the selected backup and inherently rename it to 'app.db'
+                    System.IO.File.Copy(selectedBackupPath, targetDbPath, overwrite: true);
+
+                    CustomMessageBoxView.Show("Database successfully restored and integrated into the system!", "Restore Success", CustomMessageType.Success);
+
+                    // Trigger global event to refresh bound UI components across the application
+                    OnImportSuccess?.Invoke();
+                }
+                catch (Exception ex)
+                {
+                    CustomMessageBoxView.Show($"A critical error occurred during restoration:\n{ex.Message}", "Restore Failed", CustomMessageType.Error);
+                }
+            }
         }
 
     }
