@@ -45,7 +45,7 @@ namespace NexGenSales.ViewModels
         public SeriesCollection SpecificTypeSeries { get; }
         public string[] SpecificTypeLabels { get; }
 
-        public Func<double, string> CurrencyFormatter { get; } = v => "Rs. " + v.ToString("N0");
+        public Func<double, string> CurrencyFormatter { get; } = v => "Rs. " + v.ToString("N2");
         public Func<double, string> PercentFormatter { get; } = v => v.ToString("P0");
         public Func<double, string> ScoreFormatter { get; } = v => v.ToString("F1");
 
@@ -80,34 +80,53 @@ namespace NexGenSales.ViewModels
             DashboardSubtitle = "Expenses simulation data — 5 analysis modules";
 
             TotalExpensesDisplay = CurrencyFormatter(expenseData.TotalExpenses);
-            AnomaliesList = expenseData.Anomalies;
 
             ExpenseCategorySeries = new SeriesCollection();
             foreach (var kvp in expenseData.CategoryBreakdown)
             {
-                ExpenseCategorySeries.Add(new PieSeries { Title = kvp.Key, Values = new ChartValues<double> { kvp.Value }, DataLabels = true, LabelPoint = cp => string.Format("{0} ({1:P})", CurrencyFormatter(cp.Y), cp.Participation) });
+                ExpenseCategorySeries.Add(new PieSeries
+                {
+                    Title = kvp.Key,
+                    Values = new ChartValues<double> { kvp.Value },
+                    DataLabels = true,
+
+                    // Display only the percentage on the slice (Ex: 36.95%)
+                    LabelPoint = cp => cp.Participation.ToString("P2"),
+
+                    // Keep the label inside the slice for a cleaner look since the text is shorter
+                    LabelPosition = PieLabelPosition.InsideSlice,
+                    Foreground = System.Windows.Media.Brushes.White,
+                    FontSize = 13,
+
+                    // Add a small gap between slices for a cleaner look
+                    Stroke = new System.Windows.Media.SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#0B0F13")),
+                    StrokeThickness = 2
+                });
             }
 
             ExpenseTrendSeries = new SeriesCollection();
             var trendLabels = new List<string>();
             var trendValues = new ChartValues<double>();
             foreach (var kvp in expenseData.DailyTrend) { trendLabels.Add(kvp.Key); trendValues.Add(kvp.Value); }
-            ExpenseTrendSeries.Add(new LineSeries { Title = "Daily Expense", Values = trendValues, DataLabels = true, LabelPoint = cp => CurrencyFormatter(cp.Y) });
+            ExpenseTrendSeries.Add(new LineSeries { Title = "Daily Expense", Values = trendValues, DataLabels = true, LabelPoint = cp => CurrencyFormatter(cp.Y), Foreground = System.Windows.Media.Brushes.White });
             ExpenseTrendLabels = trendLabels.ToArray();
 
             SpecificTypeSeries = new SeriesCollection();
             var typeLabels = new List<string>();
             var typeValues = new ChartValues<double>();
             foreach (var kvp in expenseData.TopSpecificExpenses) { typeLabels.Add(kvp.Key); typeValues.Add(kvp.Value); }
-            SpecificTypeSeries.Add(new ColumnSeries { Title = "Amount", Values = typeValues, DataLabels = true, LabelPoint = cp => CurrencyFormatter(cp.Y) });
+            SpecificTypeSeries.Add(new ColumnSeries { Title = "Amount", Values = typeValues, DataLabels = true, LabelPoint = cp => CurrencyFormatter(cp.Y), Foreground = System.Windows.Media.Brushes.White });
             SpecificTypeLabels = typeLabels.ToArray();
 
             AssetMaintenanceSeries = new SeriesCollection();
             var labels = new List<string>();
             var values = new ChartValues<double>();
             foreach (var kvp in expenseData.AssetMaintenanceCosts) { labels.Add(kvp.Key); values.Add(kvp.Value); }
-            AssetMaintenanceSeries.Add(new ColumnSeries { Title = "Maintenance Cost", Values = values, DataLabels = true, LabelPoint = cp => CurrencyFormatter(cp.Y) });
+            AssetMaintenanceSeries.Add(new ColumnSeries { Title = "Maintenance Cost", Values = values, DataLabels = true, LabelPoint = cp => CurrencyFormatter(cp.Y), Foreground = System.Windows.Media.Brushes.White });
             AssetLabels = labels.ToArray();
+
+            AnomaliesList = expenseData.Anomalies;
+    
         }
 
         public void SetPrintMode(bool isPrintMode)

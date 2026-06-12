@@ -216,5 +216,49 @@ namespace NexGenSales.Views
                 }
             }
         }
+
+        //Dynamically update Date Range options based on selected Report Type
+        private void CmbReportType_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            try
+            {
+                // Prevent errors during the initial UI initialization
+                if (CmbDateRange == null || CmbReportType == null) return;
+
+                // Retrieve the currently selected Report Type
+                string reportType = (CmbReportType.SelectedItem as System.Windows.Controls.ComboBoxItem)?.Content?.ToString();
+
+                // Clear the existing items in the Date Range dropdown
+                CmbDateRange.Items.Clear();
+
+                if (reportType == "Expense Data")
+                {
+                    // Populate options without "1 Week" for Expense Data
+                    CmbDateRange.Items.Add(new System.Windows.Controls.ComboBoxItem { Content = "1 Month" });
+                    CmbDateRange.Items.Add(new System.Windows.Controls.ComboBoxItem { Content = "3 Months" });
+                    CmbDateRange.Items.Add(new System.Windows.Controls.ComboBoxItem { Content = "6 Months" });
+                    CmbDateRange.Items.Add(new System.Windows.Controls.ComboBoxItem { Content = "1 Year" });
+
+                    // Explicitly select the first item ("1 Month")
+                    CmbDateRange.SelectedIndex = 0;
+                }
+                else
+                {
+                    // Populate all options including "1 Week" for Sales Data
+                    CmbDateRange.Items.Add(new System.Windows.Controls.ComboBoxItem { Content = "1 Week" });
+                    CmbDateRange.Items.Add(new System.Windows.Controls.ComboBoxItem { Content = "1 Month" });
+                    CmbDateRange.Items.Add(new System.Windows.Controls.ComboBoxItem { Content = "3 Months" });
+                    CmbDateRange.Items.Add(new System.Windows.Controls.ComboBoxItem { Content = "6 Months" });
+                    CmbDateRange.Items.Add(new System.Windows.Controls.ComboBoxItem { Content = "1 Year" });
+
+                    // Explicitly select the first item ("1 Week")
+                    CmbDateRange.SelectedIndex = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                CustomMessageBoxView.Show($"An error occurred while running the Expences Analysis:\n{ex.Message}", "Error", CustomMessageType.Error);
+            }
+        }
     }
 }
