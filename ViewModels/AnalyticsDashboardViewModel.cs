@@ -145,6 +145,10 @@ namespace NexGenSales.ViewModels
                         lvcSeries.Foreground = brush;
                         lvcSeries.Effect = effect;
 
+                        // Skip toggling DataLabels for PieSeries to prevent radius miscalculation and edge clipping
+                        if (series is LiveCharts.Wpf.PieSeries)
+                            continue;
+
                         bool hadLabels = lvcSeries.DataLabels;
                         lvcSeries.DataLabels = false;
                         lvcSeries.DataLabels = hadLabels;
@@ -182,7 +186,7 @@ namespace NexGenSales.ViewModels
             else if (_reportType == "Expenses")
             {
                 // Delegate rendering to the Expenses logic layer
-                return _expensesService.GenerateReport(charts, filePath);
+                return _expensesService.GenerateReport(charts, TotalExpensesDisplay, AnomaliesList, filePath);
             }
 
             // Fallback for unsupported report types to prevent application crashes
