@@ -13,8 +13,16 @@ namespace NexGenSales.Views
         {
             InitializeComponent();
 
-            // Binds the View to its corresponding ViewModel
-            this.DataContext = new HomeViewModel();
+            var viewModel = new HomeViewModel();
+
+            this.DataContext = viewModel;
+
+            // Subscribe to the success event to automate navigation
+            viewModel.OnImportSuccess += () =>
+            {
+                // Simulate the Process button click to navigate
+                BtnGotoProcess_Click(this, new RoutedEventArgs());
+            };
         }
 
         // Title bar window dragging

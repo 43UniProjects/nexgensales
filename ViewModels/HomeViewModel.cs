@@ -30,6 +30,7 @@ namespace NexGenSales.ViewModels
     {
         public ICommand ImportRecordCommand { get; }
 
+        public event Action OnImportSuccess;
 
         // PROPERTIES
 
@@ -124,6 +125,7 @@ namespace NexGenSales.ViewModels
 
                         new SalesRecordRepository(new SqliteService()).InsertMany(salesImportService.Records);
                         CustomMessageBoxView.Show("Sales records imported and saved successfully!", "Import Success", CustomMessageType.Success);
+                        OnImportSuccess?.Invoke();
                     }
                     else
                     {
@@ -145,6 +147,7 @@ namespace NexGenSales.ViewModels
 
                         new ExpensesRecordRepository(new SqliteService()).InsertMany(expensesImportService.Records);
                         CustomMessageBoxView.Show("Expenses records imported and saved successfully!", "Import Success", CustomMessageType.Success);
+                        OnImportSuccess?.Invoke();
                     }
                     else
                     {
