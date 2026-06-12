@@ -103,15 +103,50 @@ namespace NexGenSales.ViewModels
                     labels.Add(targetDate.ToString("MMM dd"));
                 }
 
-                double sma = last7Days.Average();
                 int daysInMonth = DateTime.DaysInMonth(maxDate.Year, maxDate.Month);
-                int remainingDays = daysInMonth - maxDate.Day;
+                DateTime startOfMonth = new DateTime(maxDate.Year, maxDate.Month, 1);
+                DateTime endOfMonth = new DateTime(maxDate.Year, maxDate.Month, daysInMonth);
 
-                double currentMonthRevenue = allSales
+                var currentMonthSales = allSales
                     .Where(s => s.Date_Time.Year == maxDate.Year && s.Date_Time.Month == maxDate.Month)
-                    .Sum(s => s.Net_Revenue);
+                    .ToList();
+                double currentMonthRevenue = currentMonthSales.Sum(s => s.Net_Revenue);
 
-                double projectedRemaining = sma * remainingDays;
+                // Step 1: Calculate Average Revenue by Day Type
+                double totalWeekdayRev = 0, totalWeekendRev = 0;
+                int elapsedWeekdays = 0, elapsedWeekends = 0;
+
+                for (DateTime d = startOfMonth; d <= maxDate; d = d.AddDays(1))
+                {
+                    bool isWeekend = d.DayOfWeek == DayOfWeek.Saturday || d.DayOfWeek == DayOfWeek.Sunday;
+                    double dailyRev = currentMonthSales.Where(s => s.Date_Time.Date == d).Sum(s => s.Net_Revenue);
+                    
+                    if (isWeekend)
+                    {
+                        totalWeekendRev += dailyRev;
+                        elapsedWeekends++;
+                    }
+                    else
+                    {
+                        totalWeekdayRev += dailyRev;
+                        elapsedWeekdays++;
+                    }
+                }
+
+                double avgWeekdayRev = elapsedWeekdays > 0 ? totalWeekdayRev / elapsedWeekdays : 0;
+                double avgWeekendRev = elapsedWeekends > 0 ? totalWeekendRev / elapsedWeekends : 0;
+
+                // Step 2: Count Remaining Days
+                int remainingWeekdays = 0, remainingWeekends = 0;
+                for (DateTime d = maxDate.AddDays(1); d <= endOfMonth; d = d.AddDays(1))
+                {
+                    bool isWeekend = d.DayOfWeek == DayOfWeek.Saturday || d.DayOfWeek == DayOfWeek.Sunday;
+                    if (isWeekend) remainingWeekends++;
+                    else remainingWeekdays++;
+                }
+
+                // Step 3: Run Final Projection Formula
+                double projectedRemaining = (avgWeekdayRev * remainingWeekdays) + (avgWeekendRev * remainingWeekends);
                 double totalExpected = currentMonthRevenue + projectedRemaining;
 
                 if (totalExpected >= budget)
