@@ -263,6 +263,9 @@
                                             <TextBlock Text="Supplier Profitability" Style="{StaticResource ChartTitle}"/>
                                         </StackPanel>
                                         <lvc:CartesianChart x:Name="SupplierChart" Series="{Binding SupplierSeries}" Height="320" LegendLocation="Bottom" Foreground="White">
+                                            <lvc:CartesianChart.DataTooltip>
+                                                <lvc:DefaultTooltip Background="#141A21" BorderBrush="#2D3A46" BorderThickness="1" Foreground="#FFFFFF" SelectionMode="OnlySender"/>
+                                            </lvc:CartesianChart.DataTooltip>
                                             <lvc:CartesianChart.AxisX>
                                                 <lvc:Axis Title="Profit Ratio" LabelFormatter="{Binding PercentFormatter}" Foreground="#788896">
                                                     <lvc:Axis.Separator>
@@ -289,6 +292,9 @@
                                             <TextBlock Text="Item Velocity — Volume Ranking" Style="{StaticResource ChartTitle}"/>
                                         </StackPanel>
                                         <lvc:CartesianChart x:Name="VelocityChart" Series="{Binding VelocitySeries}" Height="320" LegendLocation="None" Foreground="White">
+                                            <lvc:CartesianChart.DataTooltip>
+                                                <lvc:DefaultTooltip Background="#141A21" BorderBrush="#2D3A46" BorderThickness="1" Foreground="#FFFFFF" SelectionMode="OnlySender"/>
+                                            </lvc:CartesianChart.DataTooltip>
                                             <lvc:CartesianChart.AxisX>
                                                 <lvc:Axis Labels="{Binding VelocityLabels}" Title="Item ID" Foreground="#788896">
                                                     <lvc:Axis.Separator>
@@ -314,7 +320,11 @@
                                             <TextBlock Text="03" Style="{StaticResource SectionIndex}"/>
                                             <TextBlock Text="Revenue Contribution by Item" Style="{StaticResource ChartTitle}"/>
                                         </StackPanel>
-                                        <lvc:PieChart x:Name="RevenueChart" Series="{Binding RevenueSeries}" Height="400" LegendLocation="Right" InnerRadius="70" Foreground="White"/>
+                                        <lvc:PieChart x:Name="RevenueChart" Series="{Binding RevenueSeries}" Height="400" LegendLocation="Right" InnerRadius="70" Foreground="White">
+                                            <lvc:PieChart.DataTooltip>
+                                                <lvc:DefaultTooltip SelectionMode="OnlySender" Template="{StaticResource PieTooltipTemplate}"/>
+                                            </lvc:PieChart.DataTooltip>
+                                        </lvc:PieChart>
                                     </StackPanel>
                                 </Border>
 
@@ -326,6 +336,9 @@
                                             <TextBlock Text="Revenue Trend Analysis — 7 Days" Style="{StaticResource ChartTitle}"/>
                                         </StackPanel>
                                         <lvc:CartesianChart x:Name="TrendChart" Series="{Binding TrendSeries}" Height="320" LegendLocation="None" Foreground="White">
+                                            <lvc:CartesianChart.DataTooltip>
+                                                <lvc:DefaultTooltip Background="#141A21" BorderBrush="#2D3A46" BorderThickness="1" Foreground="#FFFFFF" SelectionMode="OnlySender"/>
+                                            </lvc:CartesianChart.DataTooltip>
                                             <lvc:CartesianChart.AxisX>
                                                 <lvc:Axis Labels="{Binding TrendLabels}" Title="Day of Week" Foreground="#788896"/>
                                             </lvc:CartesianChart.AxisX>
@@ -344,6 +357,9 @@
                                             <TextBlock Text="Discount Effectiveness" Style="{StaticResource ChartTitle}"/>
                                         </StackPanel>
                                         <lvc:CartesianChart x:Name="DiscountChart" Series="{Binding DiscountSeries}" Height="320" LegendLocation="None" Foreground="White">
+                                            <lvc:CartesianChart.DataTooltip>
+                                                <lvc:DefaultTooltip Background="#141A21" BorderBrush="#2D3A46" BorderThickness="1" Foreground="#FFFFFF" SelectionMode="OnlySender"/>
+                                            </lvc:CartesianChart.DataTooltip>
                                             <lvc:CartesianChart.AxisX>
                                                 <lvc:Axis Labels="{Binding DiscountLabels}" Title="Discount Tier" Foreground="#788896">
                                                     <lvc:Axis.Separator>
