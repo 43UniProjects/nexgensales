@@ -230,6 +230,10 @@ namespace NexGenSales.ViewModels
             return recordMetadataList;
         }
 
+        /// <summary>
+        /// Handles the complete database restoration lifecycle using the custom UI message box. 
+        /// Includes file selection, safety confirmations, and conflict resolution.
+        /// </summary>
         private void ExecuteRestoreDatabase()
         {
             // 1. Prompt user to select a valid SQLite database backup file
@@ -244,31 +248,29 @@ namespace NexGenSales.ViewModels
             {
                 string selectedBackupPath = openFileDialog.FileName;
 
-                // 2. Initial security confirmation to prevent accidental data loss
-                MessageBoxResult initialConfirm = MessageBox.Show(
+                // 2. Initial security confirmation using CustomMessageBoxView
+                bool confirmRestore = CustomMessageBoxView.Show(
                     "Are you sure you want to restore the database?\nThis action will overwrite the current system data.",
-                    "Confirm Restore", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                    "Confirm Restore",
+                    CustomMessageType.Warning,
+                    CustomMessageButtons.YesNo);
 
-                if (initialConfirm != MessageBoxResult.Yes) return;
+                // If user clicks 'No', abort the process
+                if (!confirmRestore) return;
 
                 string targetDbPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Database", "app.db");
 
                 // 3. Conflict Resolution: Check if an active database currently exists
                 if (System.IO.File.Exists(targetDbPath))
                 {
-                    // Utilize a Yes/No/Cancel dialog to provide branching choices for the user
-                    MessageBoxResult conflictAction = MessageBox.Show(
-                        "An active database (app.db) currently exists in the system.\n\n" +
-                        "Click 'Yes' to BACKUP the current database before restoring.\n" +
-                        "Click 'No' to FORCE RESTORE (overwrite and permanently lose current data).\n" +
-                        "Click 'Cancel' to safely abort this operation.",
-                        "Database Conflict Detected", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                    // Ask user if they want to backup the existing database before overwriting
+                    bool backupFirst = CustomMessageBoxView.Show(
+                        "An active database currently exists.\n\nDo you want to create a BACKUP of the current database before overwriting it?\n\n(Click 'Yes' to Backup, 'No' to Force Overwrite)",
+                        "Backup Current Data?",
+                        CustomMessageType.Warning,
+                        CustomMessageButtons.YesNo);
 
-                    if (conflictAction == MessageBoxResult.Cancel)
-                    {
-                        return; // Gracefully abort the process
-                    }
-                    else if (conflictAction == MessageBoxResult.Yes)
+                    if (backupFirst)
                     {
                         // Execute Pre-Restore Backup procedure
                         SaveFileDialog saveFileDialog = new SaveFileDialog
@@ -286,12 +288,12 @@ namespace NexGenSales.ViewModels
                         }
                         else
                         {
-                            // Abort restoration if the user cancels the safety backup
-                            MessageBox.Show("Restore operation safely aborted. The pre-restore backup was cancelled.", "Operation Aborted", MessageBoxButton.OK, MessageBoxImage.Information);
+                            // Gracefully abort restoration if the user cancels the safety backup dialog
+                            CustomMessageBoxView.Show("Restore operation safely aborted. The pre-restore backup was cancelled.", "Operation Aborted", CustomMessageType.Info);
                             return;
                         }
                     }
-                    // If conflictAction == MessageBoxResult.No, it naturally falls through to Force Restore
+                    // If backupFirst is False, it naturally falls through to Force Restore
                 }
 
                 // 4. Execute the core restore operation
