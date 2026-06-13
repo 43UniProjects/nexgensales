@@ -55,12 +55,6 @@ namespace NexGenSales.Core
             using var stream = new MemoryStream();
             encoder.Save(stream);
 
-            // DEBUG: Save converted chart to reports folder
-            var debugDir = "reports";
-            if (!Directory.Exists(debugDir))
-                Directory.CreateDirectory(debugDir);
-            File.WriteAllBytes(Path.Combine(debugDir, $"chart_{System.Guid.NewGuid()}.png"), stream.ToArray());
-
             return stream.ToArray();
         }
     }
