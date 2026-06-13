@@ -99,14 +99,16 @@ namespace NexGenSales.Core
             {
                 series.Add(new PieSeries
                 {
-                    Title      = items[i],
-                    Values     = new ChartValues<double> { revenues[i] },
-                    Fill       = new SolidColorBrush(PiePalette[i % PiePalette.Length]),
-                    Foreground = new SolidColorBrush(Colors.White),
-                    FontWeight = FontWeights.Bold,
-                    Effect     = new DropShadowEffect { Color = Colors.Black, ShadowDepth = 0, BlurRadius = 3, Opacity = 1 },
-                    DataLabels = true,
-                    LabelPoint = p => $"{p.Participation:P0}"
+                    Title           = items[i],
+                    Values          = new ChartValues<double> { revenues[i] },
+                    Fill            = new SolidColorBrush(PiePalette[i % PiePalette.Length]),
+                    Stroke          = new SolidColorBrush(Colors.Black),
+                    StrokeThickness = 2,
+                    Foreground      = new SolidColorBrush(Colors.White),
+                    FontWeight      = FontWeights.Bold,
+                    Effect          = new DropShadowEffect { Color = Colors.Black, ShadowDepth = 0, BlurRadius = 3, Opacity = 1 },
+                    DataLabels      = true,
+                    LabelPoint      = p => $"{p.Participation:P0}"
                 });
             }
             return series;
