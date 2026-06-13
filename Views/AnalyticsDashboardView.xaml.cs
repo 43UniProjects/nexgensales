@@ -154,6 +154,11 @@ namespace NexGenSales.Views
 
             List<(string Title, FrameworkElement Chart)> charts;
 
+            // Increase SupplierChart height for better PDF readability
+            double originalSupplierHeight = SupplierChart.Height;
+            SupplierChart.Height = 500;
+            SupplierChart.UpdateLayout();
+
             // Route execution based on active dashboard visibility
             if (SupplierChart.IsVisible)
             {
@@ -194,6 +199,10 @@ namespace NexGenSales.Views
             }
             finally
             {
+                // Restore original height
+                SupplierChart.Height = originalSupplierHeight;
+                SupplierChart.UpdateLayout();
+
                 // Ensure UI resets to dark mode regardless of success or failure
                 SetTheme(false);
             }

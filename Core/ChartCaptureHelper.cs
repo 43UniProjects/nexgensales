@@ -27,7 +27,26 @@ namespace NexGenSales.Core
 
             if (width == 0 || height == 0) return null;
 
-            var rtb = new RenderTargetBitmap(width, height, 96, 96, PixelFormats.Pbgra32);
+            // Add an extra margin at the bottom to prevent x-axis labels from being cropped.
+            // LiveCharts often draws labels slightly outside the ActualHeight layout bounds.
+            int captureHeight = height + 45;
+
+            // Use 300 DPI for high-quality printing (default is 96)
+            double dpi = 300;
+            double scale = dpi / 96d;
+
+            int pixelWidth = (int)(width * scale);
+            int pixelHeight = (int)(captureHeight * scale);
+
+            var rtb = new RenderTargetBitmap(pixelWidth, pixelHeight, dpi, dpi, PixelFormats.Pbgra32);
+
+            // Fill with a white background so the extra margin isn't transparent
+            var dv = new DrawingVisual();
+            using (var ctx = dv.RenderOpen())
+            {
+                ctx.DrawRectangle(Brushes.White, null, new Rect(0, 0, width, captureHeight));
+            }
+            rtb.Render(dv);
             rtb.Render(visual);
 
             var encoder = new PngBitmapEncoder();
