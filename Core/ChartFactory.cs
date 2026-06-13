@@ -105,6 +105,7 @@ namespace NexGenSales.Core
                     Stroke          = new SolidColorBrush(Colors.Black),
                     StrokeThickness = 2,
                     Foreground      = new SolidColorBrush(Colors.White),
+                    FontSize        = 14,
                     FontWeight      = FontWeights.Bold,
                     Effect          = new DropShadowEffect { Color = Colors.Black, ShadowDepth = 0, BlurRadius = 3, Opacity = 1 },
                     DataLabels      = true,
