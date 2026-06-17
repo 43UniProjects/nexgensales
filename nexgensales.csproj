@@ -39,7 +39,7 @@
 
   <ItemGroup>
     <None Update="Database\app.db">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

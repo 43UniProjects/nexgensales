@@ -8,6 +8,8 @@
         Background="Transparent"
         ResizeMode="CanResize"
         MinHeight="600" MinWidth="900">
+    
+    
 
     <Window.Resources>
 
@@ -209,6 +211,26 @@
             </Style.Triggers>
         </Style>
 
+        <!-- ============================================================================== -->
+        <!-- PROGRESS BAR STYLE: Modern, flat UI progress bar for asynchronous operations   -->
+        <!-- ============================================================================== -->
+        <Style TargetType="ProgressBar" x:Key="ModernProgressBarStyle">
+            <Setter Property="Background" Value="#1C2127"/>
+            <Setter Property="Foreground" Value="#00C896"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Height" Value="8"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ProgressBar">
+                        <Grid>
+                            <Border Background="{TemplateBinding Background}" CornerRadius="4"/>
+                            <Border x:Name="PART_Indicator" Background="{TemplateBinding Foreground}" HorizontalAlignment="Left" CornerRadius="4"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
     </Window.Resources>
 
     <!-- ============================================================================== -->
@@ -296,6 +318,9 @@
                 </StackPanel>
             </Grid>
 
+            <!-- ============================================================================== -->
+            <!-- MAIN CONTENT AREA                                                              -->
+            <!-- ============================================================================== -->
             <Grid Grid.Row="1">
                 <Rectangle>
                     <Rectangle.Fill>
@@ -418,6 +443,8 @@
                         <Border.Effect>
                             <DropShadowEffect BlurRadius="20" Color="Black" Opacity="0.3" ShadowDepth="5"/>
                         </Border.Effect>
+                        
+                        
 
                         <StackPanel>
 
@@ -470,10 +497,68 @@
                             </Button>
 
                         </StackPanel>
+                        
                     </Border>
-
                 </Grid>
+
+                <!-- ============================================================================== -->
+                <!-- ASYNCHRONOUS PROGRESS OVERLAY: Blocks UI input and provides real-time feedback -->
+                <!-- Displayed securely over the main content when IsImporting == True              -->
+                <!-- ============================================================================== -->
+                <Grid>
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <!-- Hidden by default -->
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <!-- Activated only during active background processing -->
+                                <DataTrigger Binding="{Binding IsImporting}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+
+                    <!-- Semi-transparent dark curtain to blur background operations -->
+                    <Border Background="#E60B0F13"/>
+
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding ImportStatusMessage}" 
+                                   Foreground="#D3D9E0" FontSize="18" FontWeight="SemiBold" 
+                                   HorizontalAlignment="Center" Margin="0,0,0,25" FontFamily="Segoe UI">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <EventTrigger RoutedEvent="Loaded">
+                                            <BeginStoryboard>
+                                                <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" 
+                                                                     From="1.0" To="0.3" Duration="0:0:0.8">
+                                                        <DoubleAnimation.EasingFunction>
+                                                            <SineEase EasingMode="EaseInOut"/>
+                                                        </DoubleAnimation.EasingFunction>
+                                                    </DoubleAnimation>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+
+                        <ProgressBar Value="{Binding ImportProgress}" Minimum="0" Maximum="100" Width="450" Style="{StaticResource ModernProgressBarStyle}"/>
+
+                        <TextBlock Foreground="#00C896" FontSize="26" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,15,0,0" FontFamily="Segoe UI">
+                            <Run Text="{Binding ImportProgress}"/>
+                            <Run Text="%"/>
+                        </TextBlock>
+                    </StackPanel>
+                </Grid>
+
             </Grid>
         </Grid>
+
     </Border>
+    
+    
 </Window>

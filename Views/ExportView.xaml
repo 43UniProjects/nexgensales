@@ -290,6 +290,20 @@
                                     <ComboBox Height="45" 
                                               ItemsSource="{Binding AvailableReports}" 
                                               SelectedItem="{Binding SelectedReport, Mode=TwoWay}">
+
+                                        <ComboBox.ItemContainerStyle>
+                                            <Style TargetType="ComboBoxItem" BasedOn="{StaticResource {x:Type ComboBoxItem}}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsHeader}" Value="True">
+                                                        <Setter Property="Foreground" Value="#00C896"/>
+                                                        <Setter Property="FontWeight" Value="Bold"/>
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                        <Setter Property="Padding" Value="5,10,5,5"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ComboBox.ItemContainerStyle>
+
                                     </ComboBox>
                                 </StackPanel>
 
@@ -321,5 +335,6 @@
                 </Grid>
             </Grid>
         </Grid>
+
     </Border>
 </Window>
