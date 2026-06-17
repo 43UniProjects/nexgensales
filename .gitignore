@@ -487,12 +487,9 @@ $RECYCLE.BIN/
 *.swp
 
 Database/
-<<<<<<< HEAD
 **/*.pdf
 **/*.xlsx
-=======
 
 nexgensales.sln
 *.xlsx#
 .csv
->>>>>>> 52fed693421c58d9d963a7615e0467fdd3e07493
