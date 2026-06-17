@@ -94,7 +94,7 @@ namespace NexGenSales.ViewModels
 
 #if DEBUG
             // DEVELOPMENT: Point to the actual project folder (3 levels up from bin/Debug/...)
-            reportsDirectory = Path.Combine(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..")), "Reports");
+            reportsDirectory = Path.Combine(GetProjectRootDirectory(), "Reports");
 #else
             // PRODUCTION: Point to the compiled executable's folder
             reportsDirectory = Path.Combine(AppContext.BaseDirectory, "Reports");
@@ -153,7 +153,7 @@ namespace NexGenSales.ViewModels
 
 #if DEBUG
                 // DEVELOPMENT: Look in the main project folder
-                sourceDbPath = Path.Combine(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..")), "Database", "app.db");
+                sourceDbPath = Path.Combine(GetProjectRootDirectory(), "Database", "app.db");
 #else
                 // PRODUCTION: Look right next to the compiled executable
                 sourceDbPath = Path.Combine(AppContext.BaseDirectory, "Database", "app.db");
@@ -207,7 +207,7 @@ namespace NexGenSales.ViewModels
 
 #if DEBUG
                 // DEVELOPMENT: Look in the main project folder's 'Reports' directory
-                sourceReportPath = Path.Combine(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..")), "Reports", SelectedReport.FileName);
+                sourceReportPath = Path.Combine(GetProjectRootDirectory(), "Reports", SelectedReport.FileName);
 #else
                 // PRODUCTION: Look in the 'Reports' directory right next to the compiled executable
                 sourceReportPath = Path.Combine(AppContext.BaseDirectory, "Reports", SelectedReport.FileName);
@@ -243,5 +243,25 @@ namespace NexGenSales.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        /// <summary>
+        /// Bulletproof method to find the actual project folder during Debug mode,
+        /// regardless of how deep the bin/Debug/x64/netX.X folder structure is.
+        /// </summary>
+        private string GetProjectRootDirectory()
+        {
+            DirectoryInfo directory = new DirectoryInfo(AppContext.BaseDirectory);
+
+            // Keep climbing up the parent directories until we see the .csproj file
+            while (directory != null && !directory.GetFiles("*.csproj").Any())
+            {
+                directory = directory.Parent;
+            }
+
+            // If we found the project root, return it. Otherwise, fallback to the base directory.
+            return directory?.FullName ?? AppContext.BaseDirectory;
+        }
     }
+
+
 }
