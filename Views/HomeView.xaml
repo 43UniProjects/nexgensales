@@ -8,6 +8,8 @@
         Background="Transparent"
         ResizeMode="CanResize"
         MinHeight="600" MinWidth="900">
+    
+    
 
     <Window.Resources>
 
@@ -441,6 +443,8 @@
                         <Border.Effect>
                             <DropShadowEffect BlurRadius="20" Color="Black" Opacity="0.3" ShadowDepth="5"/>
                         </Border.Effect>
+                        
+                        
 
                         <StackPanel>
 
@@ -493,6 +497,7 @@
                             </Button>
 
                         </StackPanel>
+                        
                     </Border>
                 </Grid>
 
@@ -552,5 +557,8 @@
 
             </Grid>
         </Grid>
+
     </Border>
+    
+    
 </Window>
