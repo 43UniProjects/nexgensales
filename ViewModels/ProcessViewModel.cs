@@ -88,6 +88,8 @@ namespace NexGenSales.ViewModels
                 AvailableDateRanges.Add("3 Months");
                 AvailableDateRanges.Add("6 Months");
                 AvailableDateRanges.Add("1 Year");
+                AvailableDateRanges.Add("All Time");
+                
             }
             else // 0 = Sales Data
             {
@@ -96,14 +98,12 @@ namespace NexGenSales.ViewModels
                 AvailableDateRanges.Add("3 Months");
                 AvailableDateRanges.Add("6 Months");
                 AvailableDateRanges.Add("1 Year");
-            }
-
-            // Explicitly set the default selected item to the first available option
-            if (AvailableDateRanges.Count > 0)
-            {
-                SelectedDateRange = AvailableDateRanges[0];
+                AvailableDateRanges.Add("All Time");
+              
             }
         }
+
+           
 
         /// <summary>
         /// Fetches all record metadata from the repository and binds it to the DataGrid.
@@ -124,6 +124,9 @@ namespace NexGenSales.ViewModels
         /// <summary>
         /// Executes the core analysis logic based on user-selected filters and displays the generated dashboard.
         /// </summary>
+        /// <summary>
+        /// Executes the core analysis logic based on user-selected filters and displays the generated dashboard.
+        /// </summary>
         private async Task ExecuteRunAnalysisAsync()
         {
             // Validate selection to prevent null reference exceptions
@@ -140,6 +143,10 @@ namespace NexGenSales.ViewModels
                 case "3 Months": startDate = endDate.AddMonths(-3); break;
                 case "6 Months": startDate = endDate.AddMonths(-6); break;
                 case "1 Year": startDate = endDate.AddYears(-1); break;
+                case "All Time":
+                    //Fetch all data from the absolute beginning
+                    startDate = DateTime.MinValue;
+                    break;
             }
 
             string reportType = SelectedReportTypeIndex == 0 ? "Sales Data" : "Expense Data";
