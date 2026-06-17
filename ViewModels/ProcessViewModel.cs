@@ -89,7 +89,9 @@ namespace NexGenSales.ViewModels
                 AvailableDateRanges.Add("6 Months");
                 AvailableDateRanges.Add("1 Year");
                 AvailableDateRanges.Add("All Time");
-                
+
+                SelectedDateRange = "1 Month";
+
             }
             else // 0 = Sales Data
             {
@@ -99,7 +101,9 @@ namespace NexGenSales.ViewModels
                 AvailableDateRanges.Add("6 Months");
                 AvailableDateRanges.Add("1 Year");
                 AvailableDateRanges.Add("All Time");
-              
+
+                SelectedDateRange = "1 Week";
+
             }
         }
 
