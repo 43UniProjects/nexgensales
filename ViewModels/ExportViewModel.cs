@@ -98,7 +98,18 @@ namespace NexGenSales.ViewModels
         private void LoadAvailableReports()
         {
             AvailableReports.Clear();
-            string reportsDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Reports");
+
+            string reportsDirectory;
+
+#if DEBUG
+            // DEVELOPMENT: Point to the actual project folder (3 levels up from bin/Debug/...)
+            reportsDirectory = Path.Combine(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..")), "Reports");
+#else
+            // PRODUCTION: Point to the compiled executable's folder
+            reportsDirectory = Path.Combine(AppContext.BaseDirectory, "Reports");
+#endif
+            // Safety check: Ensure the folder actually exists before your app tries to save a CSV!
+            Directory.CreateDirectory(reportsDirectory);
 
             if (Directory.Exists(reportsDirectory))
             {
@@ -141,8 +152,8 @@ namespace NexGenSales.ViewModels
         }
 
 
-        
-        
+
+
 
         /// <summary>
         /// Prompts the user to select a save location and creates a backup copy of the SQLite database.
