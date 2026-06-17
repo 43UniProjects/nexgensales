@@ -19,7 +19,11 @@ namespace NexGenSales.ViewModels
         public Visibility ExpenseVisibility { get; }
 
         // Newly added subtitle property for the dashboard
+        public string DashboardTitle { get; }
         public string DashboardSubtitle { get; }
+        public string RevenueTrendTitle { get; }
+        public string ExpenseTrendTitle { get; }
+        public string DiscountInsightText { get; }
 
         // Sales Properties
         public SeriesCollection SupplierSeries { get; }
@@ -47,10 +51,10 @@ namespace NexGenSales.ViewModels
 
         public Func<double, string> CurrencyFormatter { get; } = v => "Rs. " + v.ToString("N2");
         public Func<double, string> PercentFormatter { get; } = v => v.ToString("P0");
-        public Func<double, string> ScoreFormatter { get; } = v => v.ToString("F1");
+        public Func<double, string> ScoreFormatter { get; } = v => v.ToString("F0");
 
         // Sales Constructor
-        public AnalyticsDashboardViewModel(SalesAnalysisService service, string reportType = "Sales")
+        public AnalyticsDashboardViewModel(SalesAnalysisService service, string reportType = "Sales", string dateRangeLabel = "")
         {
             _salesService = service;
             _reportType = reportType;
@@ -58,7 +62,9 @@ namespace NexGenSales.ViewModels
             ExpenseVisibility = Visibility.Collapsed;
 
             // Subtitle for the sales dashboard
-            DashboardSubtitle = "Sales simulation data — 5 analysis modules";
+            DashboardTitle = "Sales Analysis Dashboard";
+            DashboardSubtitle = "5 analysis modules";
+            RevenueTrendTitle = string.IsNullOrEmpty(dateRangeLabel) ? "Revenue Trend Analysis" : $"Revenue Trend Analysis — {dateRangeLabel}";
 
             var data = _salesService.GetAllChartData();
             SupplierSeries = data.SupplierSeries; SupplierLabels = data.SupplierLabels;
@@ -66,10 +72,28 @@ namespace NexGenSales.ViewModels
             RevenueSeries = data.RevenueSeries;
             TrendSeries = data.TrendSeries; TrendLabels = data.TrendLabels;
             DiscountSeries = data.DiscountSeries; DiscountLabels = data.DiscountLabels;
+
+            // Calculate the most effective discount based on the highest score
+            double maxScore = double.MinValue;
+            string bestDiscount = "";
+            if (DiscountSeries != null && DiscountSeries.Count > 0 && DiscountLabels != null)
+            {
+                var chartValues = (ChartValues<double>)DiscountSeries[0].Values;
+                for (int i = 0; i < DiscountLabels.Length; i++)
+                {
+                    double score = chartValues[i];
+                    if (score > maxScore)
+                    {
+                        maxScore = score;
+                        bestDiscount = DiscountLabels[i];
+                    }
+                }
+                DiscountInsightText = $"★  {bestDiscount} discount yields the highest effectiveness score ({maxScore:F0})";
+            }
         }
 
         // Expenses Constructor
-        public AnalyticsDashboardViewModel(ExpenseAnalyticsResult expenseData, ExpensesAnalysisService expenseService, string reportType = "Expenses")
+        public AnalyticsDashboardViewModel(ExpenseAnalyticsResult expenseData, ExpensesAnalysisService expenseService, string reportType = "Expenses", string dateRangeLabel = "")
         {
             _expensesService = expenseService;
             _reportType = reportType;
@@ -77,7 +101,9 @@ namespace NexGenSales.ViewModels
             ExpenseVisibility = Visibility.Visible;
 
             // Subtitle for the expenses dashboard
-            DashboardSubtitle = "Expenses simulation data — 5 analysis modules";
+            DashboardTitle = "Expense Analysis Dashboard";
+            DashboardSubtitle = "4 analysis modules";
+            ExpenseTrendTitle = string.IsNullOrEmpty(dateRangeLabel) ? "Monthly Expense Trend" : $"Expense Trend Analysis — {dateRangeLabel}";
 
             TotalExpensesDisplay = CurrencyFormatter(expenseData.TotalExpenses);
 
@@ -108,7 +134,7 @@ namespace NexGenSales.ViewModels
             var trendLabels = new List<string>();
             var trendValues = new ChartValues<double>();
             foreach (var kvp in expenseData.DailyTrend) { trendLabels.Add(kvp.Key); trendValues.Add(kvp.Value); }
-            ExpenseTrendSeries.Add(new LineSeries { Title = "Daily Expense", Values = trendValues, DataLabels = true, LabelPoint = cp => CurrencyFormatter(cp.Y), Foreground = System.Windows.Media.Brushes.White });
+            ExpenseTrendSeries.Add(new LineSeries { Title = "Daily Expense", Values = trendValues, DataLabels = false, LabelPoint = cp => CurrencyFormatter(cp.Y), Foreground = System.Windows.Media.Brushes.White });
             ExpenseTrendLabels = trendLabels.ToArray();
 
             SpecificTypeSeries = new SeriesCollection();

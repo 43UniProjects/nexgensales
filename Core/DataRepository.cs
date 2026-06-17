@@ -143,7 +143,7 @@ namespace NexGenSales.Core
                 .GroupBy(s => s.Date_Time.Date)
                 .OrderBy(g => g.Key)
                 .Select(g => new {
-                    DayLabel = g.Key.ToString("dddd"), // Formats output to full day name (e.g., "Monday")
+                    DayLabel = g.Key.ToString("MMM dd"), // Formats output to a clear date string suitable for multi-month tracking
                     DailyTotal = (double)g.Sum(s => s.Net_Revenue) // Explicit cast required for LiveCharts integration
                 }).ToList();
 
@@ -167,8 +167,8 @@ namespace NexGenSales.Core
                 .GroupBy(s => s.Allowed_Discount)
                 .OrderBy(g => g.Key)
                 .Select(g => new {
-                    DiscountLabel = $"Rs. {g.Key:0.00}",
-                    ProfitScore = g.Sum(s => s.Net_Revenue - (s.Quantity_Sold * s.Unit_Purchase_Cost))
+                    DiscountLabel = $"Rs. {g.Key:0}",
+                    ProfitScore = g.Average(s => s.Net_Revenue - (s.Quantity_Sold * s.Unit_Purchase_Cost))
                 }).ToList();
 
             return (discountGroups.Select(x => x.DiscountLabel).ToArray(),

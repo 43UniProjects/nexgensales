@@ -126,7 +126,7 @@ namespace NexGenSales.Core
                     Values           = new ChartValues<double>(revenues),
                     Stroke           = AccentTeal,
                     Fill             = AccentTealFill,
-                    PointGeometrySize = 10,
+                    PointGeometrySize = 8,
                     PointForeground  = new SolidColorBrush(Colors.White),
                     DataLabels       = false
                 }
@@ -148,7 +148,7 @@ namespace NexGenSales.Core
                     FontWeight = FontWeights.Bold,
                     Effect     = new DropShadowEffect { Color = Colors.Black, ShadowDepth = 0, BlurRadius = 3, Opacity = 1 },
                     DataLabels = true,
-                    LabelPoint = p => p.Y.ToString("F1")
+                    LabelPoint = p => p.Y.ToString("F0")
                 }
             };
         }
