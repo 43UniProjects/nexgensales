@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -178,7 +178,7 @@ namespace NexGenSales.ViewModels
                     var analysisResult = service.Analyze(expensesData);
 
                     // 3. Render the dashboard with the generated analysis payload
-                    var vm = new AnalyticsDashboardViewModel(analysisResult, service, "Expenses");
+                    var vm = new AnalyticsDashboardViewModel(analysisResult, service, "Expenses", SelectedDateRange);
                     var dashboard = new AnalyticsDashboardView { DataContext = vm };
                     dashboard.ShowDialog();
 
@@ -210,7 +210,7 @@ namespace NexGenSales.ViewModels
                     var service = new SalesAnalysisService(dataRepo);
 
                     // 3. Render the dashboard with the generated analysis payload
-                    var vm = new AnalyticsDashboardViewModel(service, "Sales");
+                    var vm = new AnalyticsDashboardViewModel(service, "Sales", SelectedDateRange);
                     var dashboard = new AnalyticsDashboardView { DataContext = vm };
                     dashboard.ShowDialog();
 

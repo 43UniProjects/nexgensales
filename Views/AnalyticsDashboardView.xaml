@@ -6,6 +6,7 @@
         Height="800" Width="1150"
         MinWidth="950" MinHeight="650"
         WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
@@ -243,7 +244,7 @@
 
                     <!-- Dashboard Header -->
                     <StackPanel Grid.Row="0" Margin="30,20,30,0">
-                        <TextBlock Text="Analytics Dashboard" Foreground="White" FontSize="22" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding DashboardTitle}" Foreground="White" FontSize="22" FontWeight="Bold"/>
                         <TextBlock Text="{Binding DashboardSubtitle}" Foreground="#788896" FontSize="13" Margin="0,4,0,0"/>
                         <Border Height="2" Background="#00C896" CornerRadius="1" HorizontalAlignment="Left" Width="60" Margin="0,10,0,0"/>
                     </StackPanel>
@@ -333,7 +334,7 @@
                                     <StackPanel>
                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
                                             <TextBlock Text="04" Style="{StaticResource SectionIndex}"/>
-                                            <TextBlock Text="Revenue Trend Analysis — 7 Days" Style="{StaticResource ChartTitle}"/>
+                                            <TextBlock Text="{Binding RevenueTrendTitle}" Style="{StaticResource ChartTitle}"/>
                                         </StackPanel>
                                         <lvc:CartesianChart x:Name="TrendChart" Series="{Binding TrendSeries}" Height="320" LegendLocation="None" Foreground="White">
                                             <lvc:CartesianChart.DataTooltip>
@@ -375,8 +376,8 @@
                                                 </lvc:Axis>
                                             </lvc:CartesianChart.AxisY>
                                         </lvc:CartesianChart>
-                                        <Border Background="#0D1F16" CornerRadius="6" Padding="12,6" Margin="0,10,0,0">
-                                            <TextBlock Text="★  10% discount yields the highest effectiveness score (89.2)" Foreground="#00C896" FontSize="12"/>
+                                        <Border Background="#0D1F16" CornerRadius="6" Padding="12,6" Margin="0,10,0,0" HorizontalAlignment="Left">
+                                            <TextBlock Text="{Binding DiscountInsightText}" Foreground="#00C896" FontSize="12"/>
                                         </Border>
                                     </StackPanel>
                                 </Border>
@@ -446,7 +447,7 @@
                                     <StackPanel>
                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
                                             <TextBlock Text="02" Style="{StaticResource SectionIndex}"/>
-                                            <TextBlock Text="Monthly Expense Trend" Style="{StaticResource ChartTitle}"/>
+                                            <TextBlock Text="{Binding ExpenseTrendTitle}" Style="{StaticResource ChartTitle}"/>
                                         </StackPanel>
                                         <!-- Applied Colors & Inline Default Tooltip (100% Bug Free) -->
                                         <lvc:CartesianChart x:Name="ExpenseTrendChart" Series="{Binding ExpenseTrendSeries}" SeriesColors="{StaticResource ThemeColors}" Height="320" LegendLocation="None" Foreground="White">

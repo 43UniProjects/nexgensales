@@ -167,7 +167,7 @@ namespace NexGenSales.Views
                     ("Supplier Profitability",            SupplierChart),
                     ("Item Velocity — Volume Ranking",    VelocityChart),
                     ("Revenue Contribution by Item",      RevenueChart),
-                    ("Revenue Trend Analysis — 7 Days",   TrendChart),
+                    (vm.RevenueTrendTitle,                TrendChart),
                     ("Discount Effectiveness",            DiscountChart)
                 };
             }
@@ -176,7 +176,7 @@ namespace NexGenSales.Views
                 charts = new List<(string Title, FrameworkElement Chart)>
                 {
                     ("Expense Category Breakdown",                  ExpenseCategoryChartContainer),
-                    ("Monthly Expense Trend",                       ExpenseTrendChart),
+                    (vm.ExpenseTrendTitle,                          ExpenseTrendChart),
                     ("Highest Specific Expenses",                   ExpenseSpecificChart),
                     ("Asset Depreciation & Maintenance Costs",      AssetMaintenanceChart)
                 };

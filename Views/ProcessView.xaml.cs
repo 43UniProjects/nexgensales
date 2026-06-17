@@ -51,9 +51,6 @@ namespace NexGenSales.Views
         private void BtnHome_Click(object sender, RoutedEventArgs e)
         {
             HomeView homeWindow = new HomeView();
-            homeWindow.WindowStartupLocation = WindowStartupLocation.Manual;
-            homeWindow.Left = this.Left;
-            homeWindow.Top = this.Top;
 
             homeWindow.WindowState = this.WindowState;
             homeWindow.Show();
@@ -74,9 +71,6 @@ namespace NexGenSales.Views
         private void BtnExports_Click(object sender, RoutedEventArgs e)
         {
             ExportView exportWindow = new ExportView();
-            exportWindow.WindowStartupLocation = WindowStartupLocation.Manual;
-            exportWindow.Left = this.Left;
-            exportWindow.Top = this.Top;
             exportWindow.WindowState = this.WindowState;
             exportWindow.Show();
             this.Close();

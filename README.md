@@ -1,4 +1,4 @@
-# nexgensales
+# NexGenSales
 
 A standalone .NET desktop app for sales tracking, reporting, and prediction.
 
@@ -10,7 +10,7 @@ A standalone .NET desktop app for sales tracking, reporting, and prediction.
 
 The system supports batch importing of multiple Excel files simultaneously, separating daily sales from monthly expenses. It enforces a strict schema for incoming data:
 
-* **Sales Records:** Requires `Date_Time`, `Item_ID`, `Supplier_ID`, `Quantity_Sold`, `Unit_Purchase_Cost`, `Unit_Sale_Price`, `Allowed_Discounts`, `Net_Revenue`, and `Current_Stock`.
+* **Sales Records:** Requires `Date_Time`, `Item_ID`, `Supplier_ID`, `Quantity_Sold`, `Unit_Purchase_Cost`, `Unit_Sale_Price`, `Allowed_Discount`, `Net_Revenue`, and `Current_Stock`.
 * **Expense Records:** Requires `Date_Recorded`, `Expense_Category`, `Specific_Type`, `Amount`, and `Asset_ID`.
 
 ### 2. Time-Series Filtering
@@ -25,16 +25,18 @@ The analysis engine dynamically anchors queries to the latest uploaded data reco
 The application computes key performance indicators (KPIs) across sales and expenses:
 
 * **Sales Analytics:**
-* **Supplier Profitability:** Calculates cost-to-profit ratios and automatically flags underperforming/low-margin suppliers.
-* **Item Velocity:** Ranks inventory by sales volume to highlight best-sellers and slow-movers.
-* **Revenue Contribution:** Calculates average daily revenue generation per item.
-* **Trend Analysis:** Renders day-wise comparative total revenue charts.
-* **Discount Optimization:** Computes the most effective discount thresholds.
-
+  * **Supplier Profitability:** Calculates cost-to-profit ratios and automatically flags underperforming/low-margin suppliers.
+  * **Item Velocity:** Ranks inventory by sales volume to highlight best-sellers and slow-movers.
+  * **Revenue Contribution:** Calculates average daily revenue generation per item.
+  * **Trend Analysis:** Renders day-wise comparative total revenue charts, utilizing dynamic daily groupings (e.g., `MMM dd`) for clarity over long periods.
+  * **Discount Optimization:** Computes the most effective discount thresholds by calculating **Average Profit per Transaction** (normalizing zero-discount volumes) and generates a dynamic UI insight string.
 
 * **Expense Analytics:**
-* **Anomaly Detection:** Flags unusual spikes in utility expenses against historical averages.
-* **Depreciation Tracking:** Monitors the degrading value of physical business assets over time.
+  * **Anomaly Detection:** Flags unusual spikes across *all* expense categories using a dynamic standard deviation threshold (`Average + 1.5 * StdDev`) and a > 5000 absolute minimum to isolate true outliers.
+  * **Category Breakdown:** Groups total expenses proportionally across categories.
+  * **Daily Expense Trend:** Maps out timelines of organizational expenses.
+  * **Asset Maintenance Costs:** Accumulates maintenance expenditures mapped to physical assets.
+  * **Top Specific Expenses:** Isolates and ranks the top 5 highest expense line-items.
 
 
 
@@ -113,15 +115,13 @@ Your sales file must contain the following columns. Order does not matter, but t
 
 | Required Header | Data Type | Description & Example |
 | --- | --- | --- |
-| **Date_Time** | Date/Time | The exact time of the sale.<br>
-
-<br>*Format: YYYY-MM-DD HH:MM:SS* (e.g., `2026-06-01 14:30:00`) |
+| **Date_Time** | Date/Time | The exact time of the sale. *Format: YYYY-MM-DD HH:MM:SS* (e.g., `2026-06-01 14:30:00`) |
 | **Item_ID** | Text | The unique identifier for the product sold. (e.g., `ITM-992`) |
 | **Supplier_ID** | Text | The identifier for the supplier who provided the item. (e.g., `SUP-04`) |
 | **Quantity_Sold** | Number | Total units sold in this transaction. (e.g., `5`) |
 | **Unit_Purchase_Cost** | Currency | The cost the business paid for a single unit. (e.g., `12.50`) |
 | **Unit_Sale_Price** | Currency | The price the customer paid for a single unit. (e.g., `20.00`) |
-| **Allowed_Discounts** | Currency | Any discount applied to the total transaction. (e.g., `2.00` or `0`) |
+| **Allowed_Discount** | Currency | Any discount applied to the total transaction. (e.g., `2.00` or `0`) |
 | **Net_Revenue** | Currency | The final revenue collected. *(Quantity * Sale Price) - Discounts*. |
 | **Current_Stock** | Number | The remaining inventory of this item *after* the sale. (e.g., `45`) |
 
@@ -133,9 +133,7 @@ Your expenses file must contain the following columns. Order does not matter, bu
 
 | Required Header | Data Type | Description & Example |
 | --- | --- | --- |
-| **Date_Recorded** | Date/Time | The exact time the expense occurred or was logged.<br>
-
-<br>*Format: YYYY-MM-DD HH:MM:SS* (e.g., `2026-06-01 09:15:00`) |
+| **Date_Recorded** | Date/Time | The exact time the expense occurred or was logged. *Format: YYYY-MM-DD HH:MM:SS* (e.g., `2026-06-01 09:15:00`) |
 | **Expense_Category** | Text | The broad category of the expense. (e.g., `Utilities`, `Rent`, `Maintenance`, `Payroll`) |
 | **Specific_Type** | Text | A detailed description of the expense. (e.g., `Electricity Bill`, `POS Terminal Repair`) |
 | **Amount** | Currency | The total cost of the expense. (e.g., `245.50`) |
@@ -180,7 +178,7 @@ Top-level project layout (common files and folders you will see in the repo):
 
 Main source folders:
 
-* `Commands/` : Command handlers, CLI utilities, and app-invoked scripts
+* `Core/` : Core infrastructure, configuration, utilities, and factories
 * `Models/` : Domain models, DTOs, validation logic, and persistence schemas
 * `Models/Enums/` : Enum definitions used for mapping/imports
 
@@ -188,12 +186,13 @@ Main source folders:
 * `ViewModels/` : View-models used for UI binding and presentation logic
 * `Views/` : XAML views and their code-behind files
 * `UserComponents/` : Reusable UI components and controls
-* `Services/` : Business logic, API clients, and orchestration
-* `Services/Data/` : Repositories, SQLite adapters, seeding, and migrations
+* `Services/` : Business logic, API clients, migrations, and orchestration
+* `Services/Data/` : Repositories, SQLite adapters, and mapping abstractions
 * `Services/Data/Repository/` : Repository abstractions and concrete implementations
+* `Services/Data/Mapper/` : Data mapping operations
 
 
-* `Assets/` : Static assets, images, and resource files
+* `assets/` : Static assets, images, and resource files
 
 Build artifacts and runtime folders (generated)
 
@@ -201,6 +200,7 @@ Build artifacts and runtime folders (generated)
 * `obj/` : intermediate build files
 * `Database/` : local SQLite files when running in Debug (generated at runtime)
 * `Logs/` : `console.log` and `error.log` when running in Debug (generated at runtime)
+* `Reports/` : Exported PDF reports (generated at runtime)
 
 **Folder Structure Overview:**
 
@@ -211,26 +211,29 @@ nexgensales/
 ├─ nexgensales.csproj
 ├─ README.md
 ├─ LICENSE
-├─ Assets/
+├─ assets/
 │  └─ home/
-├─ Commands/
+├─ Core/
 ├─ Models/
 │  ├─ SalesRecord.cs
 │  ├─ ExpensesRecord.cs
+│  ├─ RecordMetadata.cs
+│  ├─ ExpenseAnalyticsResult.cs
 │  └─ Enums/
 ├─ ViewModels/
 ├─ Views/
 ├─ UserComponents/
 ├─ Services/
+│  ├─ DatabaseMigrationService.cs
 │  └─ Data/
 │     ├─ Repository/
-│     ├─ DatabaseMigrationService.cs
-│     └─ RowMapper.cs
+│     └─ Mapper/
 ├─ Database/        <-- created in Debug runs (local SQLite files)
 │  └─ app.db
 ├─ Logs/            <-- created in Debug runs (console.log, error.log)
 │  ├─ console.log
 │  └─ error.log
+├─ Reports/         <-- exported PDF reports
 └─ bin/
      └─ Debug/net10.0-windows/
 

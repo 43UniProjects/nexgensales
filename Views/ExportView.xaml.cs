@@ -52,9 +52,6 @@ namespace NexGenSales.Views
         {
             
             ProcessView processWindow = new ProcessView();
-            processWindow.WindowStartupLocation = WindowStartupLocation.Manual;
-            processWindow.Left = this.Left;
-            processWindow.Top = this.Top;
 
             processWindow.WindowState = this.WindowState;
 
@@ -67,9 +64,6 @@ namespace NexGenSales.Views
         {
             // Instantiate and display the Home dashboard
             HomeView homeWindow = new HomeView();
-            homeWindow.WindowStartupLocation = WindowStartupLocation.Manual;
-            homeWindow.Left = this.Left;
-            homeWindow.Top = this.Top;
 
             homeWindow.WindowState = this.WindowState;
 
