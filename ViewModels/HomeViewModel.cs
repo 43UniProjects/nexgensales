@@ -12,14 +12,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
 namespace NexGenSales.ViewModels
 {
-
     // DATA MODEL FOR THE IMPORT ARRAY
-
     public class ImportedFileSummary
     {
         public string FilePath { get; set; }
@@ -29,42 +28,76 @@ namespace NexGenSales.ViewModels
     public class HomeViewModel : INotifyPropertyChanged
     {
         public ICommand ImportRecordCommand { get; }
-
         public event Action OnImportSuccess;
 
+        // ==========================================
         // PROPERTIES
+        // ==========================================
 
-        // The specific Array/List requested to hold both File Paths and Record Types
         private List<ImportedFileSummary> _importedFilesArray = [];
         public List<ImportedFileSummary> ImportedFilesArray
         {
             get { return _importedFilesArray; }
-            private set
-            {
-                _importedFilesArray = value;
-                OnPropertyChanged();
-            }
+            private set { _importedFilesArray = value; OnPropertyChanged(); }
         }
 
-        // Bound to the UI ComboBox to track selected record type dynamically
         private string _selectedRecordType = "Sales Record";
         public string SelectedRecordType
         {
             get { return _selectedRecordType; }
-            set
-            {
-                _selectedRecordType = value;
-                OnPropertyChanged();
-            }
+            set { _selectedRecordType = value; OnPropertyChanged(); }
         }
+
+        // --- NEW ASYNC PROGRESS TRACKING PROPERTIES ---
+
+        private bool _isImporting = false;
+        /// <summary>
+        /// Indicates whether an import operation is currently in progress.
+        /// Useful for disabling buttons or showing/hiding progress overlays in the UI.
+        /// </summary>
+        public bool IsImporting
+        {
+            get { return _isImporting; }
+            set { _isImporting = value; OnPropertyChanged(); }
+        }
+
+        private int _importProgress = 0;
+        /// <summary>
+        /// Tracks the percentage of completion (0 to 100) for the progress bar.
+        /// </summary>
+        public int ImportProgress
+        {
+            get { return _importProgress; }
+            set { _importProgress = value; OnPropertyChanged(); }
+        }
+
+        private string _importStatusMessage = "";
+        /// <summary>
+        /// Provides real-time feedback to the user regarding the current background operation.
+        /// </summary>
+        public string ImportStatusMessage
+        {
+            get { return _importStatusMessage; }
+            set { _importStatusMessage = value; OnPropertyChanged(); }
+        }
+
+        // ==========================================
+        // CONSTRUCTOR
+        // ==========================================
 
         public HomeViewModel()
         {
             ImportRecordCommand = new RelayCommand(ExecuteImportRecord);
         }
 
+        // ==========================================
+        // COMMAND EXECUTION LOGIC
+        // ==========================================
 
-        private void ExecuteImportRecord(object parameter)
+        /// <summary>
+        /// Asynchronously executes the import record workflow to keep the main UI thread responsive.
+        /// </summary>
+        private async void ExecuteImportRecord(object parameter)
         {
             if (SelectedRecordType == "Restore Database")
             {
@@ -81,10 +114,7 @@ namespace NexGenSales.ViewModels
 
             if (openFileDialog.ShowDialog() == true)
             {
-                // Create a temporary list to hold the structured file data
                 var tempFilesList = new List<ImportedFileSummary>();
-
-                // Map each selected file path with the currently selected Record Type
                 foreach (string path in openFileDialog.FileNames)
                 {
                     tempFilesList.Add(new ImportedFileSummary
@@ -94,87 +124,122 @@ namespace NexGenSales.ViewModels
                     });
                 }
 
-                // Assign the structured list to the main array property
                 ImportedFilesArray = tempFilesList;
 
-                string fileNames = string.Join("\n", ImportedFilesArray.Select(file => System.IO.Path.GetFileName(file.FilePath)));
+                // 1. Prepare UI for the asynchronous background task
+                IsImporting = true;
+                ImportProgress = 0;
+                ImportStatusMessage = $"Preparing to import {ImportedFilesArray.Count} file(s)...";
 
-                Console.WriteLine(
-                    $"Successfully structured {ImportedFilesArray.Count} file(s) as [{SelectedRecordType}] for processing\n File Names: {fileNames}");
+                // 2. Configure a Progress reporter to securely update the UI thread from the background
+                var progressReporter = new Progress<int>(percent =>
+                {
+                    ImportProgress = percent;
+                    ImportStatusMessage = $"Importing Records... {percent}% Completed";
+                });
 
-                // Pass the structured array to the processing method
-                ProcessAndImportRecords(ImportedFilesArray);
+                // 3. Execute the heavy lifting on a separate background thread
+                await Task.Run(() => ProcessAndImportRecords(ImportedFilesArray, progressReporter));
+
+                // 4. Reset UI tracking properties once the operation concludes
+                IsImporting = false;
+                ImportProgress = 0;
+                ImportStatusMessage = string.Empty;
             }
         }
 
 
+        // ==========================================
         // RECORD PROCESSING LOGIC
+        // ==========================================
 
-
-        private void ProcessAndImportRecords(List<ImportedFileSummary> filesToProcess)
+        /// <summary>
+        /// Processes the selected files on a background thread and updates progress.
+        /// </summary>
+        private void ProcessAndImportRecords(List<ImportedFileSummary> filesToProcess, IProgress<int> progress)
         {
             try
             {
-                // Extract pure arrays of paths filtered by their specific Record Types
                 string[] salesPaths = filesToProcess.Where(f => f.RecordType == "Sales Record").Select(f => f.FilePath).ToArray();
                 string[] expensesPaths = filesToProcess.Where(f => f.RecordType == "Expenses Record").Select(f => f.FilePath).ToArray();
 
-                // 1. Process Sales Records
+                // Process Sales Records
                 if (salesPaths.Length > 0)
                 {
                     var salesImportService = new ExcelFileImportService<SalesRecordField, SalesRecord>(
                         new ExcelParser(), RecordMappers.MapToSalesRecord);
 
-                    if (salesImportService.ImportFiles(salesPaths))
+                    if (salesImportService.ImportFiles(salesPaths, progress))
                     {
-                        new RecordMetadataRepository(new SqliteService()).InsertMany(ExtractRecordMetadata(null, salesImportService.Records));
+                        // Alert the user that the heavy database operation is starting
+                        Application.Current.Dispatcher.Invoke(() => {
+                            ImportStatusMessage = "Finalizing Database Integration... Please do not close.";
+                        });
 
+                        new RecordMetadataRepository(new SqliteService()).InsertMany(ExtractRecordMetadata(null, salesImportService.Records));
                         new SalesRecordRepository(new SqliteService()).InsertMany(salesImportService.Records);
-                        CustomMessageBoxView.Show("Sales records imported and saved successfully!", "Import Success", CustomMessageType.Success);
-                        OnImportSuccess?.Invoke();
+
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            // Push progress to 100% only after the database operation finishes
+                            ImportProgress = 100;
+                            ImportStatusMessage = "Completed!";
+                            CustomMessageBoxView.Show("Sales records imported and saved successfully!", "Import Success", CustomMessageType.Success);
+                            OnImportSuccess?.Invoke();
+                        });
                     }
                     else
                     {
-                        CustomMessageBoxView.Show("Validation failed for one or more Sales Record files.", "Validation Error", CustomMessageType.Error);
+                        Application.Current.Dispatcher.Invoke(() => {
+                            CustomMessageBoxView.Show("Validation failed for one or more Sales Record files.", "Validation Error", CustomMessageType.Error);
+                        });
                     }
                 }
 
-                // 2. Process Expenses Records
+                // Process Expenses Records
                 if (expensesPaths.Length > 0)
                 {
-
                     var expensesImportService = new ExcelFileImportService<ExpensesRecordField, ExpensesRecord>(
                         new ExcelParser(), RecordMappers.MapToExpensesRecord);
 
-                    if (expensesImportService.ImportFiles(expensesPaths))
+                    if (expensesImportService.ImportFiles(expensesPaths, progress))
                     {
+                        //Alert the user that the heavy database operation is starting
+                        Application.Current.Dispatcher.Invoke(() => {
+                            ImportStatusMessage = "Finalizing Database Integration... Please do not close.";
+                        });
 
                         new RecordMetadataRepository(new SqliteService()).InsertMany(ExtractRecordMetadata(expensesImportService.Records, null));
-
                         new ExpensesRecordRepository(new SqliteService()).InsertMany(expensesImportService.Records);
-                        CustomMessageBoxView.Show("Expenses records imported and saved successfully!", "Import Success", CustomMessageType.Success);
-                        OnImportSuccess?.Invoke();
+
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            //Push progress to 100% only after the database operation finishes
+                            ImportProgress = 100;
+                            ImportStatusMessage = "Completed!";
+                            CustomMessageBoxView.Show("Expenses records imported and saved successfully!", "Import Success", CustomMessageType.Success);
+                            OnImportSuccess?.Invoke();
+                        });
                     }
                     else
                     {
-                        CustomMessageBoxView.Show("Validation failed for one or more Expenses Record files.", "Validation Error", CustomMessageType.Error);
+                        Application.Current.Dispatcher.Invoke(() => {
+                            CustomMessageBoxView.Show("Validation failed for one or more Expenses Record files.", "Validation Error", CustomMessageType.Error);
+                        });
                     }
                 }
-
             }
             catch (Exception ex)
             {
-                CustomMessageBoxView.Show($"An unexpected error occurred:\n{ex.Message}", "Critical Error", CustomMessageType.Error);
+                Application.Current.Dispatcher.Invoke(() => {
+                    CustomMessageBoxView.Show($"An unexpected error occurred:\n{ex.Message}", "Critical Error", CustomMessageType.Error);
+                });
             }
         }
 
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        // ==========================================
+        // METADATA & RESTORE LOGIC
+        // ==========================================
 
         private static List<RecordMetadata> ExtractRecordMetadata(List<ExpensesRecord> expensesRecords, List<SalesRecord> salesRecords)
         {
@@ -183,10 +248,8 @@ namespace NexGenSales.ViewModels
             if (expensesRecords != null && expensesRecords.Count > 0)
             {
                 DateTime? lastRecordDate = null;
-
                 foreach (var record in expensesRecords)
                 {
-                    Console.WriteLine("[HomeViewModel] Extracting expenses record metadata");
                     if (lastRecordDate?.Date != record.Date_Recorded.Date)
                     {
                         RecordMetadata newRecordMetadata = new()
@@ -194,9 +257,8 @@ namespace NexGenSales.ViewModels
                             Record_Type = "Expenses Record",
                             Record_Date = record.Date_Recorded,
                             Upload_Date = DateTime.Now,
-                            Process_State = "RAW" // RAW = fresh uploaded data record, ANALYSED = analysed data
+                            Process_State = "RAW"
                         };
-
                         recordMetadataList.Add(newRecordMetadata);
                         lastRecordDate = record.Date_Recorded;
                     }
@@ -206,10 +268,8 @@ namespace NexGenSales.ViewModels
             if (salesRecords != null && salesRecords.Count > 0)
             {
                 DateTime? lastRecordDate = null;
-
                 foreach (var record in salesRecords)
                 {
-                    Console.WriteLine("[HomeViewModel] Extracting sales record metadata");
                     if (lastRecordDate?.Date != record.Date_Time.Date)
                     {
                         RecordMetadata newRecordMetadata = new()
@@ -217,26 +277,18 @@ namespace NexGenSales.ViewModels
                             Record_Type = "Sales Record",
                             Record_Date = record.Date_Time,
                             Upload_Date = DateTime.Now,
-                            Process_State = "RAW" // RAW = fresh uploaded data record, ANALYSED = analysed data
+                            Process_State = "RAW"
                         };
-
                         recordMetadataList.Add(newRecordMetadata);
-
                         lastRecordDate = record.Date_Time;
                     }
                 }
             }
-
             return recordMetadataList;
         }
 
-        /// <summary>
-        /// Handles the complete database restoration lifecycle using the custom UI message box. 
-        /// Includes file selection, safety confirmations, and conflict resolution.
-        /// </summary>
         private void ExecuteRestoreDatabase()
         {
-            // 1. Prompt user to select a valid SQLite database backup file
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
                 Filter = "SQLite Database Files (*.db)|*.db",
@@ -248,22 +300,18 @@ namespace NexGenSales.ViewModels
             {
                 string selectedBackupPath = openFileDialog.FileName;
 
-                // 2. Initial security confirmation using CustomMessageBoxView
                 bool confirmRestore = CustomMessageBoxView.Show(
                     "Are you sure you want to restore the database?\nThis action will overwrite the current system data.",
                     "Confirm Restore",
                     CustomMessageType.Warning,
                     CustomMessageButtons.YesNo);
 
-                // If user clicks 'No', abort the process
                 if (!confirmRestore) return;
 
                 string targetDbPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Database", "app.db");
 
-                // 3. Conflict Resolution: Check if an active database currently exists
                 if (System.IO.File.Exists(targetDbPath))
                 {
-                    // Ask user if they want to backup the existing database before overwriting
                     bool backupFirst = CustomMessageBoxView.Show(
                         "An active database currently exists.\n\nDo you want to create a BACKUP of the current database before overwriting it?\n\n(Click 'Yes' to Backup, 'No' to Force Overwrite)",
                         "Backup Current Data?",
@@ -272,7 +320,6 @@ namespace NexGenSales.ViewModels
 
                     if (backupFirst)
                     {
-                        // Execute Pre-Restore Backup procedure
                         SaveFileDialog saveFileDialog = new SaveFileDialog
                         {
                             Title = "Save Current Database Backup",
@@ -288,30 +335,23 @@ namespace NexGenSales.ViewModels
                         }
                         else
                         {
-                            // Gracefully abort restoration if the user cancels the safety backup dialog
                             CustomMessageBoxView.Show("Restore operation safely aborted. The pre-restore backup was cancelled.", "Operation Aborted", CustomMessageType.Info);
                             return;
                         }
                     }
-                    // If backupFirst is False, it naturally falls through to Force Restore
                 }
 
-                // 4. Execute the core restore operation
                 try
                 {
-                    // Ensure the target directory structure exists prior to file operations
                     string dbDirectory = System.IO.Path.GetDirectoryName(targetDbPath);
                     if (!System.IO.Directory.Exists(dbDirectory))
                     {
                         System.IO.Directory.CreateDirectory(dbDirectory);
                     }
 
-                    // Copy the selected backup and inherently rename it to 'app.db'
                     System.IO.File.Copy(selectedBackupPath, targetDbPath, overwrite: true);
 
                     CustomMessageBoxView.Show("Database successfully restored and integrated into the system!", "Restore Success", CustomMessageType.Success);
-
-                    // Trigger global event to refresh bound UI components across the application
                     OnImportSuccess?.Invoke();
                 }
                 catch (Exception ex)
@@ -321,5 +361,10 @@ namespace NexGenSales.ViewModels
             }
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

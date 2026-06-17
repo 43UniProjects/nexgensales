@@ -59,11 +59,14 @@ namespace NexGenSales.ViewModels
         // Executes the authentication process and handles window navigation
         private void ExecuteLogin(object parameter)
         {
+            //Remove leading and trailing spaces from the username safely
+            string cleanUsername = Username?.Trim();
+
             // Temporary hardcoded authentication logic for testing purposes
-            if (Username == "nexgen" && Password == "123")
+            
+            if (cleanUsername == "nexgen" && Password == "123")
             {
                 // Instantiate and display the Home dashboard upon successful login
-
                 new DatabaseMigrationService().EnsureMigrated();
                 HomeView homeWindow = new HomeView();
 
@@ -82,8 +85,6 @@ namespace NexGenSales.ViewModels
                 {
                     homeWindow.Show();
                 }
-
-                
             }
             else
             {
