@@ -133,4 +133,9 @@ class RecordMetadataRepository(SqliteService sqliteService) : Repository<RecordM
             Console.WriteLine($"[DB ERROR] Failed to update RecordMetadata state: {ex.Message}");
         }
     }
+
+    public override Task<List<RecordMetadata>> Update<TENUM, TVAL>(int recordID, TENUM fieldName, TVAL value)
+    {
+        throw new NotImplementedException();
+    }
 }

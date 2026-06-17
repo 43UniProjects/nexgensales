@@ -152,7 +152,7 @@ namespace NexGenSales.ViewModels
                     // 1. Retrieve expense data from the database for the selected date range
                     var sqliteService = new SqliteService();
                     var expenseRepo = new ExpensesRecordRepository(sqliteService);
-                    var expensesData = await expenseRepo.GetExpensesByDateRangeAsync(startDate, endDate);
+                    var expensesData = await expenseRepo.GetExpensesByDateRange(startDate, endDate);
 
                     // Validate data availability before proceeding
                     if (expensesData == null || expensesData.Count == 0)

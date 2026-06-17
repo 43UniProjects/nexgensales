@@ -106,7 +106,10 @@ class ExpensesRecordRepository(SqliteService sqliteService) : Repository<Expense
     public override Task<List<ExpensesRecord>> Update<TENUM, TVAL>(int recordID, TENUM fieldName, TVAL value)
     {
         throw new NotImplementedException();
-    public async Task<List<ExpensesRecord>> GetExpensesByDateRangeAsync(DateTime startDate, DateTime endDate)
+
+    }
+
+    public async Task<List<ExpensesRecord>> GetExpensesByDateRange(DateTime startDate, DateTime endDate)
     {
         var expenseRecords = new List<ExpensesRecord>();
 
