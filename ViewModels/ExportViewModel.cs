@@ -162,7 +162,15 @@ namespace NexGenSales.ViewModels
         {
             try
             {
-                string sourceDbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Database", "app.db");
+                string sourceDbPath;
+
+#if DEBUG
+                // DEVELOPMENT: Look in the main project folder (3 levels up from bin/Debug/...)
+                sourceDbPath = Path.Combine(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..")), "Database", "app.db");
+#else
+                // PRODUCTION: Look right next to the compiled executable
+                sourceDbPath = Path.Combine(AppContext.BaseDirectory, "Database", "app.db");
+#endif
 
                 if (!File.Exists(sourceDbPath))
                 {
@@ -208,7 +216,15 @@ namespace NexGenSales.ViewModels
 
             try
             {
-                string sourceReportPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Reports", SelectedReport.FileName);
+                string sourceReportPath;
+
+#if DEBUG
+                // DEVELOPMENT: Look in the main project folder's 'Reports' directory
+                sourceReportPath = Path.Combine(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..")), "Reports", SelectedReport.FileName);
+#else
+                // PRODUCTION: Look in the 'Reports' directory right next to the compiled executable
+                sourceReportPath = Path.Combine(AppContext.BaseDirectory, "Reports", SelectedReport.FileName);
+#endif
 
                 if (!File.Exists(sourceReportPath))
                 {
