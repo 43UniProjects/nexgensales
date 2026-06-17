@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         Title="Predictions Dashboard" Height="600" Width="800"
-        WindowStartupLocation="CenterOwner"
+        WindowStartupLocation="CenterScreen"
         WindowStyle="None" AllowsTransparency="True" Background="Transparent" FontFamily="Segoe UI">
 
     <Border Background="#0B0F13" CornerRadius="12" BorderBrush="#2D3A46" BorderThickness="1">

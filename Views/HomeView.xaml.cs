@@ -64,9 +64,6 @@ namespace NexGenSales.Views
         {
             
             ProcessView processWindow = new ProcessView();
-            processWindow.WindowStartupLocation = WindowStartupLocation.Manual;
-            processWindow.Left = this.Left;
-            processWindow.Top = this.Top;
 
             processWindow.WindowState = this.WindowState;
 
@@ -88,9 +85,6 @@ namespace NexGenSales.Views
             {
                 // If click yes go to login page
                 LoginView loginWindow = new LoginView();
-                loginWindow.WindowStartupLocation = WindowStartupLocation.Manual;
-                loginWindow.Left = this.Left;
-                loginWindow.Top = this.Top;
 
                 loginWindow.WindowState = this.WindowState;
 
