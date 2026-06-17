@@ -1,10 +1,12 @@
 using Microsoft.Data.Sqlite;
+using NexGenSales.Core;
 using NexGenSales.Models;
+using NexGenSales.Models.Enums;
 
 namespace NexGenSales.Services.Data.Repository;
 
 
-class RecordMetadataRepository(SqliteService sqliteService) : Repository<RecordMetadata>(sqliteService)
+public class RecordMetadataRepository(SqliteService sqliteService) : Repository<RecordMetadata>(sqliteService)
 {
 
     public override void InitializeTable()
@@ -105,37 +107,28 @@ class RecordMetadataRepository(SqliteService sqliteService) : Repository<RecordM
         }
     }
 
-    
-    public async Task UpdateRecordStateAsync(string recordType, DateTime startDate, DateTime endDate)
+    public override async Task<List<RecordMetadata>> Update<TENUM, TVAL>(SqlTransactionQueue queue, int recordID, TENUM fieldName, TVAL value)
     {
-        string sql = @"
+        if (fieldName is not RecordMetadataField metadataField)
+        {
+            throw new ArgumentException($"Invalid enum type provided to Metadata update. Expected {nameof(RecordMetadataField)}.");
+        }
+
+        string columnName = metadataField.ToColumnName();
+
+        string sql = $@"
             UPDATE RecordMetadata 
-            SET Process_State = 'ANALYZED' 
-            WHERE Record_Type = @Record_Type 
-            AND Process_State = 'RAW'
-            AND date(Record_Date) BETWEEN date(@StartDate) AND date(@EndDate)";
+            SET {columnName} = @Value 
+            WHERE Record_ID = @RecordID
+        ";
 
-        using var connection = sqliteService.CreateConnection();
-        await connection.OpenAsync();
+        var parameters = new Dictionary<string, object>{
+                { "@RecordID", recordID },
+                { "@Value", value != null ? value : DBNull.Value }
+        };
 
-        using var command = new SqliteCommand(sql, connection);
-        command.Parameters.AddWithValue("@Record_Type", recordType);
-        // SQLite date formatting
-        command.Parameters.AddWithValue("@StartDate", startDate.ToString("yyyy-MM-dd"));
-        command.Parameters.AddWithValue("@EndDate", endDate.ToString("yyyy-MM-dd"));
+        queue.Enqueue(sql, parameters);
 
-        try
-        {
-            await command.ExecuteNonQueryAsync();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"[DB ERROR] Failed to update RecordMetadata state: {ex.Message}");
-        }
-    }
-
-    public override Task<List<RecordMetadata>> Update<TENUM, TVAL>(int recordID, TENUM fieldName, TVAL value)
-    {
-        throw new NotImplementedException();
+        return await GetAll();
     }
 }
