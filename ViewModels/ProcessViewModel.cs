@@ -163,7 +163,8 @@ namespace NexGenSales.ViewModels
                     // 1. Retrieve expense data from the database for the selected date range
                     var sqliteService = new SqliteService();
                     var expenseRepo = new ExpensesRecordRepository(sqliteService);
-                    var expensesData = await expenseRepo.GetExpensesByDateRangeAsync(startDate, endDate);
+                    var expenseService = new ExpensesService(expenseRepo);
+                    var expensesData = await expenseService.GetExpensesByDateRange(startDate, endDate);
 
                     // Validate data availability before proceeding
                     if (expensesData == null || expensesData.Count == 0)
@@ -182,7 +183,8 @@ namespace NexGenSales.ViewModels
                     dashboard.ShowDialog();
 
                     // 4. Finalize process: Update database state and refresh UI grid
-                    await _metadataRepo.UpdateRecordStateAsync(dbRecordType, startDate, endDate);
+                    var metadataService = new MetadataService(_metadataRepo, new SqliteService());
+                    await metadataService.MarkRecordsAsAnalyzedAsync(dbRecordType, startDate, endDate);
                     await LoadTableDataAsync();
                 }
                 catch (Exception ex)
@@ -213,7 +215,8 @@ namespace NexGenSales.ViewModels
                     dashboard.ShowDialog();
 
                     // 4. Finalize process: Update database state and refresh UI grid
-                    await _metadataRepo.UpdateRecordStateAsync(dbRecordType, startDate, endDate);
+                    var metadataService = new MetadataService(_metadataRepo, new SqliteService());
+                    await metadataService.MarkRecordsAsAnalyzedAsync(dbRecordType, startDate, endDate);
                     await LoadTableDataAsync();
                 }
                 catch (Exception ex)

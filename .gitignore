@@ -487,6 +487,8 @@ $RECYCLE.BIN/
 *.swp
 
 Database/
+**/*.pdf
+**/*.xlsx
 
 nexgensales.sln
 *.xlsx#

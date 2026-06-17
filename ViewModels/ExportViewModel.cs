@@ -11,8 +11,6 @@ using NexGenSales.UserComponents;
 
 namespace NexGenSales.ViewModels
 {
-
-
     // Updated Model for Reports
     public class ReportItem
     {
@@ -26,7 +24,6 @@ namespace NexGenSales.ViewModels
             return IsHeader ? FileName : DisplayName;
         }
     }
-
 
     public class ExportViewModel : INotifyPropertyChanged
     {
@@ -69,13 +66,9 @@ namespace NexGenSales.ViewModels
                 string nameWithoutExt = Path.GetFileNameWithoutExtension(fileName);
                 string[] parts = nameWithoutExt.Split('_');
 
-
                 if (parts.Length >= 4)
                 {
-
                     string datePart = parts[2].Replace("-", " ");
-
-
                     string[] timeTokens = parts[3].Split('-');
                     string timePart = timeTokens.Length == 3 ? $"{timeTokens[0]}:{timeTokens[1]} {timeTokens[2]}" : parts[3];
 
@@ -84,13 +77,11 @@ namespace NexGenSales.ViewModels
             }
             catch
             {
-
+                // Silently fallback to original filename if parsing fails
             }
 
             return fileName;
         }
-
-
 
         /// <summary>
         /// Scans the local 'Reports' directory for generated PDF files and populates the UI dropdown.
@@ -103,12 +94,12 @@ namespace NexGenSales.ViewModels
 
 #if DEBUG
             // DEVELOPMENT: Point to the actual project folder (3 levels up from bin/Debug/...)
-            reportsDirectory = Path.Combine(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..")), "Reports");
+            reportsDirectory = Path.Combine(GetProjectRootDirectory(), "Reports");
 #else
             // PRODUCTION: Point to the compiled executable's folder
             reportsDirectory = Path.Combine(AppContext.BaseDirectory, "Reports");
 #endif
-            // Safety check: Ensure the folder actually exists before your app tries to save a CSV!
+            // Safety check: Ensure the folder actually exists before your app tries to scan!
             Directory.CreateDirectory(reportsDirectory);
 
             if (Directory.Exists(reportsDirectory))
@@ -151,10 +142,6 @@ namespace NexGenSales.ViewModels
             }
         }
 
-
-
-
-
         /// <summary>
         /// Prompts the user to select a save location and creates a backup copy of the SQLite database.
         /// </summary>
@@ -162,7 +149,15 @@ namespace NexGenSales.ViewModels
         {
             try
             {
-                string sourceDbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Database", "app.db");
+                string sourceDbPath;
+
+#if DEBUG
+                // DEVELOPMENT: Look in the main project folder
+                sourceDbPath = Path.Combine(GetProjectRootDirectory(), "Database", "app.db");
+#else
+                // PRODUCTION: Look right next to the compiled executable
+                sourceDbPath = Path.Combine(AppContext.BaseDirectory, "Database", "app.db");
+#endif
 
                 if (!File.Exists(sourceDbPath))
                 {
@@ -208,7 +203,15 @@ namespace NexGenSales.ViewModels
 
             try
             {
-                string sourceReportPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Reports", SelectedReport.FileName);
+                string sourceReportPath;
+
+#if DEBUG
+                // DEVELOPMENT: Look in the main project folder's 'Reports' directory
+                sourceReportPath = Path.Combine(GetProjectRootDirectory(), "Reports", SelectedReport.FileName);
+#else
+                // PRODUCTION: Look in the 'Reports' directory right next to the compiled executable
+                sourceReportPath = Path.Combine(AppContext.BaseDirectory, "Reports", SelectedReport.FileName);
+#endif
 
                 if (!File.Exists(sourceReportPath))
                 {
@@ -240,5 +243,25 @@ namespace NexGenSales.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        /// <summary>
+        /// Bulletproof method to find the actual project folder during Debug mode,
+        /// regardless of how deep the bin/Debug/x64/netX.X folder structure is.
+        /// </summary>
+        private string GetProjectRootDirectory()
+        {
+            DirectoryInfo directory = new DirectoryInfo(AppContext.BaseDirectory);
+
+            // Keep climbing up the parent directories until we see the .csproj file
+            while (directory != null && !directory.GetFiles("*.csproj").Any())
+            {
+                directory = directory.Parent;
+            }
+
+            // If we found the project root, return it. Otherwise, fallback to the base directory.
+            return directory?.FullName ?? AppContext.BaseDirectory;
+        }
     }
+
+
 }

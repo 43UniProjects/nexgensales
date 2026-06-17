@@ -1,6 +1,7 @@
 using Microsoft.Data.Sqlite;
+using NexGenSales.Core;
 using NexGenSales.Models;
-
+using NexGenSales.Models.Enums;
 namespace NexGenSales.Services.Data.Repository;
 
 class SalesRecordRepository(SqliteService sqliteService) : Repository<SalesRecord>(sqliteService)
@@ -66,7 +67,6 @@ class SalesRecordRepository(SqliteService sqliteService) : Repository<SalesRecor
 
     }
 
-
     public override bool Insert(SalesRecord newRecord, SqliteConnection connection)
     {
         const string query = @"
@@ -123,5 +123,31 @@ class SalesRecordRepository(SqliteService sqliteService) : Repository<SalesRecor
                 throw new InvalidOperationException(err);
             }
         }
+    }
+
+
+    public override async Task<List<SalesRecord>> Update<TENUM, TVAL>(SqlTransactionQueue queue, int recordID, TENUM fieldName, TVAL value)
+    {
+        if (fieldName is not SalesRecordField salesField)
+        {
+            throw new ArgumentException($"Invalid enum type provided to Sales update. Expected {nameof(SalesRecordField)}.");
+        }
+
+        string columnName = salesField.ToColumnName();
+
+        string sql = $@"
+            UPDATE SalesRecord 
+            SET {columnName} = @Value 
+            WHERE Transaction_ID = @RecordID
+        ";
+
+        var parameters = new Dictionary<string, object>{
+                { "@RecordID", recordID },
+                { "@Value", value != null ? value : DBNull.Value }
+        };
+
+        queue.Enqueue(sql, parameters);
+
+        return await GetAll();
     }
 }

@@ -1,9 +1,11 @@
 using Microsoft.Data.Sqlite;
+using NexGenSales.Core;
 using NexGenSales.Models;
+using NexGenSales.Models.Enums;
 
 namespace NexGenSales.Services.Data.Repository;
 
-class ExpensesRecordRepository(SqliteService sqliteService) : Repository<ExpensesRecord>(sqliteService)
+public class ExpensesRecordRepository(SqliteService sqliteService) : Repository<ExpensesRecord>(sqliteService)
 {
     public override void InitializeTable()
     {
@@ -103,38 +105,65 @@ class ExpensesRecordRepository(SqliteService sqliteService) : Repository<Expense
         }
     }
 
-    public async Task<List<ExpensesRecord>> GetExpensesByDateRangeAsync(DateTime startDate, DateTime endDate)
+    public async Task<List<ExpensesRecord>> GetMany(string sql, Dictionary<string, object>? parameters = null)
     {
         var expenseRecords = new List<ExpensesRecord>();
 
         using var connection = sqliteService.CreateConnection();
         await connection.OpenAsync();
 
-        string sql = @"
-            SELECT * FROM ExpensesRecord 
-            WHERE Date_Recorded >= @StartDate AND Date_Recorded <= @EndDate;";
+        using var command = new SqliteCommand(sql, connection);
 
-        using var command = new Microsoft.Data.Sqlite.SqliteCommand(sql, connection);
-        command.Parameters.AddWithValue("@StartDate", startDate.ToString("yyyy-MM-dd HH:mm:ss"));
-        command.Parameters.AddWithValue("@EndDate", endDate.ToString("yyyy-MM-dd HH:mm:ss"));
+        // Conditionally attach parameters if any were provided
+        if (parameters != null)
+        {
+            foreach (var param in parameters)
+            {
+                command.Parameters.AddWithValue(param.Key, param.Value ?? DBNull.Value);
+            }
+        }
 
         using var reader = await command.ExecuteReaderAsync();
 
+        // Map the database rows to C# objects (Only happens in ONE place now!)
         while (await reader.ReadAsync())
         {
-            var model = new ExpensesRecord
-            { 
+            expenseRecords.Add(new ExpensesRecord
+            {
                 Expense_ID = reader.GetInt32(reader.GetOrdinal("Transaction_ID")),
                 Date_Recorded = reader.GetDateTime(reader.GetOrdinal("Date_Recorded")),
                 Expense_Category = reader.IsDBNull(reader.GetOrdinal("Expense_Category")) ? null : reader.GetString(reader.GetOrdinal("Expense_Category")),
                 Specific_Type = reader.IsDBNull(reader.GetOrdinal("Specific_Type")) ? null : reader.GetString(reader.GetOrdinal("Specific_Type")),
                 Amount = reader.GetDouble(reader.GetOrdinal("Amount")),
                 Asset_ID = reader.IsDBNull(reader.GetOrdinal("Asset_ID")) ? null : reader.GetString(reader.GetOrdinal("Asset_ID")),
-            };
-
-            expenseRecords.Add(model);
+            });
         }
 
         return expenseRecords;
+    }
+
+    public override async Task<List<ExpensesRecord>> Update<TENUM, TVAL>(SqlTransactionQueue queue, int recordID, TENUM fieldName, TVAL value)
+    {
+        if (fieldName is not ExpensesRecordField expenseField)
+        {
+            throw new ArgumentException($"Invalid enum type provided to Expenses update. Expected {nameof(ExpensesRecordField)}.");
+        }
+
+        string columnName = expenseField.ToColumnName();
+
+        string sql = $@"
+            UPDATE ExpensesRecord 
+            SET {columnName} = @Value 
+            WHERE Expense_ID = @RecordID
+        ";
+
+        var parameters = new Dictionary<string, object>{
+                { "@RecordID", recordID },
+                { "@Value", value != null ? value : DBNull.Value }
+        };
+
+        queue.Enqueue(sql, parameters);
+
+        return await GetAll();
     }
 }

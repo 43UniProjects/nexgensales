@@ -13,8 +13,6 @@ namespace NexGenSales.Views
 {
     public partial class ProcessView : Window
     {
-        private readonly RecordMetadataRepository _metadataRepo;
-
         public ProcessView()
         {
             InitializeComponent();
