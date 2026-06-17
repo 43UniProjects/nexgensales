@@ -102,4 +102,9 @@ class ExpensesRecordRepository(SqliteService sqliteService) : Repository<Expense
             }
         }
     }
+
+    public override Task<List<ExpensesRecord>> Update<TENUM, TVAL>(int recordID, TENUM fieldName, TVAL value)
+    {
+        throw new NotImplementedException();
+    }
 }
