@@ -11,8 +11,6 @@ using NexGenSales.UserComponents;
 
 namespace NexGenSales.ViewModels
 {
-
-
     // Updated Model for Reports
     public class ReportItem
     {
@@ -26,7 +24,6 @@ namespace NexGenSales.ViewModels
             return IsHeader ? FileName : DisplayName;
         }
     }
-
 
     public class ExportViewModel : INotifyPropertyChanged
     {
@@ -69,13 +66,9 @@ namespace NexGenSales.ViewModels
                 string nameWithoutExt = Path.GetFileNameWithoutExtension(fileName);
                 string[] parts = nameWithoutExt.Split('_');
 
-
                 if (parts.Length >= 4)
                 {
-
                     string datePart = parts[2].Replace("-", " ");
-
-
                     string[] timeTokens = parts[3].Split('-');
                     string timePart = timeTokens.Length == 3 ? $"{timeTokens[0]}:{timeTokens[1]} {timeTokens[2]}" : parts[3];
 
@@ -84,13 +77,11 @@ namespace NexGenSales.ViewModels
             }
             catch
             {
-
+                // Silently fallback to original filename if parsing fails
             }
 
             return fileName;
         }
-
-
 
         /// <summary>
         /// Scans the local 'Reports' directory for generated PDF files and populates the UI dropdown.
@@ -108,7 +99,7 @@ namespace NexGenSales.ViewModels
             // PRODUCTION: Point to the compiled executable's folder
             reportsDirectory = Path.Combine(AppContext.BaseDirectory, "Reports");
 #endif
-            // Safety check: Ensure the folder actually exists before your app tries to save a CSV!
+            // Safety check: Ensure the folder actually exists before your app tries to scan!
             Directory.CreateDirectory(reportsDirectory);
 
             if (Directory.Exists(reportsDirectory))
@@ -151,10 +142,6 @@ namespace NexGenSales.ViewModels
             }
         }
 
-
-
-
-
         /// <summary>
         /// Prompts the user to select a save location and creates a backup copy of the SQLite database.
         /// </summary>
@@ -165,7 +152,7 @@ namespace NexGenSales.ViewModels
                 string sourceDbPath;
 
 #if DEBUG
-                // DEVELOPMENT: Look in the main project folder (3 levels up from bin/Debug/...)
+                // DEVELOPMENT: Look in the main project folder
                 sourceDbPath = Path.Combine(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..")), "Database", "app.db");
 #else
                 // PRODUCTION: Look right next to the compiled executable
