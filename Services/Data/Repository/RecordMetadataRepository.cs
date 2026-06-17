@@ -104,4 +104,33 @@ class RecordMetadataRepository(SqliteService sqliteService) : Repository<RecordM
             }
         }
     }
+
+    
+    public async Task UpdateRecordStateAsync(string recordType, DateTime startDate, DateTime endDate)
+    {
+        string sql = @"
+            UPDATE RecordMetadata 
+            SET Process_State = 'ANALYZED' 
+            WHERE Record_Type = @Record_Type 
+            AND Process_State = 'RAW'
+            AND date(Record_Date) BETWEEN date(@StartDate) AND date(@EndDate)";
+
+        using var connection = sqliteService.CreateConnection();
+        await connection.OpenAsync();
+
+        using var command = new SqliteCommand(sql, connection);
+        command.Parameters.AddWithValue("@Record_Type", recordType);
+        // SQLite date formatting
+        command.Parameters.AddWithValue("@StartDate", startDate.ToString("yyyy-MM-dd"));
+        command.Parameters.AddWithValue("@EndDate", endDate.ToString("yyyy-MM-dd"));
+
+        try
+        {
+            await command.ExecuteNonQueryAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[DB ERROR] Failed to update RecordMetadata state: {ex.Message}");
+        }
+    }
 }

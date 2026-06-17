@@ -3,7 +3,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Linq;
 
-namespace NexGenSales.Views
+namespace NexGenSales.UserComponents
 {
     public enum CustomMessageType
     {
@@ -31,7 +31,7 @@ namespace NexGenSales.Views
             TxtMessage.Text = message;
             TxtTitle.Text = title;
 
-            // Configure Button Visibility and Text
+            // Configure Button Visibility and Text based on the required action
             if (buttons == CustomMessageButtons.YesNo)
             {
                 BtnOk.Content = "Yes";
@@ -43,29 +43,41 @@ namespace NexGenSales.Views
                 BtnNo.Visibility = Visibility.Collapsed;
             }
 
-            // Configure Colors and Icons
+            // Configure Colors and Scalable Text Icons dynamically based on the message type
             switch (type)
             {
                 case CustomMessageType.Success:
-                    TxtIcon.Text = "✅";
-                    TxtTitle.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#00C896"));
-                    BtnOk.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#00C896"));
+                    TxtIcon.Text = "✔"; // Standard text symbol (responds to color changes)
+                    var successBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#00C896"));
+                    TxtTitle.Foreground = successBrush;
+                    TxtIcon.Foreground = successBrush; // Apply color to the icon
+                    BtnOk.Background = successBrush;
                     break;
+
                 case CustomMessageType.Error:
-                    TxtIcon.Text = "❌";
-                    TxtTitle.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E81123"));
-                    BtnOk.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E81123"));
+                    TxtIcon.Text = "✖";
+                    var errorBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E81123"));
+                    TxtTitle.Foreground = errorBrush;
+                    TxtIcon.Foreground = errorBrush;
+                    BtnOk.Background = errorBrush;
                     BtnOk.Foreground = new SolidColorBrush(Colors.White);
                     break;
+
                 case CustomMessageType.Warning:
-                    TxtIcon.Text = "⚠️";
-                    TxtTitle.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F8C400"));
-                    BtnOk.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F8C400"));
+                    TxtIcon.Text = "⚠";
+                    var warningBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F8C400"));
+                    TxtTitle.Foreground = warningBrush;
+                    TxtIcon.Foreground = warningBrush;
+                    BtnOk.Background = warningBrush;
                     break;
+
                 case CustomMessageType.Info:
                 default:
-                    TxtIcon.Text = "ℹ️";
-                    TxtTitle.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#00C896"));
+                    TxtIcon.Text = "ℹ";
+                    // Applied a distinct professional blue color for the Info state
+                    var infoBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0078D7"));
+                    TxtTitle.Foreground = infoBrush;
+                    TxtIcon.Foreground = infoBrush;
                     BtnOk.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1C2127"));
                     BtnOk.Foreground = new SolidColorBrush(Colors.White);
                     break;

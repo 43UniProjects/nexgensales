@@ -6,7 +6,7 @@
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
-    <NoWarn>$(NoWarn);NU1510;NU1701</NoWarn>
+    <NoWarn>$(NoWarn);NU1510;NU1701;CS8632</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,5 +32,20 @@
     <PackageReference Include="QuestPDF" Version="2026.5.0" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="10.0.8" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Database\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Database\app.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <Target Name="Husky" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug'">
+    <Exec Command="dotnet tool restore" StandardOutputImportance="Low" StandardErrorImportance="High" />
+    <Exec Command="dotnet husky install" StandardOutputImportance="Low" StandardErrorImportance="High" />
+  </Target>
 
 </Project>

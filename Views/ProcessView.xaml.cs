@@ -1,25 +1,33 @@
+using System;
 using System.Windows;
 using System.Windows.Input;
+using System.Threading.Tasks;
 using NexGenSales.Core;
 using NexGenSales.Services;
+using NexGenSales.Services.Data.Repository;
 using NexGenSales.ViewModels;
+using NexGenSales.UserComponents;
+
 
 namespace NexGenSales.Views
 {
     public partial class ProcessView : Window
     {
+        private readonly RecordMetadataRepository _metadataRepo;
+
         public ProcessView()
         {
             InitializeComponent();
+
+            DataContext = new ProcessViewModel();
         }
 
-        // Window Dragging Logic
+
+
+        // Enable dragging the window by holding the left mouse button
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == MouseButton.Left)
-            {
-                this.DragMove();
-            }
+            if (e.ChangedButton == MouseButton.Left) DragMove();
         }
 
         // Minimize Button Logic
@@ -41,6 +49,7 @@ namespace NexGenSales.Views
             }
         }
 
+        // Navigate to the Home window
         private void BtnHome_Click(object sender, RoutedEventArgs e)
         {
             HomeView homeWindow = new HomeView();
@@ -53,6 +62,17 @@ namespace NexGenSales.Views
             this.Close();
         }
 
+        // Open the Prediction Dashboard as a dialog
+        private void BtnPrediction_Click(object sender, RoutedEventArgs e)
+        {
+            PredictionView predictionWindow = new PredictionView
+            {
+                Owner = this
+            };
+            predictionWindow.ShowDialog();
+        }
+
+        // Navigate to the Export window
         private void BtnExports_Click(object sender, RoutedEventArgs e)
         {
             ExportView exportWindow = new ExportView();
@@ -69,25 +89,6 @@ namespace NexGenSales.Views
         {
             this.Close();
         }
-
-        /// <summary>
-        /// Opens the Analytics Dashboard as a modal dialog.
-        /// Report type is always "Sales" — a separate Expenses dashboard will handle expenses.
-        /// The ProcessView is blocked (ShowDialog) until the dashboard is closed.
-        /// </summary>
-        private void BtnRunAnalysis_Click(object sender, RoutedEventArgs e)
-        {
-            var service   = new SalesAnalysisService(new MockDataRepository());
-            var vm        = new AnalyticsDashboardViewModel(service, "Sales");
-            var dashboard = new AnalyticsDashboardView
-            {
-                DataContext = vm,
-                Owner       = this
-            };
-
-            // ShowDialog() gives the dashboard exclusive focus and blocks
-            // all interaction with this window until the dashboard is closed.
-            dashboard.ShowDialog();
-        }
+        
     }
 }

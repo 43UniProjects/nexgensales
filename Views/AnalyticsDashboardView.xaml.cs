@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 using NexGenSales.ViewModels;
+using NexGenSales.UserComponents;
+
 
 namespace NexGenSales.Views
 {
@@ -39,40 +41,172 @@ namespace NexGenSales.Views
         }
 
         // ── PDF generation ────────────────────────────────────────────────────
+
         /// <summary>
-        /// Collects all named chart controls, passes them to the ViewModel for PDF generation.
-        /// Using code-behind here is intentional — the View owns the visual references.
+        /// Adjusts the visual theme of the active charts for PDF generation.
+        /// Temporarily switches foreground colors to black for printing, then reverts them.
         /// </summary>
-        private void GenerateReport_Click(object sender, RoutedEventArgs e)
+        private void SetTheme(bool isPrint)
+        {
+            var brush = isPrint ? new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Black) : new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.White);
+            var axisBrush = isPrint ? brush : new System.Windows.Media.SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#788896"));
+
+            Action<LiveCharts.Wpf.CartesianChart> updateAxes = (chart) =>
+            {
+                foreach (var axis in chart.AxisX)
+                {
+                    axis.Foreground = axisBrush;
+                    bool labels = axis.ShowLabels;
+                    axis.ShowLabels = !labels;
+                    axis.ShowLabels = labels;
+                    string title = axis.Title;
+                    axis.Title = null;
+                    axis.Title = title;
+                }
+                foreach (var axis in chart.AxisY)
+                {
+                    axis.Foreground = axisBrush;
+                    bool labels = axis.ShowLabels;
+                    axis.ShowLabels = !labels;
+                    axis.ShowLabels = labels;
+                    string title = axis.Title;
+                    axis.Title = null;
+                    axis.Title = title;
+                }
+            };
+
+            // Determine which dashboard is currently visible to the user
+            bool isSalesActive = SupplierChart.IsVisible;
+
+            if (isSalesActive)
+            {
+                // Apply print theme to Sales charts
+                SupplierChart.Foreground = brush;
+                VelocityChart.Foreground = brush;
+                RevenueChart.Foreground = brush;
+                TrendChart.Foreground = brush;
+                DiscountChart.Foreground = brush;
+
+                updateAxes(SupplierChart);
+                updateAxes(VelocityChart);
+                updateAxes(TrendChart);
+                updateAxes(DiscountChart);
+
+                SupplierChart.DisableAnimations = isPrint;
+                VelocityChart.DisableAnimations = isPrint;
+                RevenueChart.DisableAnimations = isPrint;
+                TrendChart.DisableAnimations = isPrint;
+                DiscountChart.DisableAnimations = isPrint;
+
+                SupplierChart.Update(true, true);
+                VelocityChart.Update(true, true);
+                RevenueChart.Update(true, true);
+                TrendChart.Update(true, true);
+                DiscountChart.Update(true, true);
+            }
+            else
+            {
+                // Apply print theme to Expenses charts
+                ExpenseCategoryChart.Foreground = brush;
+                ExpenseTrendChart.Foreground = brush;
+                ExpenseSpecificChart.Foreground = brush;
+                AssetMaintenanceChart.Foreground = brush;
+
+                updateAxes(ExpenseTrendChart);
+                updateAxes(ExpenseSpecificChart);
+                updateAxes(AssetMaintenanceChart);
+
+                ExpenseCategoryChart.DisableAnimations = isPrint;
+                ExpenseTrendChart.DisableAnimations = isPrint;
+                ExpenseSpecificChart.DisableAnimations = isPrint;
+                AssetMaintenanceChart.DisableAnimations = isPrint;
+
+                ExpenseCategoryChart.Update(true, true);
+                ExpenseTrendChart.Update(true, true);
+                ExpenseSpecificChart.Update(true, true);
+                AssetMaintenanceChart.Update(true, true);
+            }
+
+            if (DataContext is AnalyticsDashboardViewModel vm)
+            {
+                vm.SetPrintMode(isPrint);
+            }
+
+            // Force layout update and flush rendering queue
+            this.UpdateLayout();
+
+            System.Windows.Threading.Dispatcher.CurrentDispatcher.Invoke(
+                System.Windows.Threading.DispatcherPriority.Render, new Action(delegate { }));
+        }
+
+        /// <summary>
+        /// Handles the report generation process by identifying the active view, 
+        /// packaging the relevant charts, and delegating file creation to the ViewModel.
+        /// </summary>
+        private async void GenerateReport_Click(object sender, RoutedEventArgs e)
         {
             if (DataContext is not AnalyticsDashboardViewModel vm) return;
 
-            var charts = new List<(string Title, FrameworkElement Chart)>
+            SetTheme(true);
+
+            // Yield to the UI thread so LiveCharts can fully render the black text
+            await System.Threading.Tasks.Task.Delay(400);
+
+            List<(string Title, FrameworkElement Chart)> charts;
+
+            // Increase SupplierChart height for better PDF readability
+            double originalSupplierHeight = SupplierChart.Height;
+            SupplierChart.Height = 500;
+            SupplierChart.UpdateLayout();
+
+            // Route execution based on active dashboard visibility
+            if (SupplierChart.IsVisible)
             {
-                ("Supplier Profitability",            SupplierChart),
-                ("Item Velocity — Volume Ranking",    VelocityChart),
-                ("Revenue Contribution by Item",      RevenueChart),
-                ("Revenue Trend Analysis — 7 Days",   TrendChart),
-                ("Discount Effectiveness",            DiscountChart)
-            };
+                charts = new List<(string Title, FrameworkElement Chart)>
+                {
+                    ("Supplier Profitability",            SupplierChart),
+                    ("Item Velocity — Volume Ranking",    VelocityChart),
+                    ("Revenue Contribution by Item",      RevenueChart),
+                    ("Revenue Trend Analysis — 7 Days",   TrendChart),
+                    ("Discount Effectiveness",            DiscountChart)
+                };
+            }
+            else
+            {
+                charts = new List<(string Title, FrameworkElement Chart)>
+                {
+                    ("Expense Category Breakdown",                  ExpenseCategoryChartContainer),
+                    ("Monthly Expense Trend",                       ExpenseTrendChart),
+                    ("Highest Specific Expenses",                   ExpenseSpecificChart),
+                    ("Asset Depreciation & Maintenance Costs",      AssetMaintenanceChart)
+                };
+            }
 
             try
             {
                 string fullPath = vm.GenerateReport(charts);
-                MessageBox.Show(
+                CustomMessageBoxView.Show(
                     $"Report successfully saved to:\n{fullPath}",
                     "✓ Report Generated",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Information);
+                    CustomMessageType.Success);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
+                CustomMessageBoxView.Show(
                     $"Failed to generate report:\n{ex.Message}",
                     "Error",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                    CustomMessageType.Error);
+            }
+            finally
+            {
+                // Restore original height
+                SupplierChart.Height = originalSupplierHeight;
+                SupplierChart.UpdateLayout();
+
+                // Ensure UI resets to dark mode regardless of success or failure
+                SetTheme(false);
             }
         }
     }
 }
+

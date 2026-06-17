@@ -32,8 +32,8 @@ namespace NexGenSales.Core
 
             // Ensure the output directory exists before the caller tries to write
             Directory.CreateDirectory(OutputDirectory);
-
-            return Path.Combine(OutputDirectory, fileName);
+       
+            return Path.GetFullPath(Path.Combine(OutputDirectory, fileName));
         }
     }
 }
