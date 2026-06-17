@@ -22,6 +22,8 @@ public abstract class Repository<TModel>
 
     public abstract Task<List<TModel>> Get(string sql);
 
+    public abstract Task<List<TModel>> Update<TENUM, TVAL>(int recordID, TENUM fieldName, TVAL value);
+
     protected void ExecuteNonQuery(string sql)
     {
         using var connection = sqliteService.CreateConnection();
