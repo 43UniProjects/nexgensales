@@ -242,7 +242,7 @@ nexgensales/
 Where logs and DB are written depending on build mode:
 
 * **Debug (development):** `Database/` and `Logs/` are created inside the project root (as shown above) to make inspection easy.
-* **Release (production):** files are created next to the compiled executable and/or under `%LOCALAPPDATA%\NextGenSales\Logs` for user-safe storage (see `App.xaml.cs`).
+* **Release (production):** files are created next to the compiled executable and/or under `C:\Users\<Current User>\NextGenSales\Logs` for user-safe storage (see `App.xaml.cs`).
 
 ---
 
